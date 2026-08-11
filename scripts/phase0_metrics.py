@@ -96,15 +96,20 @@ def _carry_forward(last_row: dict, last_record: dict, max_round: int) -> list[di
 
 
 def run_label(row: dict) -> str:
-    """The series a row belongs to: one model crossed with one prompt.
+    """The series a row belongs to: one model, one arm, one prompt.
 
-    Keyed on the model **tag** for readability, but grouping must be model-aware at all:
-    the first version of this keyed only on (prompt, passage), so running a second reviser
-    into the same artifact would have interleaved two models' rounds into one trajectory —
-    duplicate round numbers, a feed-forward chain that never existed, and thrash windows
-    computed across a model boundary. Nothing would have raised.
+    Every dimension that can vary within an artifact has to be in here, and this has now
+    been wrong twice in the same way. The first version keyed only on (prompt, passage), so
+    a second reviser in the same file would have interleaved two models' rounds into one
+    trajectory. Adding the model fixed that — and then the arm comparison put three
+    *architectures* in one file under the same model and the same prompt name, which would
+    have merged them just as invisibly: duplicate round numbers, a feed-forward chain that
+    never existed, thrash windows spanning an architecture boundary, and no exception.
+
+    The general rule, stated so the third instance does not happen: **the grouping key must
+    contain every field the run plan varies.**
     """
-    return f"{row['model_tag']} | {row['prompt_name']}"
+    return f"{row['model_tag']} | {row['arm']} | {row['prompt_name']}"
 
 
 def trajectories(rows: list[dict]) -> dict[tuple[str, str], list[dict]]:
@@ -181,6 +186,9 @@ def main(argv: list[str] | None = None) -> int:
                     "run": run,
                     "model_tag": row["model_tag"],
                     "model_digest": row["model_digest"],
+                    "arm": row["arm"],
+                    "strategy": row.get("strategy", "whole"),
+                    "proposal": row.get("proposal"),
                     "prompt_name": row["prompt_name"],
                     "passage_id": passage_id,
                     "author_id": row["author_id"],

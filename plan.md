@@ -251,6 +251,21 @@ Settled and open items for M0-c:
 - **Feed-forward confirmed:** round k+1's input is round k's output, asserted in
   `tests/test_loop.py::TestFeedForward`.
 
+### Phase 1 in progress — and a re-ordering
+
+`docs/findings-phase1.md` §2 compared three revision architectures on phi4. The bounded-diff
+arm (**A2e**, model names find/replace spans; only unambiguous ones apply) is the first
+mechanism in this project that controls length at all — ratio 1.00, voice drift 0.08 against
+the unconstrained control's 0.99. But it applied only **25% of the edits it proposed** and
+halted after 2.6 rounds, so its preservation is partly real and partly the trivial result of
+changing very little. §6 already names that failure: a gate that blocks everything scores
+zero recall and must be rejected on those grounds.
+
+**Consequence: build Stratum B before the three-family sweep.** The recall-vs-preservation
+frontier has one axis until planted defects exist, and running the most promising
+architecture across more families would multiply a result nothing can falsify. M1-b and M1-c
+are re-ordered accordingly.
+
 ### Carried into Phase 1 (from `docs/findings-phase0.md` §6.6–6.7)
 
 - **Handle length in the runner, not the prompt.** Both revisers summarise under the

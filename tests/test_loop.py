@@ -314,6 +314,64 @@ class TestStopping:
         assert all(r["stop_reason"] is None for r in rows)
 
 
+class TestNoValidProposal:
+    """A protocol failure must not be reported as voluntary halting."""
+
+    class FailingStrategy:
+        name = "editlist"
+
+        def revise(self, ctx, text):
+            from revisionbench.arms import Proposal
+
+            return Proposal(
+                text=text,
+                generations=[],
+                units=1,
+                proposed=0,
+                applied=0,
+                problems=["unparseable edit list; no edits applied"],
+            )
+
+    class SilentNoOpStrategy:
+        name = "editlist"
+
+        def revise(self, ctx, text):
+            from revisionbench.arms import Proposal
+
+            return Proposal(text=text, generations=[], units=1, proposed=0, applied=0)
+
+    def drive_with(self, strategy, tmp_path: Path):
+        path = tmp_path / "rounds.jsonl"
+        with JsonlWriter(path, fsync=False) as writer:
+            return list(
+                run_passage(
+                    FakeClient([]),
+                    PASSAGE,
+                    prompt=PROMPT,
+                    model=MODEL,
+                    options=OPTIONS,
+                    spec=SPEC,
+                    writer=writer,
+                    config_hash=CONFIG_HASH,
+                    strategy=strategy,
+                )
+            )
+
+    def test_unparseable_output_is_not_called_a_fixed_point(self, tmp_path: Path) -> None:
+        """Crediting a protocol failure as convergence flatters bounded-diff arms.
+
+        An arm that changes nothing also scores as perfectly voice-preserving, so the two
+        outcomes must stay distinguishable in the artifact.
+        """
+        rows = self.drive_with(self.FailingStrategy(), tmp_path)
+        assert rows[-1]["stop_reason"] == "no_valid_proposal"
+
+    def test_proposing_nothing_cleanly_is_still_a_fixed_point(self, tmp_path: Path) -> None:
+        """Choosing to leave the text alone is convergence; failing to speak is not."""
+        rows = self.drive_with(self.SilentNoOpStrategy(), tmp_path)
+        assert rows[-1]["stop_reason"] == "fixed_point"
+
+
 class TestResume:
     def test_resumed_run_skips_done_rounds_and_continues_the_chain(self, tmp_path: Path) -> None:
         first = [" ".join([f"Round {i} sentence here."] * 15) for i in range(1, 5)]

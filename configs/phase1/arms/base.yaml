@@ -1,0 +1,63 @@
+# Arm comparison: which revision architecture holds length? (docs/findings-phase1.md §2)
+#
+# Two levers on the length collapse are already dead — the prompt (model-dependent) and
+# resampling (no variance to select from). What remains is architectural, so this compares
+# three strategies that differ in *what unit gets revised and what gets applied*, holding
+# model, corpus, sampling and prompt wording fixed.
+#
+#   whole      arm A0. One call replaces the passage. The control.
+#   paragraph  arm A2p. Each paragraph revised alone, then reassembled.
+#   editlist   arm A2e. The model names find/replace spans; only unambiguous ones apply.
+#
+# ONE SHARED PROMPT WORDING, ON PURPOSE
+#
+# The template below says "text" rather than "passage" so that the identical wording can be
+# sent to a whole passage and to a single paragraph. That makes the three arms differ in
+# architecture and nothing else, which is the comparison worth having.
+#
+# The cost is that this wording is NOT byte-identical to Phase 0's neutral prompt, so its
+# sha256 differs and absolute numbers are not directly comparable across phases. Within
+# this comparison everything is matched; across phases, compare shapes rather than values.
+#
+# phi4 is the reviser because it is the hard case: the Phase-0 length clause failed on it
+# (0.69x, 6/10 guard trips) and the retry gate failed on it too.
+
+version: 1
+description: >-
+  Head-to-head of whole-passage, paragraph-scoped and edit-list revision architectures,
+  on the reviser where every non-architectural length control has failed.
+
+corpus: configs/corpus/phase0.yaml
+
+model:
+  tag: "phi4:latest"
+  expected_digest: ac896e5b8b34a1f4efa7b14d7520725140d5512484457fab45d2a4ea14c69dba
+  keep_alive: 60m
+
+generation:
+  seed: 0
+  temperature: 0.8
+  top_k: 40
+  top_p: 0.95
+  num_ctx: 8192
+  num_predict: 3072
+  repeat_penalty: 1.0
+
+loop:
+  arm: A0
+  # Five rounds, not ten. Phase 0 showed nearly all movement happens by round 3 and this
+  # comparison is about the length mechanism rather than long-horizon dynamics; the budget
+  # buys three architectures instead of five extra rounds of one.
+  rounds: 5
+  length_guard: [0.7, 1.4]
+  min_words_to_continue: 120
+  length_policy: observe
+  max_attempts: 1
+  strategy: whole
+
+prompts:
+  - name: neutral_text
+    template: |
+      Revise the following text to improve it. Return only the revised text, with no commentary.
+
+      {passage}

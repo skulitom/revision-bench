@@ -23,6 +23,7 @@ from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, replace
 from typing import Any
 
+from revisionbench.arms import ReviseContext, Strategy
 from revisionbench.ollama import Generation, GenerationOptions, ModelIdentity, OllamaClient
 from revisionbench.provenance import sha256_text
 from revisionbench.records import JsonlWriter
@@ -208,6 +209,7 @@ def run_passage(
     spec: LoopSpec,
     writer: JsonlWriter,
     config_hash: str,
+    strategy: Strategy | None = None,
     already_done: set[tuple[Any, ...]] | None = None,
     resume_texts: dict[int, str] | None = None,
 ) -> Iterator[dict[str, Any]]:
@@ -280,19 +282,45 @@ def run_passage(
                 f"{round_index - 1} is missing from the artifact"
             )
 
-        rendered = prompt.render(previous_text)
-        generation, text, attempts = _generate_within_guard(
-            client, model, rendered, options, spec, round_zero_words
-        )
+        if strategy is None:
+            rendered = prompt.render(previous_text)
+            generation, text, attempts = _generate_within_guard(
+                client, model, rendered, options, spec, round_zero_words
+            )
+            proposal_stats = None
+        else:
+            context = ReviseContext(
+                client=client, model=model, options=options, template=prompt.template
+            )
+            proposal = strategy.revise(context, previous_text)
+            text = proposal.text.strip()
+            proposal_stats = proposal.as_dict()
+            attempts = [word_count(text)]
+            # A strategy may make many calls; the row's `generation` block summarises them
+            # so downstream code keeps one shape. The per-call detail is in `proposal`.
+            generation = _merge_generations(proposal.generations, text)
         current_words = word_count(text)
         ratio = current_words / round_zero_words if round_zero_words else 0.0
 
         stop_reason = None
-        # A fixed point. Under deterministic decoding this is provably absorbing: the next
-        # round's input would equal this one's, so its output would equal this one's too.
-        # Stopping is therefore free of information loss, and the claim is only made when
-        # the sampler actually is deterministic.
-        if options.is_deterministic and words(text) == words(previous_text):
+        unchanged = words(text) == words(previous_text)
+        failed_to_propose = (
+            proposal_stats is not None
+            and proposal_stats["applied"] == 0
+            and bool(proposal_stats["problems"])
+        )
+        # Both of the next two branches stop the trajectory, and both are absorbing for the
+        # same reason: under a reproducible sampler the next round's input would equal this
+        # one's, so its output would too. They are separated because they mean opposite
+        # things about the arm. `fixed_point` says the model looked at the text and chose to
+        # leave it alone — convergence. `no_valid_proposal` says the model tried and its
+        # output could not be used: unparseable JSON, or every edit rejected. Reporting the
+        # second as the first would credit a protocol failure as voluntary halting, which is
+        # exactly the direction that flatters a bounded-diff arm, since an arm that changes
+        # nothing also scores as perfectly voice-preserving.
+        if failed_to_propose and unchanged:
+            stop_reason = "no_valid_proposal"
+        elif options.is_deterministic and unchanged:
             stop_reason = "fixed_point"
         elif current_words < spec.min_words_to_continue:
             stop_reason = "collapsed"
@@ -308,6 +336,8 @@ def run_passage(
             # than merely asserted. Length 1 under the `observe` policy.
             "attempt_word_counts": attempts,
             "attempts": len(attempts),
+            "strategy": getattr(strategy, "name", "whole"),
+            "proposal": proposal_stats,
             "stop_reason": stop_reason,
         }
         writer.write(row)
@@ -317,6 +347,27 @@ def run_passage(
         previous_text = text
         if stop_reason is not None:
             return
+
+
+def _merge_generations(generations: Sequence[Generation], text: str) -> Generation:
+    """Collapse a strategy's model calls into one summary row entry.
+
+    Sums tokens and wall clock, and reports ``done_reason`` as ``"length"`` if *any* call
+    was truncated — the pessimistic direction on purpose, because one cut paragraph is
+    enough to make a reassembled passage suspect, and a summary that hid it would let the
+    round be scored as clean.
+    """
+    if not generations:
+        return Generation(
+            text=text, prompt_tokens=0, output_tokens=0, done_reason="none", wall_seconds=0.0
+        )
+    return Generation(
+        text=text,
+        prompt_tokens=sum(g.prompt_tokens for g in generations),
+        output_tokens=sum(g.output_tokens for g in generations),
+        done_reason="length" if any(g.truncated for g in generations) else "stop",
+        wall_seconds=round(sum(g.wall_seconds for g in generations), 2),
+    )
 
 
 def _generate_within_guard(

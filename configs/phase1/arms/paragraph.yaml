@@ -1,0 +1,7 @@
+# Arm A2p: each paragraph revised independently, then reassembled. Compression is bounded
+# per paragraph, so it cannot compound across the passage the way a whole rewrite does.
+# Costs one generation per paragraph rather than one per passage.
+extends: base.yaml
+loop:
+  arm: A2p
+  strategy: paragraph

@@ -24,6 +24,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from revisionbench.arms import build_strategy  # noqa: E402
 from revisionbench.config import ConfigError, config_hash, load_config, require_keys  # noqa: E402
 from revisionbench.loop import (  # noqa: E402
     RESUME_KEY_FIELDS,
@@ -43,7 +44,7 @@ TOP_LEVEL = {
 }
 
 
-def parse(cfg: dict) -> tuple[dict, GenerationOptions, LoopSpec, list[PromptSpec]]:
+def parse(cfg: dict) -> tuple[dict, GenerationOptions, LoopSpec, list[PromptSpec], str]:
     require_keys(cfg, where="phase0 config", **TOP_LEVEL)
     require_keys(cfg["model"], required=("tag", "expected_digest", "keep_alive"), where="model")
     require_keys(
@@ -62,7 +63,7 @@ def parse(cfg: dict) -> tuple[dict, GenerationOptions, LoopSpec, list[PromptSpec
     require_keys(
         cfg["loop"],
         required=("arm", "rounds", "length_guard", "min_words_to_continue"),
-        optional=("length_policy", "max_attempts"),
+        optional=("length_policy", "max_attempts", "strategy"),
         where="loop",
     )
     options = GenerationOptions(**cfg["generation"])
@@ -83,7 +84,7 @@ def parse(cfg: dict) -> tuple[dict, GenerationOptions, LoopSpec, list[PromptSpec
             raise ConfigError(f"duplicate prompt name {prompt.name!r}")
         seen.add(prompt.name)
         prompts.append(prompt)
-    return cfg["model"], options, spec, prompts
+    return cfg["model"], options, spec, prompts, str(cfg["loop"].get("strategy", "whole"))
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -98,7 +99,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         cfg = load_config(args.config)
-        model_cfg, options, spec, prompts = parse(cfg)
+        model_cfg, options, spec, prompts, strategy_name = parse(cfg)
     except (ConfigError, ValueError, TypeError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
@@ -127,6 +128,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     gated = "   (GATED - this is not the A0 control)" if spec.length_policy != "observe" else ""
     print(f"length     policy={spec.length_policy} max_attempts={spec.max_attempts}{gated}")
+    print(f"strategy   {strategy_name}")
     print(f"model      {model_cfg['tag']}")
     print(
         f"sampling   seed={options.seed} temp={options.temperature} top_k={options.top_k} "
@@ -148,6 +150,7 @@ def main(argv: list[str] | None = None) -> int:
             )
         return 0
 
+    strategy = build_strategy(strategy_name)
     client = OllamaClient(args.host, keep_alive=str(model_cfg["keep_alive"]))
     try:
         model = client.identity(model_cfg["tag"])
@@ -202,6 +205,7 @@ def main(argv: list[str] | None = None) -> int:
                         spec=spec,
                         writer=writer,
                         config_hash=cfg_hash,
+                        strategy=strategy,
                         already_done=done,
                         resume_texts=recover_texts(prior),
                     ):

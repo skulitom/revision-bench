@@ -1,0 +1,9 @@
+# Arm A2e: the model returns find/replace operations and only unambiguous ones are applied.
+# Text the model does not name structurally cannot change, which is the strongest length
+# control available without a judge. Also the arm most able to fail silently -- a model that
+# returns prose instead of JSON leaves the passage pristine, which scores as ideal
+# preservation, so parse failures are recorded per round.
+extends: base.yaml
+loop:
+  arm: A2e
+  strategy: editlist

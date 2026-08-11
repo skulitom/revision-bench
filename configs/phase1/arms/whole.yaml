@@ -1,0 +1,5 @@
+# Arm A0 control: one call replaces the whole passage.
+extends: base.yaml
+loop:
+  arm: A0
+  strategy: whole
