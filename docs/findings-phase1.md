@@ -1,10 +1,15 @@
 # Phase 1 findings
 
-Status: **in progress.** M1-a is complete: the runner-level length gate failed (§1), and the
+Status: **M1-a and M1-b complete.** The runner-level length gate failed (§1); the
 architecture comparison that followed found the first mechanism that does control length
-(§2). Its verdict is that the **next milestone should be Stratum B and defect-fix recall,
-not the three-family sweep** — the most promising architecture is currently the least
-evaluable, and more model families would multiply an unfalsifiable result.
+(§2); and with Stratum B built, §3 reports the recall-vs-preservation frontier — the
+project's central deliverable, and the first result here that can falsify an architecture
+rather than describe one.
+
+**The headline is in §3.4, and it is not in the table.** The bounded arms now apply edits
+reliably (74% apply rate, zero protocol failures) but apply roughly **24 edits per planted
+defect repaired**. The bottleneck has moved from *how much* a loop changes to *what it
+chooses to change*. Next, per `NEXT.md`: Phase 2 judge validity at per-edit granularity.
 
 Phase 0 is written up separately in [`findings-phase0.md`](findings-phase0.md).
 
@@ -168,7 +173,7 @@ and the invariant is asserted per round rather than assumed — a violation is r
 row rather than averaged into a reassuring figure. The arm was re-run from scratch after the
 fix; every number in §2 is post-fix.
 
-### 2.5 Two instrumentation changes this comparison forced
+### 2.5 Two instrumentation changes this comparison forced (see also §3)
 
 - **`stop_reason` now distinguishes `no_valid_proposal` from `fixed_point`.** A2e rounds
   whose JSON failed to parse were being recorded as fixed points, i.e. as the model
@@ -180,3 +185,95 @@ fix; every number in §2 is post-fix.
   trajectories with duplicate round numbers and thrash windows spanning an architecture
   boundary. Stated generally so there is no third instance: *the grouping key must contain
   every field the run plan varies.*
+
+---
+
+## 3. The recall-vs-preservation frontier (M1-b complete)
+
+The project's central deliverable, and the first result here that can falsify an
+architecture rather than describe one. Four arms × 10 Stratum-B passages × 5 rounds,
+phi4, 148 generations, 35 minutes. Figure:
+[`results/phase1/frontier.png`](../results/phase1/frontier.png).
+
+| arm | length | voice drift | slop /1k | **recall** | **removed** | defects fixed | edits applied |
+|---|---|---|---|---|---|---|---|
+| *unrevised (floor)* | 1.05 | 0.12 | 0.52 | 0.00 | 0.00 | 0 | 0 |
+| **A0** whole passage | 0.59 | 0.96 | 2.31 | **0.73** | **0.45** | 16 | 48 |
+| **A2p** paragraph | 0.93 | 0.84 | 3.29 | 0.59 | 0.33 | 16 | 719 |
+| **A2e** edit-list | 1.02 | 0.13 | 0.86 | 0.15 | 0.00 | 6 | 208 |
+| **A2i** indexed + vetoes | 1.03 | 0.31 | **0.43** | 0.22 | 0.07 | 8 | 195 |
+
+Recall is over *surviving* defects; `removed` is the fraction whose region was cut rather
+than repaired, and is censored rather than counted as a fix.
+
+### 3.1 The trade-off is real, and no arm escapes it
+
+Nothing dominates. The two arms with high recall (A0 0.73, A2p 0.59) sit at voice drift
+0.96 and 0.84 — near-total loss of the round-0 fingerprint. The two bounded arms sit at
+drift 0.13–0.31, close to the unrevised floor of 0.12, and fix 0.15–0.22 of surviving
+defects. **This is the frontier plan.md §6 predicted, measured for the first time.**
+
+It is also steeper than hoped. There is no arm here that both preserves voice and fixes
+most defects; the best bounded arm repairs about a fifth of what survives.
+
+### 3.2 The high-recall arms are partly deleting, not repairing
+
+A0 and A2p each "fixed" 16 defects — and each also lost 45% and 33% of planted defects to
+deletion. Their recall is computed over a denominator that their own destructiveness
+shrank. A naive metric would have scored A0 at 32/40 and called it the winner; the removal
+column is the whole reason it does not.
+
+A0 gets its recall by rewriting 41% of the passage away. That is not a defect-fixing
+strategy, it is a defect-*removal* strategy, and it takes the surrounding prose with it.
+
+### 3.3 A2i strictly dominates A2e, and the slop veto works
+
+A2i beats A2e on recall (0.22 vs 0.15) at the same length, with **lower slop than the
+unrevised input** (0.43 vs the floor's 0.52). That last number is worth pausing on: the
+per-edit no-new-slop veto did not merely hold the line, it pulled the slop rate *below the
+text it was given*, because edits that would have introduced a lexicon term were rejected
+while edits that removed one were not. A free mechanical veto, doing exactly what it was
+specified to do.
+
+A2e's drift of 0.13 is barely above the floor — but §2.2's warning applies: that is largely
+preservation by inaction, and its recall of 0.15 is the price.
+
+### 3.4 The finding that is not in the table: the edits are not aimed at the defects
+
+A2i applied **195 edits and fixed 8 planted defects**. A2e applied 208 and fixed 6. That is
+roughly **24 applied edits per defect repaired**, and it is the most actionable number in
+this section.
+
+The bounded arms are not failing to *apply* edits any more — A2i's apply rate is 74% and
+its protocol failures are zero. They are failing to apply edits **to the right places**.
+Nearly everything they change is cosmetic: a word swapped, a clause reordered, in sentences
+that had nothing wrong with them. Meanwhile a planted name drift three sentences away goes
+untouched.
+
+So the bottleneck has moved. Phase 0 and M1-a were about *how much* a loop changes; this is
+about *what it chooses to change*. Two consequences:
+
+- **plan.md §7 M5's overreach precision is now the interesting metric**, not recall.
+  "Fraction of applied edits that touch a defective span" is measurable today from the
+  artifacts already written, and 4% is a striking starting number.
+- **The "diagnose, then fix" arm from `design-space.md` §7 is now the highest-value
+  untested architecture**, because it separates the two failure modes the current arms
+  conflate: not finding the defect, and finding it but editing elsewhere.
+
+### 3.5 A2p is the worst of both worlds
+
+719 applied edits — 3.7× the next busiest arm — for drift 0.84, the **highest slop of any
+arm at 3.29** (6.3× the floor), and still 33% removal. Revising paragraph by paragraph
+gives the model the most opportunities to reach for stock phrasing and buys the least. On
+this evidence it should not be carried into Phase 2.
+
+### 3.6 What this does not establish
+
+- **One model.** phi4 only. Length compliance and halting have both already proven
+  model-dependent, so no threshold from this table should travel until it is replicated on
+  a larger model and a second family.
+- **One prompt, five rounds, ten passages, 40 defects.** Cell counts are small; A2e and A2i
+  fixed 6 and 8 defects respectively, so the recall gap between them rests on two events.
+- **No quality judgment anywhere.** Every column is mechanical movement. Whether A2i's
+  surviving prose actually *reads* better than A0's is exactly the question Phase 2 exists
+  to answer, and nothing here bears on it.
