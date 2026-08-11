@@ -43,7 +43,7 @@ class FakeClient:
         self.outputs = list(outputs)
         self.prompts = []
 
-    def generate(self, tag, prompt, options):
+    def generate(self, tag, prompt, options, schema=None):
         self.prompts.append(prompt)
         if not self.outputs:
             raise AssertionError("FakeClient ran out of scripted outputs")
@@ -66,7 +66,7 @@ def ctx(outputs, template="Revise:\n{passage}"):
 
 class TestRegistry:
     def test_known_names(self) -> None:
-        assert set(ARMS) == {"whole", "paragraph", "editlist"}
+        assert set(ARMS) == {"whole", "paragraph", "editlist", "indexed"}
         assert isinstance(build_strategy("whole"), WholePassage)
 
     def test_unknown_name_is_fatal(self) -> None:
@@ -236,6 +236,133 @@ class TestEditList:
         context, client = ctx(["[]"])
         EditList().revise(context, PASSAGE)
         assert "JSON array of edits" in client.prompts[0]
+
+
+class TestIndexedEditList:
+    """A2i: symbolic addressing + enforced schema + per-edit mechanical vetoes."""
+
+    def payload(self, edits):
+        return json.dumps({"edits": [{"sentence_index": i, "replacement": r} for i, r in edits]})
+
+    def arm(self, **kwargs):
+        from revisionbench.arms import IndexedEditList
+
+        return IndexedEditList(**kwargs)
+
+    def test_applies_an_indexed_edit_to_the_right_sentence(self) -> None:
+        context, _ = ctx([self.payload([(1, "She strolled down the lane, counting gates.")])])
+        result = self.arm(vetoes=()).revise(context, PASSAGE)
+        assert "She strolled down the lane" in result.text
+        assert PARA_A in result.text, "the untouched sentence is byte-identical"
+        assert (result.proposed, result.applied, result.rejected) == (1, 1, 0)
+
+    def test_an_integer_cannot_be_misquoted(self) -> None:
+        """The whole point of the arm.
+
+        A2e lost 223 of 236 rejected edits to the model paraphrasing its `find` anchor.
+        Indices remove that failure class by construction rather than reducing it.
+        """
+        context, _ = ctx([self.payload([(0, "Rewritten first sentence.")])])
+        result = self.arm(vetoes=()).revise(context, PASSAGE)
+        assert result.applied == 1
+        assert not any("not found" in p for p in result.problems)
+
+    def test_the_model_is_shown_numbered_sentences(self) -> None:
+        context, client = ctx([self.payload([])])
+        self.arm().revise(context, PASSAGE)
+        assert "[0] " in client.prompts[0] and "[1] " in client.prompts[0]
+
+    def test_out_of_range_index_is_rejected_not_clamped(self) -> None:
+        context, _ = ctx([self.payload([(99, "Nope.")])])
+        result = self.arm(vetoes=()).revise(context, PASSAGE)
+        assert (result.applied, result.rejected) == (0, 1)
+        assert any("out of range" in p for p in result.problems)
+
+    def test_duplicate_index_keeps_the_first_only(self) -> None:
+        context, _ = ctx([self.payload([(0, "First try here now."), (0, "Second try here.")])])
+        result = self.arm(vetoes=()).revise(context, PASSAGE)
+        assert result.applied == 1
+        assert any("duplicate" in p for p in result.problems)
+
+    def test_whitespace_and_paragraph_structure_survive(self) -> None:
+        """An arm that reflowed the passage would move the punctuation metrics itself."""
+        context, _ = ctx([self.payload([(0, "A short new first sentence.")])])
+        result = self.arm(vetoes=()).revise(context, PASSAGE)
+        assert result.text.count("\n\n") == PASSAGE.count("\n\n")
+
+    def test_empty_edit_list_is_a_clean_no_op(self) -> None:
+        context, _ = ctx([self.payload([])])
+        result = self.arm().revise(context, PASSAGE)
+        assert result.text == PASSAGE
+        assert result.problems == []
+
+    def test_length_veto_rejects_a_collapsing_replacement(self) -> None:
+        """Applied per edit, so a model that decided to summarise cannot defeat it."""
+        context, _ = ctx([self.payload([(0, "Wind.")])])
+        result = self.arm(vetoes=("length",)).revise(context, PASSAGE)
+        assert result.applied == 0
+        assert any("length" in p for p in result.problems)
+
+    def test_length_veto_allows_a_proportionate_rewrite(self) -> None:
+        context, _ = ctx(
+            [self.payload([(0, "The wind blew off the water in gusts and gulls called overhead.")])]
+        )
+        assert self.arm(vetoes=("length",)).revise(context, PASSAGE).applied == 1
+
+    def test_slop_veto_rejects_an_introduced_lexicon_term(self) -> None:
+        """M3 measured slop rising 0.54 -> 3.73 under A0; this makes the rise impossible."""
+        context, _ = ctx(
+            [self.payload([(0, "A wave of unease hung in the air above the restless water.")])]
+        )
+        result = self.arm(vetoes=("slop",)).revise(context, PASSAGE)
+        assert result.applied == 0
+        assert any("slop" in p for p in result.problems)
+
+    def test_slop_veto_permits_a_term_already_present(self) -> None:
+        """Only *introduced* slop is vetoed, or the arm could never touch such a sentence."""
+        text = "There was a sense of unease about the whole business that morning.\n\nSecond one."
+        context, _ = ctx(
+            [
+                self.payload(
+                    [(0, "There was a sense of unease about the affair that whole morning.")]
+                )
+            ]
+        )
+        assert self.arm(vetoes=("slop",)).revise(context, text).applied == 1
+
+    def test_unknown_veto_is_rejected(self) -> None:
+        with pytest.raises(ValueError, match="unknown veto"):
+            self.arm(vetoes=("vibes",))
+
+    def test_schema_is_sent_to_the_client(self) -> None:
+        from revisionbench.arms import INDEXED_EDIT_SCHEMA
+
+        seen = {}
+
+        class SchemaRecordingClient(FakeClient):
+            def generate(self, tag, prompt, options, schema=None):
+                seen["schema"] = schema
+                return super().generate(tag, prompt, options)
+
+        from revisionbench.ollama import ModelIdentity
+
+        client = SchemaRecordingClient([self.payload([])])
+        context = ReviseContext(
+            client=client,
+            model=ModelIdentity("fake:1b", "d" * 64, "fake", "1B", "Q4", "0.0.0"),
+            options=OPTIONS,
+            template="Revise:\n{passage}",
+        )
+        self.arm().revise(context, PASSAGE)
+        assert seen["schema"] == INDEXED_EDIT_SCHEMA
+
+    def test_unparseable_output_is_still_recorded(self) -> None:
+        """Constrained decoding should make this unreachable; assuming so is how no-op
+        arms get shipped."""
+        context, _ = ctx(["not json at all"])
+        result = self.arm().revise(context, PASSAGE)
+        assert result.text == PASSAGE
+        assert any("did not parse" in p for p in result.problems)
 
 
 class TestProposalTelemetry:

@@ -1,0 +1,11 @@
+# Arm A2i: edits addressed by sentence number, under an enforced JSON schema, with per-edit
+# mechanical vetoes (length band + no-new-slop). Zero judge calls.
+#
+# Targets the two measured failures of A2e: 223 of its 236 rejected edits (94.5%) were the
+# model paraphrasing its `find` anchor instead of copying it, and 3 of 13 rounds returned
+# unparseable JSON. An integer cannot be misquoted and a constrained sampler cannot emit
+# invalid JSON, so both failure classes should disappear rather than shrink.
+extends: base.yaml
+loop:
+  arm: A2i
+  strategy: indexed

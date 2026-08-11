@@ -32,15 +32,23 @@ from __future__ import annotations
 
 import json
 import re
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from typing import Any, Protocol
 
 from revisionbench.ollama import Generation, GenerationOptions, ModelIdentity, OllamaClient
-from revisionbench.text import normalise_newlines, paragraph_spans, word_count
+from revisionbench.text import (
+    normalise_newlines,
+    paragraph_spans,
+    sentence_spans,
+    word_count,
+)
 
 __all__ = [
     "ARMS",
+    "INDEXED_EDIT_SCHEMA",
     "EditList",
+    "IndexedEditList",
     "ParagraphScoped",
     "Proposal",
     "ReviseContext",
@@ -359,6 +367,186 @@ class EditList:
 
 
 # --------------------------------------------------------------------------------------
+# A2i — indexed edits, enforced schema, per-edit mechanical vetoes
+# --------------------------------------------------------------------------------------
+
+#: JSON schema for the indexed edit protocol. Passed to Ollama's `format`, which constrains
+#: decoding rather than merely requesting a shape.
+INDEXED_EDIT_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "properties": {
+        "edits": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "sentence_index": {"type": "integer"},
+                    "replacement": {"type": "string"},
+                },
+                "required": ["sentence_index", "replacement"],
+            },
+        }
+    },
+    "required": ["edits"],
+}
+
+INDEXED_EDIT_INSTRUCTION = """
+The text above is numbered by sentence. Return the sentences you want to change, each as
+its number and its full replacement text. Change only what needs changing; returning no
+edits is a valid answer. Do not renumber, merge, or reorder sentences.
+"""
+
+
+class IndexedEditList:
+    """Arm A2i: edits addressed by sentence number, under an enforced schema.
+
+    Two changes from :class:`EditList`, each aimed at a measured failure:
+
+    **Symbolic addressing instead of verbatim quotation.** A2e lost 223 of its 236 rejected
+    edits (94.5%) to a single cause — the model paraphrased the ``find`` anchor instead of
+    copying it. Quoting asks a model to do the one thing transformers are unreliable at, for
+    no benefit, since the span is already on screen and already addressable. An integer
+    cannot be misquoted, so this failure class disappears rather than shrinking.
+
+    **Enforced schema instead of requested JSON.** A2e lost 3 of 13 rounds to unparseable
+    output. Under Ollama's ``format`` the sampler cannot emit a token that breaks the schema.
+
+    Indices refer to the *input* snapshot and every edit is applied against it, so edits
+    cannot interfere with one another and the k-th sentence in maps to the k-th slot out.
+    Whitespace and paragraph structure come from the original spans, so the arm cannot
+    reflow the passage as a side effect.
+
+    Optional per-edit mechanical vetoes (all free — no judge):
+
+    - ``length`` — the replacement must stay within a band of the sentence it replaces.
+      Applied per edit, so it cannot be defeated by a model that has decided to summarise.
+    - ``slop`` — reject a replacement that introduces a term from the versioned lexicon
+      which was not already in the sentence. M3 measured slop rising 0.54 -> 3.73 under A0;
+      this makes that rise unrepresentable rather than merely discouraged.
+    """
+
+    name = "indexed"
+
+    #: Replacement word count must fall within these multiples of the original sentence's.
+    length_band = (0.5, 2.0)
+
+    def __init__(self, *, vetoes: Sequence[str] = ("length", "slop")) -> None:
+        unknown = [v for v in vetoes if v not in ("length", "slop")]
+        if unknown:
+            raise ValueError(f"unknown veto(es): {unknown}; known: length, slop")
+        self.vetoes = tuple(vetoes)
+        self._lexicon = None
+
+    def _slop_terms(self, text: str) -> set[str]:
+        from revisionbench.metrics.slop import load_lexicon, slop_index
+
+        if self._lexicon is None:
+            self._lexicon = load_lexicon()
+        return set(slop_index(text, self._lexicon).by_term)
+
+    def revise(self, ctx: ReviseContext, text: str) -> Proposal:
+        normalised = normalise_newlines(text)
+        spans = sentence_spans(normalised)
+        if not spans:
+            return Proposal(text=text, units=0, problems=["passage has no sentences"])
+
+        numbered = "\n".join(f"[{i}] {normalised[a:b]}" for i, (a, b) in enumerate(spans))
+        prompt = (
+            ctx.template.replace("{word_count}", str(word_count(normalised))).replace(
+                "{passage}", numbered
+            )
+            + "\n"
+            + INDEXED_EDIT_INSTRUCTION
+        )
+        generation = ctx.client.generate(
+            ctx.model.tag, prompt, ctx.options, schema=INDEXED_EDIT_SCHEMA
+        )
+
+        problems: list[str] = []
+        try:
+            payload = json.loads(generation.text)
+            raw_edits = payload.get("edits", [])
+        except json.JSONDecodeError as exc:
+            # Should be unreachable under constrained decoding. Recorded rather than
+            # assumed away, because "the schema guarantees it" is exactly the kind of
+            # assumption that turns into a silent no-op arm.
+            return Proposal(
+                text=text,
+                generations=[generation],
+                units=len(spans),
+                problems=[f"schema-constrained output still did not parse ({exc.msg})"],
+            )
+
+        chosen: dict[int, str] = {}
+        rejected = 0
+        for edit in raw_edits:
+            index = edit.get("sentence_index")
+            replacement = edit.get("replacement", "")
+            if not isinstance(index, int) or not 0 <= index < len(spans):
+                rejected += 1
+                problems.append(f"index {index!r} out of range 0..{len(spans) - 1}")
+                continue
+            if index in chosen:
+                rejected += 1
+                problems.append(f"duplicate edit for sentence {index}")
+                continue
+            original = normalised[spans[index][0] : spans[index][1]]
+            veto = self._veto(original, replacement)
+            if veto:
+                rejected += 1
+                problems.append(f"sentence {index}: {veto}")
+                continue
+            if replacement.strip() == original.strip():
+                rejected += 1
+                continue
+            chosen[index] = replacement
+
+        rebuilt = self._rebuild(normalised, spans, chosen)
+        return Proposal(
+            text=rebuilt,
+            generations=[generation],
+            units=len(spans),
+            proposed=len(raw_edits),
+            applied=len(chosen),
+            rejected=rejected,
+            problems=problems,
+        )
+
+    def _veto(self, original: str, replacement: str) -> str:
+        if not replacement.strip():
+            return "empty replacement"
+        if "length" in self.vetoes:
+            before, after = word_count(original), word_count(replacement)
+            low, high = self.length_band
+            if before and not (low * before <= after <= high * before):
+                return f"length {after}w outside {low}-{high}x of {before}w"
+        if "slop" in self.vetoes:
+            introduced = self._slop_terms(replacement) - self._slop_terms(original)
+            if introduced:
+                return f"introduces slop {sorted(introduced)}"
+        return ""
+
+    @staticmethod
+    def _rebuild(text: str, spans: Sequence[tuple[int, int]], edits: dict[int, str]) -> str:
+        """Substitute replacements into their slots, preserving everything between them.
+
+        Rebuilt from the original spans rather than by joining sentences, so inter-sentence
+        whitespace and paragraph breaks survive exactly. An arm that silently reflowed the
+        passage would move the punctuation and sentence-density metrics on its own.
+        """
+        out: list[str] = []
+        cursor = 0
+        for index, (start, end) in enumerate(spans):
+            out.append(text[cursor:start])
+            out.append(
+                edits.get(index, text[start:end]).strip() if index in edits else text[start:end]
+            )
+            cursor = end
+        out.append(text[cursor:])
+        return "".join(out)
+
+
+# --------------------------------------------------------------------------------------
 # Registry
 # --------------------------------------------------------------------------------------
 
@@ -366,6 +554,7 @@ ARMS: dict[str, type] = {
     WholePassage.name: WholePassage,
     ParagraphScoped.name: ParagraphScoped,
     EditList.name: EditList,
+    IndexedEditList.name: IndexedEditList,
 }
 
 

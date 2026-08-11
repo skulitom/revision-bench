@@ -248,7 +248,13 @@ class OllamaClient:
         )
         return self.generate(tag, "Say the single word: ready.", probe)
 
-    def generate(self, tag: str, prompt: str, options: GenerationOptions) -> Generation:
+    def generate(
+        self,
+        tag: str,
+        prompt: str,
+        options: GenerationOptions,
+        schema: dict[str, Any] | None = None,
+    ) -> Generation:
         """Run one completion.
 
         Raises:
@@ -258,13 +264,20 @@ class OllamaClient:
                 from the result would be measuring our bug.
         """
         started = time.time()
-        payload = {
+        payload: dict[str, Any] = {
             "model": tag,
             "prompt": prompt,
             "stream": False,
             "keep_alive": self.keep_alive,
             "options": options.as_ollama_options(),
         }
+        if schema is not None:
+            # Constrained decoding. Under a schema, malformed output is not merely unlikely
+            # but unrepresentable — the sampler cannot emit a token that would break it.
+            # The edit-list arm lost 3 of 13 rounds to unparseable JSON when the format was
+            # merely *requested* in the prompt, and an unparseable round leaves the passage
+            # untouched, which scores as flawless voice preservation.
+            payload["format"] = schema
         data = self._post("/api/generate", payload)
         elapsed = time.time() - started
 
