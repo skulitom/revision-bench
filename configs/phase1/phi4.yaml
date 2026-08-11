@@ -1,0 +1,11 @@
+# Phase 1 / Microsoft family. 14.7B — the largest reviser that loads on this box.
+#
+# This is the family the Phase-0 length clause failed on (0.69x, 6/10 guard trips), so it
+# is the sharpest test of whether the runner-level gate actually works.
+
+extends: base.yaml
+
+model:
+  tag: "phi4:latest"
+  expected_digest: ac896e5b8b34a1f4efa7b14d7520725140d5512484457fab45d2a4ea14c69dba
+  keep_alive: 60m

@@ -173,6 +173,109 @@ class TestLengthGuard:
         assert not any(r["length_guard_tripped"] for r in rows)
 
 
+class TestLengthPolicy:
+    """The retry policy is a separate arm, not a setting. See LENGTH_POLICIES."""
+
+    # One round, so each test exercises exactly the attempt loop. PASSAGE is 90 words
+    # (SENTENCE is 15 words x 6), so the in-band window is 63-126 words.
+    RETRY = LoopSpec(
+        arm="A0len",
+        rounds=1,
+        length_guard=(0.7, 1.4),
+        min_words_to_continue=10,
+        length_policy="retry",
+        max_attempts=3,
+    )
+
+    def test_a0_cannot_retry(self) -> None:
+        """A gated run labelled A0 would make the artifact claim a control it lacks."""
+        with pytest.raises(ValueError, match="cannot use the retry policy"):
+            LoopSpec(
+                arm="A0",
+                rounds=2,
+                length_guard=(0.7, 1.4),
+                min_words_to_continue=10,
+                length_policy="retry",
+                max_attempts=3,
+            )
+
+    def test_observe_cannot_have_attempts(self) -> None:
+        with pytest.raises(ValueError, match="cannot retry"):
+            LoopSpec(
+                arm="A0",
+                rounds=2,
+                length_guard=(0.7, 1.4),
+                min_words_to_continue=10,
+                length_policy="observe",
+                max_attempts=3,
+            )
+
+    def test_unknown_policy_rejected(self) -> None:
+        with pytest.raises(ValueError, match="length_policy must be one of"):
+            LoopSpec(
+                arm="X",
+                rounds=2,
+                length_guard=(0.7, 1.4),
+                min_words_to_continue=10,
+                length_policy="coerce",
+            )
+
+    def test_observe_does_not_retry(self, tmp_path: Path) -> None:
+        # 21 words each: far out of band, but above the 10-word collapse floor, so the
+        # trajectory runs its full four rounds rather than stopping.
+        short = [" ".join([f"Tiny {i} text here now."] * 3) for i in range(4)]
+        client = FakeClient(short)
+        rows, _ = drive(client, tmp_path)
+        assert len(client.prompts) == 4, "one generation per round, no retries"
+        assert all(r["attempts"] == 1 for r in rows if r["round"] > 0)
+        assert all(r["length_guard_tripped"] for r in rows if r["round"] > 0)
+
+    def test_retry_stops_as_soon_as_a_round_lands_in_band(self, tmp_path: Path) -> None:
+        in_band = " ".join([SENTENCE] * 6)  # 90 words, ratio 1.0
+        client = FakeClient([" ".join(["Tiny."] * 12), in_band])
+        rows, _ = drive(client, tmp_path, spec=self.RETRY)
+        first = next(r for r in rows if r["round"] == 1)
+        assert first["attempts"] == 2, "one out-of-band attempt, then an in-band one"
+        assert first["length_guard_tripped"] is False
+
+    def test_retry_keeps_the_attempt_closest_to_round_zero(self, tmp_path: Path) -> None:
+        """Best-of-N on length, not last-of-N.
+
+        Keeping the last attempt would make the accepted text depend on how many attempts
+        the budget happened to allow -- a knob nobody would think to report.
+        """
+        far = " ".join(["Tiny."] * 6)  # 6 words, ratio 0.07
+        nearer = " ".join([SENTENCE] * 4)  # 60 words, ratio 0.67 -- closest, still out
+        farther = " ".join(["Short one."] * 10)  # 20 words, ratio 0.22
+        client = FakeClient([far, nearer, farther])
+        rows, _ = drive(client, tmp_path, spec=self.RETRY)
+        first = next(r for r in rows if r["round"] == 1)
+        assert first["attempts"] == 3, "budget exhausted, nothing landed in band"
+        assert first["text"] == nearer
+        assert first["length_guard_tripped"] is True, "still flagged; the gate did not succeed"
+
+    def test_every_attempt_is_recorded_for_audit(self, tmp_path: Path) -> None:
+        client = FakeClient(
+            [" ".join(["Tiny."] * 6), " ".join(["Short one."] * 10), " ".join([SENTENCE] * 4)]
+        )
+        rows, _ = drive(client, tmp_path, spec=self.RETRY)
+        first = next(r for r in rows if r["round"] == 1)
+        assert first["attempt_word_counts"] == [6, 20, 60]
+
+    def test_retry_reseeds_deterministically(self, tmp_path: Path) -> None:
+        """Same config re-run must make the same attempts in the same order."""
+        seen: list[int] = []
+
+        class SeedRecordingClient(FakeClient):
+            def generate(self, tag, prompt, options):
+                seen.append(options.seed)
+                return super().generate(tag, prompt, options)
+
+        client = SeedRecordingClient([" ".join(["Tiny."] * 6)] * 3)
+        drive(client, tmp_path, spec=self.RETRY)
+        assert seen == [OPTIONS.seed, OPTIONS.seed + 1, OPTIONS.seed + 2]
+
+
 class TestStopping:
     def test_stops_when_the_text_collapses(self, tmp_path: Path) -> None:
         client = FakeClient(["Too short now.", "never reached"])

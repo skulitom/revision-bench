@@ -62,6 +62,7 @@ def parse(cfg: dict) -> tuple[dict, GenerationOptions, LoopSpec, list[PromptSpec
     require_keys(
         cfg["loop"],
         required=("arm", "rounds", "length_guard", "min_words_to_continue"),
+        optional=("length_policy", "max_attempts"),
         where="loop",
     )
     options = GenerationOptions(**cfg["generation"])
@@ -70,6 +71,8 @@ def parse(cfg: dict) -> tuple[dict, GenerationOptions, LoopSpec, list[PromptSpec
         rounds=int(cfg["loop"]["rounds"]),
         length_guard=tuple(cfg["loop"]["length_guard"]),
         min_words_to_continue=int(cfg["loop"]["min_words_to_continue"]),
+        length_policy=str(cfg["loop"].get("length_policy", "observe")),
+        max_attempts=int(cfg["loop"].get("max_attempts", 1)),
     )
     prompts = []
     seen = set()
@@ -122,6 +125,8 @@ def main(argv: list[str] | None = None) -> int:
         f"arm        {spec.arm}   rounds {spec.rounds}   "
         f"length guard {spec.length_guard}   floor {spec.min_words_to_continue}w"
     )
+    gated = "   (GATED - this is not the A0 control)" if spec.length_policy != "observe" else ""
+    print(f"length     policy={spec.length_policy} max_attempts={spec.max_attempts}{gated}")
     print(f"model      {model_cfg['tag']}")
     print(
         f"sampling   seed={options.seed} temp={options.temperature} top_k={options.top_k} "

@@ -1,0 +1,65 @@
+# Phase 1 base — attractor characterization (plan.md §9 Phase 1, tests H1–H3).
+#
+# Shared by every reviser family. Only the `model` block is overridden per family, so a
+# cross-family comparison differs in exactly one thing.
+#
+# WHAT CHANGED FROM PHASE 0, AND WHY
+#
+# Phase 0 found that both revisers summarise under the literal A0 instruction (gemma3:4b
+# to 0.53x, phi4 to 0.61x), and that a prompt clause fixes it on one model and largely
+# fails on the other (0.97x vs 0.69x). Phase 1's first act was to try controlling length in
+# the runner instead, by re-rolling out-of-band rounds. That failed too -- see the `loop`
+# block below and docs/findings-phase1.md §1.
+#
+# Two mechanisms have now been tried and neither is a lever, so length is treated as an
+# outcome of the loop rather than a confound to be removed: reported beside every metric,
+# and controlled statistically when comparing families.
+
+version: 1
+description: >-
+  Phase 1: unconstrained-but-length-gated revision loop across reviser families, to test
+  whether degradation converges on a model-specific stylistic attractor (H1–H3).
+
+corpus: configs/corpus/phase0.yaml
+
+generation:
+  # Unchanged from Phase 0 so the two phases stay comparable. Reproducibility comes from
+  # the model being warm, not from the sampler (docs/findings-phase0.md §5.1).
+  seed: 0
+  temperature: 0.8
+  top_k: 40
+  top_p: 0.95
+  num_ctx: 8192
+  num_predict: 3072
+  repeat_penalty: 1.0
+
+loop:
+  # `observe`, not `retry` -- and that is a measured decision, not a default.
+  #
+  # The retry gate was built for this phase, tested, and run against phi4 on the passages
+  # that had actually tripped the guard in Phase 0. It failed: 18 of 32 rounds were still
+  # out of band after three attempts, at 2.12x the generation cost. The attempt logs show
+  # why -- re-seeding moves output length by about +/-10 words when the gap to the band is
+  # ~300. Given an input, the model has a target length and holds it across seeds, so
+  # best-of-N cannot select what the distribution does not produce.
+  # See docs/findings-phase1.md §1.
+  #
+  # Length is therefore reported as an outcome and controlled statistically at analysis
+  # time, not gated at generation time. The arm reverts to plain A0.
+  arm: A0
+  rounds: 10
+  length_guard: [0.7, 1.4]
+  min_words_to_continue: 120
+  length_policy: observe
+  max_attempts: 1
+
+# Only the length-preserving prompt. Phase 0 established what the neutral prompt does and
+# it is in the record; repeating it here would double the cost of every family to
+# re-measure a known result. The prompt is byte-identical to Phase 0's so the sha256
+# matches and the two phases can be compared directly.
+prompts:
+  - name: length_preserving
+    template: |
+      Revise the following passage to improve it. Keep the revision close to the original length of {word_count} words; this is a revision, not a summary. Return only the revised passage, with no commentary.
+
+      {passage}

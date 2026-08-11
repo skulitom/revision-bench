@@ -20,7 +20,7 @@ control flow and a Phase-3 concern. There is deliberately no gate hook here yet.
 from __future__ import annotations
 
 from collections.abc import Iterator, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any
 
 from revisionbench.ollama import Generation, GenerationOptions, ModelIdentity, OllamaClient
@@ -30,6 +30,7 @@ from revisionbench.text import word_count, words
 
 __all__ = [
     "ARM_A0",
+    "LENGTH_POLICIES",
     "RESUME_KEY_FIELDS",
     "LoopSpec",
     "PromptSpec",
@@ -91,21 +92,42 @@ class PromptSpec:
         return rendered.replace("{passage}", passage)
 
 
+#: Length-guard policies. **These are different experimental arms, not settings.**
+#:
+#: ``observe`` flags an out-of-band round and does nothing else. That is arm A0 as
+#: plan.md §8 defines it: unconstrained, always accept.
+#:
+#: ``retry`` re-generates an out-of-band round with a fresh seed and keeps the attempt
+#: closest to the original length. That is *already an acceptance architecture* — a
+#: one-dimensional gate — so a run using it is emphatically **not** A0 and must not be
+#: labelled as such. It exists because Phase 0 showed prompt-level length control is
+#: model-dependent (docs/findings-phase0.md §6.7: the length clause holds gemma3:4b at
+#: 0.97x and phi4 at only 0.69x), so a cross-model comparison needs length controlled by
+#: the runner rather than by asking politely.
+#:
+#: Keeping both is the point. ``observe`` remains the honest control; ``retry`` is the
+#: condition in which H1-H3 can be tested without compression swamping every metric.
+LENGTH_POLICIES = ("observe", "retry")
+
+
 @dataclass(frozen=True, slots=True)
 class LoopSpec:
-    """How a trajectory runs and when it stops early."""
+    """How a trajectory runs, when it retries, and when it stops early."""
 
     arm: str
     rounds: int
-    #: Word count outside ``round0 * (low, high)`` flags the round. It does **not** stop
-    #: the loop: A0 is the unconstrained control, and intervening would make it a different
-    #: arm. The flag exists so the length confound (docs/findings-phase0.md §5.2) can be
-    #: separated from voice change at analysis time rather than silently averaged into it.
+    #: Word count outside ``round0 * (low, high)`` flags the round, and — under the
+    #: ``retry`` policy — triggers re-generation.
     length_guard: tuple[float, float]
     #: Below this many words the trajectory stops. Revising a stub for seven more rounds
     #: burns GPU time and yields nothing but MetricErrors; the collapse is itself the
     #: result, and it is recorded as one.
     min_words_to_continue: int
+    length_policy: str = "observe"
+    #: Total generations allowed per round under ``retry`` (1 = no retry). Bounded because
+    #: a model that simply will not produce in-band text would otherwise spin forever; when
+    #: the budget runs out the round is accepted anyway and flagged.
+    max_attempts: int = 1
 
     def __post_init__(self) -> None:
         if self.rounds < 1:
@@ -117,6 +139,24 @@ class LoopSpec:
             )
         if self.min_words_to_continue < 1:
             raise ValueError("min_words_to_continue must be positive")
+        if self.length_policy not in LENGTH_POLICIES:
+            raise ValueError(
+                f"length_policy must be one of {LENGTH_POLICIES}, got {self.length_policy!r}"
+            )
+        if self.max_attempts < 1:
+            raise ValueError(f"max_attempts must be >= 1, got {self.max_attempts}")
+        if self.length_policy == "observe" and self.max_attempts != 1:
+            raise ValueError(
+                "length_policy 'observe' cannot retry; max_attempts must be 1. Set "
+                "length_policy: retry if you meant to gate on length — and rename the arm, "
+                "because a length gate is an acceptance architecture and no longer A0."
+            )
+        if self.length_policy == "retry" and self.arm == ARM_A0:
+            raise ValueError(
+                f"arm {ARM_A0!r} is the unconstrained control and cannot use the retry "
+                f"policy; a retried run is a gated run and needs its own arm label, or the "
+                f"artifact will claim a control it does not contain"
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -240,8 +280,10 @@ def run_passage(
                 f"{round_index - 1} is missing from the artifact"
             )
 
-        generation = client.generate(model.tag, prompt.render(previous_text), options)
-        text = generation.text.strip()
+        rendered = prompt.render(previous_text)
+        generation, text, attempts = _generate_within_guard(
+            client, model, rendered, options, spec, round_zero_words
+        )
         current_words = word_count(text)
         ratio = current_words / round_zero_words if round_zero_words else 0.0
 
@@ -262,6 +304,10 @@ def run_passage(
             "length_ratio": round(ratio, 4),
             "length_guard_tripped": not (low <= ratio <= high),
             "generation": generation.as_dict(),
+            # Every attempt's word count, so a best-of-N selection is auditable rather
+            # than merely asserted. Length 1 under the `observe` policy.
+            "attempt_word_counts": attempts,
+            "attempts": len(attempts),
             "stop_reason": stop_reason,
         }
         writer.write(row)
@@ -271,6 +317,51 @@ def run_passage(
         previous_text = text
         if stop_reason is not None:
             return
+
+
+def _generate_within_guard(
+    client: OllamaClient,
+    model: ModelIdentity,
+    rendered: str,
+    options: GenerationOptions,
+    spec: LoopSpec,
+    round_zero_words: int,
+) -> tuple[Generation, str, list[int]]:
+    """Generate one round, retrying out-of-band lengths when the policy asks for it.
+
+    Returns ``(generation, text, attempt_word_counts)``.
+
+    Under ``retry``, each attempt re-seeds deterministically (``seed + attempt``) so the
+    round stays reproducible: the same config re-run makes the same attempts in the same
+    order. If no attempt lands in band, the one **closest to the round-0 length** is kept.
+
+    That last rule is a best-of-N selection and is therefore a mild optimisation pressure
+    on length — recorded rather than hidden, via ``attempt_word_counts`` on every row. It
+    is preferred to keeping the last attempt because the alternative is worse in a specific
+    way: "keep the last" would make the accepted text depend on how many attempts the
+    budget happened to allow, which is a knob nobody would think to report.
+    """
+    low, high = spec.length_guard
+    attempts: list[int] = []
+    best: tuple[float, Generation, str] | None = None
+
+    for attempt in range(spec.max_attempts):
+        step_options = options if attempt == 0 else replace(options, seed=options.seed + attempt)
+        generation = client.generate(model.tag, rendered, step_options)
+        text = generation.text.strip()
+        words_here = word_count(text)
+        attempts.append(words_here)
+        ratio = words_here / round_zero_words if round_zero_words else 0.0
+
+        if low <= ratio <= high:
+            return generation, text, attempts
+
+        distance = abs(ratio - 1.0)
+        if best is None or distance < best[0]:
+            best = (distance, generation, text)
+
+    assert best is not None
+    return best[1], best[2], attempts
 
 
 def recover_texts(rows: Sequence[dict[str, Any]]) -> dict[int, str]:
