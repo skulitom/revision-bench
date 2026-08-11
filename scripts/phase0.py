@@ -95,6 +95,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dry-run", action="store_true", help="validate and plan; no model calls")
     parser.add_argument("--prompt", action="append", help="run only these prompt names")
     parser.add_argument("--passage", action="append", help="run only these passage ids")
+    parser.add_argument(
+        "--corpus",
+        type=Path,
+        default=REPO_ROOT / "data" / "corpus" / "passages",
+        help="passage directory; point at passages_b to run against Stratum B",
+    )
     args = parser.parse_args(argv)
 
     try:
@@ -110,7 +116,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"error: no prompt matched {args.prompt}", file=sys.stderr)
             return 2
 
-    corpus_dir = REPO_ROOT / "data" / "corpus" / "passages"
+    corpus_dir = args.corpus
     passages = [json.loads(p.read_text("utf-8")) for p in sorted(corpus_dir.glob("*.json"))]
     if args.passage:
         wanted = set(args.passage)
