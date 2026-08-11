@@ -1,0 +1,90 @@
+# Phase 0 — A0 unconstrained-loop degradation replication (plan.md §9, §14 M0-c).
+#
+# 10 Stratum-A passages x 10 rounds x 1 local reviser, metrics M1-M3 and M6 only.
+# Everything the run depends on is in this file, and its hash is stamped on every row.
+
+version: 1
+description: >-
+  Unconstrained revision loop (arm A0) over the Phase-0 corpus, characterising what
+  repeated "improve this" does to distinctive literary prose.
+
+corpus: configs/corpus/phase0.yaml
+
+model:
+  # Pulled 2026-08-11. Chosen over the 12-22-month-old cached tags so that a null result
+  # would be a fact about revision loops rather than about model weakness (plan.md §14).
+  # Google-family, which leaves Meta / Microsoft / OpenAI-open-weight / DeepSeek free for
+  # the cross-family judge panels §11 requires in Phase 2.
+  tag: "gemma3:4b"
+  # Recorded, and checked at run time. A tag is a mutable pointer: a later `ollama pull`
+  # can move gemma3:4b to different weights, and the digest is what makes a row traceable.
+  # A mismatch is a hard error, not a warning.
+  expected_digest: a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a
+  # Ollama unloads an idle model after 5 minutes by default, and the first generation
+  # after a reload is the one that does not reproduce (docs/findings-phase0.md §5.1).
+  # Holding the model resident for the whole sweep removes that hazard entirely.
+  keep_alive: 60m
+
+generation:
+  # Sampled, not greedy, and the reason is measurement rather than taste.
+  #
+  # Under greedy decoding this loop reaches a fixed point at round 3 (measured: woolf-01
+  # went 901 -> 289 -> 284 -> 284 words and then stopped changing). That is reproducible
+  # and it is also nearly content-free: seven of ten rounds do nothing, M6 thrash is zero
+  # by construction, and the attractor dynamics plan.md §4 is about never get to run. A
+  # deployed revision loop would not use greedy decoding either.
+  #
+  # Reproducibility does not have to be given up for this. Measured on this machine: with
+  # a pinned seed, four consecutive warm calls at temperature 0.8 were byte-identical.
+  # What breaks reproducibility here is a cold model, not the sampler -- see
+  # docs/findings-phase0.md §5.1, and note that an earlier version of this comment claimed
+  # top_k: 1 was the fix, which was wrong.
+  seed: 0
+  temperature: 0.8
+  top_k: 40
+  top_p: 0.95
+  # A ~900-word passage is ~1300 tokens; prompt plus a same-length revision is ~3000.
+  # 8192 leaves room for a reviser that expands, and the client fails loudly rather than
+  # letting Ollama silently drop the tail of a passage.
+  num_ctx: 8192
+  # Generous but finite. Unbounded generation would let one runaway round stall the sweep;
+  # a round that hits this cap is flagged via done_reason rather than scored as if the
+  # model chose to stop there.
+  num_predict: 3072
+  repeat_penalty: 1.0
+
+loop:
+  arm: A0
+  rounds: 10
+  # Flags a round whose word count leaves this band relative to round 0. It does NOT stop
+  # the loop -- A0 is the unconstrained control and intervening would make it a different
+  # arm. The flag lets analysis separate "the loop flattened the voice" from "the loop
+  # shortened the text", which a single probe round showed is a real risk here: gemma3:4b
+  # cut a 901-word Woolf passage to 389 words under the neutral prompt.
+  length_guard: [0.7, 1.4]
+  # Below this the trajectory stops. Revising a stub for the remaining rounds costs GPU
+  # time and produces only MetricErrors; the collapse is itself the result.
+  min_words_to_continue: 120
+
+# Two prompts, run as separate arms of the same loop.
+#
+# `neutral` is the literal reading of plan.md §8 A0: "revise to improve", nothing else.
+# `length_preserving` adds one clause, targeting the confound and nothing else -- it does
+# not tell the model to preserve voice, events, or style, because those would turn A0 into
+# a scoped arm (A2) and there would be no control left.
+#
+# Running both is the measurement: the difference between them is how much of A0's
+# apparent degradation is compression rather than revision. Neither is "the" A0 -- that is
+# the point, and the write-up must report both.
+prompts:
+  - name: neutral
+    template: |
+      Revise the following passage to improve it. Return only the revised passage, with no commentary.
+
+      {passage}
+
+  - name: length_preserving
+    template: |
+      Revise the following passage to improve it. Keep the revision close to the original length of {word_count} words; this is a revision, not a summary. Return only the revised passage, with no commentary.
+
+      {passage}

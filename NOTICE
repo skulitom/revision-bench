@@ -1,0 +1,43 @@
+revision-bench
+Copyright 2026 The revision-bench contributors
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+
+--------------------------------------------------------------------------------
+Third-party material bundled in this repository
+--------------------------------------------------------------------------------
+
+data/corpus/passages/*.json
+
+    Extracted passages from books distributed by Project Gutenberg
+    (https://www.gutenberg.org). The underlying works are in the public domain in
+    the United States. Each passage file records its source ebook id, source URL,
+    the SHA-256 of the exact book file it was cut from, and the rights statement
+    Project Gutenberg published with that file.
+
+    Project Gutenberg's own trademark licence applies to files that carry the
+    Project Gutenberg header. The extraction step strips that header and footer,
+    which -- per Project Gutenberg's terms -- means the resulting text may be used
+    freely as a public-domain work, without the Project Gutenberg trademark and
+    without the associated licence terms. We keep the provenance record anyway,
+    because attribution is a research requirement here regardless of what the
+    licence compels.
+
+    Works whose United States public-domain status is not clear are out of scope
+    for this corpus; see docs/corpus-rights.md.
+
+data/slop_lexicon.yaml
+
+    Terms and constructions are attributed per entry group in the file itself.
+    Groups marked `source: curated:project` are this project's own additions and
+    carry no external authority -- they are hypotheses, and plan.md §12 governs
+    how they must be treated.

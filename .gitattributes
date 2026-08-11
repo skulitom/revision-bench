@@ -1,0 +1,13 @@
+# Line endings are a measurement hazard here, not a style preference.
+#
+# Sentence splitting, punctuation profiles and the thrash detector's sentence
+# alignment all run over stored corpus text. If git rewrote CRLF <-> LF on checkout,
+# the same passage would hash differently and could tokenise differently on Windows
+# than on Linux CI, so a metric could move without anyone editing anything.
+#
+# Corpus and result artifacts are therefore byte-frozen; source and docs normalise.
+* text=auto eol=lf
+
+data/corpus/** -text
+results/** -text
+*.jsonl -text

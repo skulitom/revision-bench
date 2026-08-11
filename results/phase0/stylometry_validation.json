@@ -1,0 +1,220 @@
+{
+  "inputs": {
+    "n_authors": 3,
+    "n_function_words": [
+      20,
+      50,
+      100,
+      150
+    ],
+    "n_passages": 10,
+    "permutations": 2000,
+    "seed": 0
+  },
+  "pairs": {
+    "different_author": 33,
+    "same_author": 12
+  },
+  "rows": [
+    {
+      "auc": 0.7146464646464646,
+      "family": "fw",
+      "mean_diff_author": 1.1991215700736673,
+      "mean_same_author": 1.0166563791151215,
+      "n_features": 40,
+      "n_features_in_family": 20,
+      "n_function_words": 20,
+      "permutation_p": 0.00849575212393803
+    },
+    {
+      "auc": 0.8838383838383839,
+      "family": "punct",
+      "mean_diff_author": 1.19218686948266,
+      "mean_same_author": 0.7127726964814053,
+      "n_features": 40,
+      "n_features_in_family": 13,
+      "n_function_words": 20,
+      "permutation_p": 0.0009995002498750624
+    },
+    {
+      "auc": 0.5606060606060606,
+      "family": "sent",
+      "mean_diff_author": 1.1971810553042008,
+      "mean_same_author": 1.0045119090863077,
+      "n_features": 40,
+      "n_features_in_family": 6,
+      "n_function_words": 20,
+      "permutation_p": 0.22288855572213892
+    },
+    {
+      "auc": 0.8585858585858586,
+      "family": "all",
+      "mean_diff_author": 1.1985266459136972,
+      "mean_same_author": 0.9129160234306851,
+      "n_features": 40,
+      "n_features_in_family": 40,
+      "n_function_words": 20,
+      "permutation_p": 0.0009995002498750624
+    },
+    {
+      "auc": 0.7752525252525253,
+      "family": "balanced",
+      "mean_diff_author": 1.2164020737088213,
+      "mean_same_author": 0.906084457707924,
+      "n_features": 40,
+      "n_features_in_family": 40,
+      "n_function_words": 20,
+      "permutation_p": 0.004497751124437781
+    },
+    {
+      "auc": 0.7676767676767676,
+      "family": "fw",
+      "mean_diff_author": 1.1859067711858708,
+      "mean_same_author": 1.0206367970003363,
+      "n_features": 70,
+      "n_features_in_family": 50,
+      "n_function_words": 50,
+      "permutation_p": 0.0029985007496251873
+    },
+    {
+      "auc": 0.8838383838383839,
+      "family": "punct",
+      "mean_diff_author": 1.19218686948266,
+      "mean_same_author": 0.7127726964814053,
+      "n_features": 70,
+      "n_features_in_family": 13,
+      "n_function_words": 50,
+      "permutation_p": 0.0009995002498750624
+    },
+    {
+      "auc": 0.5606060606060606,
+      "family": "sent",
+      "mean_diff_author": 1.1971810553042008,
+      "mean_same_author": 1.0045119090863077,
+      "n_features": 70,
+      "n_features_in_family": 6,
+      "n_function_words": 50,
+      "permutation_p": 0.22288855572213892
+    },
+    {
+      "auc": 0.8484848484848485,
+      "family": "all",
+      "mean_diff_author": 1.1893424713481155,
+      "mean_same_author": 0.9602193314991685,
+      "n_features": 70,
+      "n_features_in_family": 70,
+      "n_function_words": 50,
+      "permutation_p": 0.0009995002498750624
+    },
+    {
+      "auc": 0.7651515151515151,
+      "family": "balanced",
+      "mean_diff_author": 1.213098373986872,
+      "mean_same_author": 0.9070795621792277,
+      "n_features": 70,
+      "n_features_in_family": 70,
+      "n_function_words": 50,
+      "permutation_p": 0.0034982508745627187
+    },
+    {
+      "auc": 0.797979797979798,
+      "family": "fw",
+      "mean_diff_author": 1.1532287545022537,
+      "mean_same_author": 0.9986749392854654,
+      "n_features": 120,
+      "n_features_in_family": 100,
+      "n_function_words": 100,
+      "permutation_p": 0.004497751124437781
+    },
+    {
+      "auc": 0.8838383838383839,
+      "family": "punct",
+      "mean_diff_author": 1.19218686948266,
+      "mean_same_author": 0.7127726964814053,
+      "n_features": 120,
+      "n_features_in_family": 13,
+      "n_function_words": 100,
+      "permutation_p": 0.0009995002498750624
+    },
+    {
+      "auc": 0.5606060606060606,
+      "family": "sent",
+      "mean_diff_author": 1.1971810553042008,
+      "mean_same_author": 1.0045119090863077,
+      "n_features": 120,
+      "n_features_in_family": 6,
+      "n_function_words": 100,
+      "permutation_p": 0.22288855572213892
+    },
+    {
+      "auc": 0.8383838383838383,
+      "family": "all",
+      "mean_diff_author": 1.160679249044166,
+      "mean_same_author": 0.9670917273622628,
+      "n_features": 120,
+      "n_features_in_family": 120,
+      "n_function_words": 100,
+      "permutation_p": 0.0009995002498750624
+    },
+    {
+      "auc": 0.76010101010101,
+      "family": "balanced",
+      "mean_diff_author": 1.2049288698159677,
+      "mean_same_author": 0.90158909775051,
+      "n_features": 120,
+      "n_features_in_family": 120,
+      "n_function_words": 100,
+      "permutation_p": 0.00399800099950025
+    },
+    {
+      "auc": 0.8156565656565656,
+      "family": "fw",
+      "mean_diff_author": 1.1015376307519358,
+      "mean_same_author": 0.9875970623265172,
+      "n_features": 170,
+      "n_features_in_family": 150,
+      "n_function_words": 150,
+      "permutation_p": 0.0034982508745627187
+    },
+    {
+      "auc": 0.8838383838383839,
+      "family": "punct",
+      "mean_diff_author": 1.19218686948266,
+      "mean_same_author": 0.7127726964814053,
+      "n_features": 170,
+      "n_features_in_family": 13,
+      "n_function_words": 150,
+      "permutation_p": 0.0009995002498750624
+    },
+    {
+      "auc": 0.5606060606060606,
+      "family": "sent",
+      "mean_diff_author": 1.1971810553042008,
+      "mean_same_author": 1.0045119090863077,
+      "n_features": 170,
+      "n_features_in_family": 6,
+      "n_function_words": 150,
+      "permutation_p": 0.22288855572213892
+    },
+    {
+      "auc": 0.8611111111111112,
+      "family": "all",
+      "mean_diff_author": 1.112878112046264,
+      "mean_same_author": 0.9666063100229562,
+      "n_features": 170,
+      "n_features_in_family": 170,
+      "n_function_words": 150,
+      "permutation_p": 0.0009995002498750624
+    },
+    {
+      "auc": 0.7651515151515151,
+      "family": "balanced",
+      "mean_diff_author": 1.1920060888783883,
+      "mean_same_author": 0.8988196285107729,
+      "n_features": 170,
+      "n_features_in_family": 170,
+      "n_function_words": 150,
+      "permutation_p": 0.004497751124437781
+    }
+  ]
+}

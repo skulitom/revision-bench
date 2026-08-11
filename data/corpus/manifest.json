@@ -1,0 +1,125 @@
+{
+  "config_hash": "ba30247996f23793",
+  "corpus_config": "configs/corpus/phase0.yaml",
+  "extractor_version": 1,
+  "passages": [
+    {
+      "author_id": "woolf",
+      "fame": "famous",
+      "passage_id": "woolf-01",
+      "stratum": "A",
+      "text_sha256": "4d4e30208b0ad89bbfd710b21418f37c7812603e0557abec65c9cc30d2af8ad3",
+      "word_count": 901
+    },
+    {
+      "author_id": "woolf",
+      "fame": "famous",
+      "passage_id": "woolf-02",
+      "stratum": "A",
+      "text_sha256": "9728dcb035aa9f6de89d871f585c7a23af8cccb8dfc8e4988ba93cf60c6f23f0",
+      "word_count": 966
+    },
+    {
+      "author_id": "woolf",
+      "fame": "famous",
+      "passage_id": "woolf-03",
+      "stratum": "A",
+      "text_sha256": "d888ab20085a71e1765d1501500fbd977fab3d97c96a1c369d37f2e556886534",
+      "word_count": 908
+    },
+    {
+      "author_id": "woolf",
+      "fame": "famous",
+      "passage_id": "woolf-04",
+      "stratum": "A",
+      "text_sha256": "3e037ee752664923e85e99ac6a0057ceaef82d6ed33a6952604d65029605f2ac",
+      "word_count": 950
+    },
+    {
+      "author_id": "hemingway",
+      "fame": "famous",
+      "passage_id": "hemingway-01",
+      "stratum": "A",
+      "text_sha256": "be03e185590a1ea4e02f30146cbe7d5a5e6436be1d1898edbd268ecc471c5fd6",
+      "word_count": 916
+    },
+    {
+      "author_id": "hemingway",
+      "fame": "famous",
+      "passage_id": "hemingway-02",
+      "stratum": "A",
+      "text_sha256": "969f9a94ca91e329bef34b30c5ab157eef95b3d2b57bf925d1b42340c9a135e2",
+      "word_count": 938
+    },
+    {
+      "author_id": "hemingway",
+      "fame": "famous",
+      "passage_id": "hemingway-03",
+      "stratum": "A",
+      "text_sha256": "198bc325101942816535ed9630da288651165db066bfc4e1f054339df97862f1",
+      "word_count": 909
+    },
+    {
+      "author_id": "richardson",
+      "fame": "obscure",
+      "passage_id": "richardson-01",
+      "stratum": "A",
+      "text_sha256": "a2a865ecb369c4956c20fc20a70d02f0fc728dbbc18c197e0387c72be849f034",
+      "word_count": 908
+    },
+    {
+      "author_id": "richardson",
+      "fame": "obscure",
+      "passage_id": "richardson-02",
+      "stratum": "A",
+      "text_sha256": "a9a096117a56be9bc31bd3b1aa7d526c84546c6bd2b38c254cf521d64f06704e",
+      "word_count": 1020
+    },
+    {
+      "author_id": "richardson",
+      "fame": "obscure",
+      "passage_id": "richardson-03",
+      "stratum": "A",
+      "text_sha256": "4f2a5726819d318eed642ec910ff2f2cffb1f73ad5289006594d4b17f8f2a5bc",
+      "word_count": 913
+    }
+  ],
+  "sources": {
+    "hemingway-sun": {
+      "author": "Ernest Hemingway",
+      "byte_length": 413336,
+      "ebook_id": 67138,
+      "language": "English",
+      "original_publication": "United States: Charles Scribner's Sons, 1926",
+      "release_date": "January 10, 2022 [eBook #67138]",
+      "rights_statement": "This eBook is for the use of anyone anywhere in the United States and most other parts of the world at no cost and with almost no restrictions whatsoever. You may copy it, give it away or re-use it under the terms of the Project Gutenberg License included with this eBook or online at www.gutenberg.org. If you are not located in the United States, you will have to check the laws of the country where you are located before using this eBook.",
+      "sha256": "4b9699c31be25f62d644468926d716165402d2d363ca4af64312839f6e63534e",
+      "title": "The Sun Also Rises",
+      "url": "https://www.gutenberg.org/cache/epub/67138/pg67138.txt"
+    },
+    "richardson-pointed": {
+      "author": "Dorothy M. Richardson",
+      "byte_length": 365320,
+      "ebook_id": 3019,
+      "language": "English",
+      "original_publication": null,
+      "release_date": "January 1, 2002 [eBook #3019]",
+      "rights_statement": "This eBook is for the use of anyone anywhere in the United States and most other parts of the world at no cost and with almost no restrictions whatsoever. You may copy it, give it away or re-use it under the terms of the Project Gutenberg License included with this eBook or online at www.gutenberg.org. If you are not located in the United States, you will have to check the laws of the country where you are located before using this eBook.",
+      "sha256": "f22a8397060a00909dd8efb5fcbf720833aeb941957067db9f2e851f7da1f4eb",
+      "title": "Pointed roofs",
+      "url": "https://www.gutenberg.org/cache/epub/3019/pg3019.txt"
+    },
+    "woolf-dalloway": {
+      "author": "Virginia Woolf",
+      "byte_length": 390401,
+      "ebook_id": 71865,
+      "language": "English",
+      "original_publication": "New York: Harcourt, Brace & World, Inc., 1925",
+      "release_date": "October 13, 2023 [eBook #71865]",
+      "rights_statement": "This eBook is for the use of anyone anywhere in the United States and most other parts of the world at no cost and with almost no restrictions whatsoever. You may copy it, give it away or re-use it under the terms of the Project Gutenberg License included with this eBook or online at www.gutenberg.org. If you are not located in the United States, you will have to check the laws of the country where you are located before using this eBook.",
+      "sha256": "949709f2afc38690e88703238b24d3f521d627ebacccf8ac82f972a82d4a622b",
+      "title": "Mrs. Dalloway",
+      "url": "https://www.gutenberg.org/cache/epub/71865/pg71865.txt"
+    }
+  }
+}

@@ -1,0 +1,72 @@
+# CPU-only, offline CI: lint, format check, unit suite, and an offline corpus rebuild.
+#
+# This workflow must never need a GPU, a model, an API key, or the network. The corpus
+# passages are committed, so the metric tests run against real prose without fetching
+# anything; `--offline` on the rebuild proves the corpus can be regenerated from the
+# committed artifacts alone.
+#
+# A green run here says "the code is consistent", not "the benchmark reproduces". That
+# second claim only comes from a local run against real models.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      UV_PYTHON_DOWNLOADS: automatic
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      # --locked fails if uv.lock is stale relative to pyproject.toml, which is the
+      # cheapest possible guard on the reproducibility promise.
+      - name: Sync environment
+        run: uv sync --locked
+
+      - name: Lint
+        run: uv run ruff check
+
+      - name: Format check
+        run: uv run ruff format --check
+
+      - name: Tests
+        run: uv run pytest -q
+
+      # Validates the corpus config and prints the plan. It does NOT prove the corpus
+      # regenerates: the raw Gutenberg files are gitignored, so a real rebuild cannot run
+      # on a fresh checkout without the network, and this workflow does not get the
+      # network. The corpus-vs-config consistency checks that CI *can* make -- every
+      # passage's text matching its recorded digest, the manifest matching the passage
+      # files, the config declaring exactly the passages that exist -- live in
+      # tests/test_corpus.py::TestCommittedCorpus and ran in the step above.
+      #
+      # The byte-for-byte rebuild check is a local one, and it is worth running before
+      # touching revisionbench/corpus.py or revisionbench/text.py:
+      #
+      #     uv run python scripts/fetch_corpus.py --config configs/corpus/phase0.yaml --offline
+      #     git diff --exit-code -- data/corpus
+      - name: Corpus config validates
+        run: uv run python scripts/fetch_corpus.py --config configs/corpus/phase0.yaml --dry-run
+
+      - name: Stylometry validation runs
+        run: uv run python scripts/validate_stylometry.py --permutations 200

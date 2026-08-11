@@ -1,0 +1,33 @@
+# Phase 0, reviser-capability check: is the compression a small-model artifact?
+#
+# Everything is inherited from phase0.yaml except the model, so the comparison is clean:
+# same corpus, same prompts (byte-identical, hence the same prompt sha256 on every row),
+# same sampling settings, same guards.
+#
+# THE QUESTION
+#
+# gemma3:4b cut a 933-word mean passage to 0.53x under the neutral prompt, and that
+# compression accounted for most of the apparent voice degradation (docs/findings-phase0.md
+# §6.1). If it is a property of small models, Phase 1's design gets simpler and the
+# length-preserving prompt matters less. If a much larger model from a different family
+# does the same thing, the confound is structural and every later phase has to control for
+# it.
+#
+# WHY phi4
+#
+# 14.7B against 4.3B is a 3.4x capability step, and Microsoft-family against Google-family
+# means a positive result cannot be explained by a shared lineage. It is also already on
+# disk, so the check costs nothing but GPU time.
+#
+# The obvious choice was gpt-oss:20b, and it is unusable here: the locally cached copy
+# fails to load on Ollama 0.32.8 with `tensor "blk.0.ffn_down_exps.weight" size overflow`.
+# That is worth noting against plan.md §12.5, which this project retired on the grounds
+# that local weights cannot drift. The weights did not drift -- the runtime's ability to
+# load them did. Provenance records `ollama_version` for exactly this reason.
+
+extends: phase0.yaml
+
+model:
+  tag: "phi4:latest"
+  expected_digest: ac896e5b8b34a1f4efa7b14d7520725140d5512484457fab45d2a4ea14c69dba
+  keep_alive: 60m

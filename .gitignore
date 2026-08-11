@@ -1,0 +1,43 @@
+# --- secrets -----------------------------------------------------------
+.env
+*.token
+
+# --- corpus caches -----------------------------------------------------
+# Raw Project Gutenberg book files are ~0.5-2 MB each and are fully reproducible
+# from `configs/corpus/*.yaml` (which pins the ebook id and the expected SHA-256).
+# The *extracted passages* under data/corpus/passages/ are committed on purpose:
+# they are the actual experimental input, they are small, they are public domain,
+# and committing them is what makes the metrics runnable offline.
+data/corpus/raw/
+
+# --- run outputs -------------------------------------------------------
+# Result JSONL and figures are committed per phase (plan.md §13), so `results/` is
+# deliberately NOT ignored. These are the things inside it that should never land.
+#
+# results/provenance/ holds the volatile half of a run's identity -- wall-clock time,
+# hostname, absolute paths. It is deliberately separated from the artifacts it describes
+# so that those artifacts stay byte-reproducible and a rebuild can be diffed.
+results/provenance/
+results/**/*.part.jsonl
+*.log
+run.log
+
+# --- python ------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# --- editors / os ------------------------------------------------------
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store

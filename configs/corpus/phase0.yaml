@@ -1,0 +1,131 @@
+# Phase-0 corpus: 10 Stratum-A passages, 3 authors (plan.md §9 Phase 0, §14 M0-a).
+#
+# Author selection is doing three jobs at once, and each is deliberate:
+#
+#   1. Maximal stylistic contrast between the two famous authors. Woolf and Hemingway are
+#      the extremes plan.md §5 names -- fluid/subordinated/dash-heavy against
+#      terse/coordinated/declarative. If a revision loop pulls text toward a single house
+#      style (plan.md §4, H1), these two are where it should be most visible.
+#
+#   2. A contamination control (plan.md §5, §12.6). Dorothy Richardson wrote in the same
+#      period and in the same stream-of-consciousness mode as Woolf -- Pilgrimage predates
+#      Mrs. Dalloway by a decade -- but is far less read: at the time of writing, Project
+#      Gutenberg reports 658 downloads for Pointed Roofs against 30,616 for Mrs. Dalloway,
+#      a ~46x gap. So Woolf/Richardson is a near-matched pair on style and era that differs
+#      chiefly in how much of it a model is likely to have memorised. If the famous and
+#      obscure passages behave the same under revision, memorisation is not driving the
+#      result; if they diverge, §5's memorisation probe has something to explain.
+#
+#   3. Richardson doubles as a second "fluid" voice, so Woolf-vs-Richardson (similar) and
+#      Woolf-vs-Hemingway (extreme) give two different starting distances for M2's
+#      homogenization curve to close.
+#
+# All three works are in the public domain in the United States.
+#
+# The expected_sha256 values are pinned against the exact files fetched on 2026-08-11.
+# A mismatch is a hard error, not a warning: Project Gutenberg re-issues files (the
+# Mrs. Dalloway file records "Most recently updated: August 4, 2026"), and a re-issue can
+# move or re-typeset the text an anchor points at. Re-verify the passages before repinning.
+
+version: 1
+description: >-
+  Phase-0 Stratum-A corpus: 10 passages of ~900 words from three authors, two famous and
+  one obscure, for the unconstrained-loop degradation replication.
+
+extraction:
+  # plan.md §5: passages are 500-1500 words. The targets below sit mid-range: long enough
+  # for stylometry to have signal (plan.md §12.2 flags this as untested), short enough
+  # that a 10-round loop on a local model stays cheap in wall-clock.
+  min_words: 500
+  max_words: 1500
+  complete_paragraph_slack_frac: 0.2
+
+sources:
+  - key: woolf-dalloway
+    ebook_id: 71865
+    author_id: woolf
+    author_display: Virginia Woolf
+    fame: famous
+    title_hint: Mrs. Dalloway
+    expected_sha256: 949709f2afc38690e88703238b24d3f521d627ebacccf8ac82f972a82d4a622b
+
+  - key: hemingway-sun
+    ebook_id: 67138
+    author_id: hemingway
+    author_display: Ernest Hemingway
+    fame: famous
+    title_hint: The Sun Also Rises
+    expected_sha256: 4b9699c31be25f62d644468926d716165402d2d363ca4af64312839f6e63534e
+
+  - key: richardson-pointed
+    ebook_id: 3019
+    author_id: richardson
+    author_display: Dorothy M. Richardson
+    fame: obscure
+    title_hint: "Pointed Roofs (Pilgrimage, Volume 1)"
+    expected_sha256: f22a8397060a00909dd8efb5fcbf720833aeb941957067db9f2e851f7da1f4eb
+
+# Anchors are the shortest prefix of the target paragraph that occurs exactly once in the
+# book body, derived mechanically rather than typed by hand -- a non-unique anchor would
+# make the cut ambiguous, and extract_passage rejects it. They are matched literally
+# against un-normalised source text, so the "--" and curly quotes below are significant.
+passages:
+  - id: woolf-01
+    source: woolf-dalloway
+    anchor: "What a lark! What a plunge! For so it ha"
+    target_words: 900
+    note: The novel's opening movement; Clarissa on the morning of the party.
+
+  - id: woolf-02
+    source: woolf-dalloway
+    anchor: "Laying her brooch on the table, she had a"
+    target_words: 900
+    note: Interior monologue, mortality; long subordinated periods.
+
+  - id: woolf-03
+    source: woolf-dalloway
+    anchor: "Oddly enough, she was one of the most th"
+    target_words: 900
+    note: Peter Walsh's retrospective assessment of Clarissa.
+
+  - id: woolf-04
+    source: woolf-dalloway
+    anchor: "And they went further and further from h"
+    target_words: 900
+    note: Free indirect style across a scene transition.
+
+  - id: hemingway-01
+    source: hemingway-sun
+    anchor: "We left the floor and I took my coat off"
+    target_words: 900
+    note: Dialogue-heavy bar scene; short declaratives and coordination.
+
+  - id: hemingway-02
+    source: hemingway-sun
+    anchor: "We had coffee at the Iruña, sitting in c"
+    target_words: 900
+    note: Pamplona; descriptive narration with minimal subordination.
+
+  - id: hemingway-03
+    source: hemingway-sun
+    anchor: "Montoya knocked on the door and opened i"
+    target_words: 900
+    note: Room interior, flat affect, concrete nouns.
+
+  - id: richardson-01
+    source: richardson-pointed
+    anchor: "In the outcries and laughter which follo"
+    target_words: 900
+    note: Miriam at the school table; perception-led narration.
+
+  - id: richardson-02
+    source: richardson-pointed
+    anchor: "There was time for Miriam to read the fi"
+    target_words: 900
+    note: The hymn scene; long associative interior sequence.
+
+  - id: richardson-03
+    source: richardson-pointed
+    anchor: "Startled into observation Miriam saw the"
+    target_words: 900
+    note: Mealtime observation; fragmentary sensory detail.

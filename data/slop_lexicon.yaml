@@ -1,0 +1,142 @@
+# LLM-tell lexicon for the M3 slop index (plan.md §7).
+#
+# HOW TO READ THIS FILE
+#
+# Each group carries a `source`. That field is the whole point of the file: a slop
+# lexicon assembled from folklore and then reported as a rate per 1000 words looks
+# exactly as authoritative as one assembled from measurement, and only one of them is.
+# Groups are therefore either cited to a specific publication, or marked
+# `curated:project` and treated as hypotheses under plan.md §12 — unvalidated until this
+# project measures them.
+#
+# WHAT THE INDEX IS FOR
+#
+# The number that matters is the *slope across rounds*, not the absolute rate. Literary
+# prose legitimately contains "sense of" and "weight of"; Woolf uses "profound" without
+# any help from a language model. A passage's round-0 rate is its own baseline, and M3's
+# claim is about how that rate moves as an unconstrained loop runs. Report per-term
+# counts alongside the total (revisionbench.metrics.slop does) so that a rise can be
+# attributed to specific terms rather than asserted in aggregate.
+#
+# MATCHING
+#
+# Terms are matched over the tokenised, case-folded word stream, so punctuation and
+# typography do not matter and "Delve" matches "delve". Multi-word terms match
+# consecutive tokens. A `*` matches exactly one token, and is used sparingly. Matching is
+# leftmost-longest and non-overlapping: at a given position the longest term wins and its
+# tokens are consumed, so listing both "sense of unease" and "sense of" counts one hit,
+# not two.
+
+version: 1
+
+groups:
+  - name: chakrabarty2024_fiction_phrases
+    source: >-
+      Chakrabarty, Laban & Wu, "Can AI writing be salvaged? Mitigating Idiosyncrasies and
+      Improving Human-AI Alignment in the Writing Process through Edits", CHI 2025.
+      https://arxiv.org/abs/2409.14509 — phrases the paper reports as frequent in LLM
+      continuations across three models while occurring rarely or not at all in the human
+      seed paragraphs.
+    note: >-
+      The strongest external evidence available for this metric, and specific to *fiction*
+      rather than to expository AI-assistant prose, which is what makes it the right
+      anchor for a literary-prose corpus.
+    terms:
+      - unspoken
+      - "air was thick"
+      - "hung in the air"
+      - "eyes darting"
+      - "sense of unease"
+      - "pit of * stomach"
+      - "weight of"
+      - "sense of"
+      - "mix of"
+
+  - name: curated_project_fiction_cliche
+    source: curated:project
+    note: >-
+      UNVALIDATED. Fiction-register constructions this project expects a reviser to add,
+      listed before any data was collected so that the list cannot be tuned to the result
+      it is meant to measure. Treat every entry as a hypothesis under plan.md §12 until
+      Phase 0 reports per-term counts. Entries that never fire, or that fire equally at
+      round 0, should be removed in version 2 rather than quietly retained.
+    terms:
+      - "a testament to"
+      - "little did * know"
+      - "barely above a whisper"
+      - "breath he didn't know"
+      - "breath she didn't know"
+      - "couldn't help but"
+      - "a mixture of"
+      - "a wave of"
+      - "a pang of"
+      - "a flicker of"
+      - "a ghost of a smile"
+      - "shiver down"
+      - "heart hammered"
+      - "heart pounded"
+      - "blood ran cold"
+      - "let out a breath"
+      - "exchanged a glance"
+      - "trailed off"
+      - "voice barely"
+      - "silence stretched"
+      - "world seemed to"
+      - "time seemed to"
+      - "as if on cue"
+      - "in that moment"
+      - "for the first time in"
+      - "little more than"
+      - "something akin to"
+      - "unreadable expression"
+      - "jaw tightened"
+      - "eyes narrowed"
+
+  - name: curated_project_expository_register
+    source: curated:project
+    note: >-
+      UNVALIDATED, and included for a specific reason: the predicted failure mode is not
+      only that a reviser adds fiction clichés, but that it drags narrative prose toward
+      the essayistic assistant register it was tuned on. These terms are near-absent from
+      1920s literary fiction, so a rise in them across rounds is register drift rather
+      than ordinary word choice — a cleaner signal than the fiction list, if it fires at
+      all.
+    terms:
+      - delve
+      - delves
+      - delving
+      - tapestry
+      - underscore
+      - underscores
+      - underscoring
+      - myriad
+      - plethora
+      - pivotal
+      - crucial
+      - vibrant
+      - bustling
+      - nestled
+      - meticulous
+      - meticulously
+      - seamless
+      - seamlessly
+      - robust
+      - leverage
+      - navigating
+      - "it is important to note"
+      - "it's important to note"
+      - "it is worth noting"
+      - "in the realm of"
+      - "in today's"
+      - "a rich tapestry"
+      - "stark contrast"
+      - "sheds light on"
+      - "at the heart of"
+      - "serves as a"
+      - "plays a * role"
+      - "not only * but also"
+      - "moreover"
+      - "furthermore"
+      - "in conclusion"
+      - "overall"
+      - "ultimately"

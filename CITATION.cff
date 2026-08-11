@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite it as below."
+title: "revision-bench: measuring revision-loop dynamics in large language models"
+abstract: >-
+  Measurement infrastructure for iterative LLM revision of prose. Controlled revision
+  loops over a fixed corpus, instrumented with stylometric, lexical and blinded-preference
+  readouts, scored per round, with pinned seeds, bootstrap confidence intervals and full
+  provenance. The research question is under what acceptance architecture iterative
+  revision is non-degrading while still fixing real defects.
+type: software
+# Alias only, matching the sibling mirror-bench repo. Do not substitute a personal name
+# here: it was written that way on purpose, and an earlier draft of this file guessed one
+# from the GitHub handle.
+authors:
+  - alias: skulitom
+    website: "https://github.com/skulitom"
+license: Apache-2.0
+repository-code: "https://github.com/skulitom/revision-bench"
+keywords:
+  - large language models
+  - iterative refinement
+  - stylometry
+  - authorship attribution
+  - text degradation
+  - evaluation
+version: 0.0.0.dev0
+date-released: "2026-08-11"

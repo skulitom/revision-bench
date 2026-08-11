@@ -1,0 +1,340 @@
+# Closed-class English function words, used as the feature set for Burrows' Delta
+# (plan.md §7 M1) and as part of the composite style fingerprint the A4 voice veto
+# thresholds on (plan.md §8).
+#
+# WHY A FIXED LIST RATHER THAN "THE N MOST FREQUENT WORDS"
+#
+# Burrows' Delta is classically computed over the most-frequent-words list derived from
+# the corpus itself. Doing that here would break the measurement, not improve it. This
+# corpus is three novels, so a top-100 MFW list drawn from it contains "Miriam",
+# "Clarissa", "Brett", "Cohn" and "Peter" -- character names. Delta would then separate
+# the authors almost perfectly, and it would be measuring *cast lists*, not style.
+#
+# The failure that follows is the dangerous one. A reviser rarely renames characters, so
+# the name features stay pinned across rounds, the measured stylometric drift comes out
+# reassuringly small, and the A4 voice veto would pass edits that had sanded the prose
+# flat. The number would look right and mean nothing.
+#
+# A closed-class list cannot contain a proper noun, so it is immune to this by
+# construction. It is also the standard "writeprint" feature family, which is what
+# plan.md §7 M1 names.
+#
+# SELECTION RULE
+#
+# Determiners, pronouns, prepositions, conjunctions, auxiliary and modal verbs,
+# particles, and the small set of degree/frequency adverbs that behave as function words.
+# No content words. Contractions are listed separately and are deliberate: they tokenise
+# as single words here (see revisionbench.text), and contraction rate is one of the
+# sharper dialogue-voice signals in the Phase-0 corpus.
+#
+# Frequencies are relative to *total word tokens*, not to total function-word tokens.
+
+version: 1
+source: >-
+  Standard closed-class English inventory. Compiled for this project from ordinary
+  descriptive-grammar categories; no external list is copied, and none is authoritative,
+  so treat coverage as a project choice rather than a citation.
+
+words:
+  # articles and determiners
+  - a
+  - an
+  - the
+  - this
+  - that
+  - these
+  - those
+  - each
+  - every
+  - either
+  - neither
+  - both
+  - all
+  - any
+  # Quoted deliberately. In YAML 1.1 -- which is what PyYAML implements -- bare `no`,
+  # `yes`, `on`, `off`, `y`, `n`, `true` and `false` are BOOLEANS, not strings. Left
+  # unquoted, "no" and "on" silently leave the function-word list and are replaced by
+  # `False`/`True`, so Delta is computed over a feature set missing four of the commonest
+  # words in English and nothing reports it. revisionbench.metrics.stylometry rejects
+  # non-string entries for this reason; keep the quotes anyway.
+  - "no"
+  - none
+  - such
+  - another
+  - other
+  - others
+  - same
+  - own
+  - enough
+  - several
+  - few
+  - fewer
+  - many
+  - much
+  - more
+  - most
+  - less
+  - least
+
+  # personal, possessive, reflexive and relative pronouns
+  - i
+  - me
+  - my
+  - mine
+  - myself
+  - we
+  - us
+  - our
+  - ours
+  - ourselves
+  - you
+  - your
+  - yours
+  - yourself
+  - yourselves
+  - he
+  - him
+  - his
+  - himself
+  - she
+  - her
+  - hers
+  - herself
+  - it
+  - its
+  - itself
+  - they
+  - them
+  - their
+  - theirs
+  - themselves
+  - who
+  - whom
+  - whose
+  - which
+  - what
+  - whatever
+  - whoever
+  - whichever
+  - one
+  - ones
+  - oneself
+  - somebody
+  - someone
+  - something
+  - anybody
+  - anyone
+  - anything
+  - everybody
+  - everyone
+  - everything
+  - nobody
+  - nothing
+  - thee
+  - thou
+  - thy
+  - thine
+
+  # prepositions
+  - about
+  - above
+  - across
+  - after
+  - against
+  - along
+  - amid
+  - among
+  - around
+  - as
+  - at
+  - before
+  - behind
+  - below
+  - beneath
+  - beside
+  - besides
+  - between
+  - beyond
+  - but
+  - by
+  - concerning
+  - despite
+  - down
+  - during
+  - except
+  - for
+  - from
+  - in
+  - inside
+  - into
+  - like
+  - near
+  - of
+  - "off"   # quoted: YAML 1.1 boolean, see the note above
+  - "on"    # quoted: YAML 1.1 boolean, see the note above
+  - onto
+  - out
+  - outside
+  - over
+  - past
+  - round
+  - since
+  - through
+  - throughout
+  - till
+  - to
+  - toward
+  - towards
+  - under
+  - underneath
+  - until
+  - unto
+  - up
+  - upon
+  - with
+  - within
+  - without
+
+  # conjunctions and subordinators
+  - and
+  - or
+  - nor
+  - yet
+  - so
+  - because
+  - although
+  - though
+  - if
+  - unless
+  - whether
+  - while
+  - whilst
+  - whereas
+  - when
+  - whenever
+  - where
+  - wherever
+  - why
+  - how
+  - than
+  - lest
+  - once
+
+  # auxiliary and modal verbs
+  - am
+  - is
+  - are
+  - was
+  - were
+  - be
+  - been
+  - being
+  - have
+  - has
+  - had
+  - having
+  - do
+  - does
+  - did
+  - doing
+  - done
+  - shall
+  - should
+  - will
+  - would
+  - can
+  - could
+  - may
+  - might
+  - must
+  - ought
+  - need
+  - dare
+  - used
+  - let
+
+  # negation, degree and frequency adverbs that behave as function words
+  - not
+  - never
+  - always
+  - often
+  - sometimes
+  - seldom
+  - rarely
+  - ever
+  - again
+  - already
+  - still
+  - just
+  - only
+  - even
+  - also
+  - too
+  - very
+  - quite
+  - rather
+  - almost
+  - nearly
+  - hardly
+  - scarcely
+  - perhaps
+  - indeed
+  - however
+  - therefore
+  - thus
+  - then
+  - there
+  - here
+  - now
+  - soon
+  - well
+  - back
+  - away
+  - "yes"   # quoted: YAML 1.1 boolean, see the note above
+
+  # contractions -- see the note above on why these are their own group
+  - "don't"
+  - "doesn't"
+  - "didn't"
+  - "isn't"
+  - "wasn't"
+  - "aren't"
+  - "weren't"
+  - "hasn't"
+  - "haven't"
+  - "hadn't"
+  - "can't"
+  - "couldn't"
+  - "won't"
+  - "wouldn't"
+  - "shouldn't"
+  - "mustn't"
+  - "shan't"
+  - "it's"
+  - "that's"
+  - "there's"
+  - "here's"
+  - "what's"
+  - "who's"
+  - "he's"
+  - "she's"
+  - "i'm"
+  - "you're"
+  - "we're"
+  - "they're"
+  - "i've"
+  - "you've"
+  - "we've"
+  - "they've"
+  - "i'll"
+  - "you'll"
+  - "he'll"
+  - "she'll"
+  - "we'll"
+  - "they'll"
+  - "i'd"
+  - "you'd"
+  - "he'd"
+  - "she'd"
+  - "we'd"
+  - "they'd"
