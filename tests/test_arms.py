@@ -66,7 +66,7 @@ def ctx(outputs, template="Revise:\n{passage}"):
 
 class TestRegistry:
     def test_known_names(self) -> None:
-        assert set(ARMS) == {"whole", "paragraph", "editlist", "indexed"}
+        assert set(ARMS) == {"whole", "paragraph", "editlist", "indexed", "indexed_fb"}
         assert isinstance(build_strategy("whole"), WholePassage)
 
     def test_unknown_name_is_fatal(self) -> None:
@@ -363,6 +363,109 @@ class TestIndexedEditList:
         result = self.arm().revise(context, PASSAGE)
         assert result.text == PASSAGE
         assert any("did not parse" in p for p in result.problems)
+
+
+class TestFeedbackIndexedEditList:
+    """A2f: constraint-visible protocol + punctuation veto + one per-edit feedback retry."""
+
+    def payload(self, edits):
+        return json.dumps({"edits": [{"sentence_index": i, "replacement": r} for i, r in edits]})
+
+    def arm(self, **kwargs):
+        from revisionbench.arms import FeedbackIndexedEditList
+
+        return FeedbackIndexedEditList(**kwargs)
+
+    def test_protocol_states_the_enforced_band(self) -> None:
+        """The rule text is generated from the enforcing attributes, so the stated protocol
+        and the applied veto cannot drift apart — asserted, not assumed."""
+        context, client = ctx([self.payload([])])
+        arm = self.arm()
+        arm.revise(context, PASSAGE)
+        low, high = arm.length_band
+        assert f"{low}x" in client.prompts[0] and f"{high}x" in client.prompts[0]
+        assert "punctuation" in client.prompts[0]
+
+    def test_punctuation_veto_rejects_a_restyling_edit(self) -> None:
+        """Targets the one attractor effect Phase 0 found surviving length control."""
+        context, _ = ctx(
+            [
+                self.payload(
+                    [(0, "The wind, in short gusts, came off the water, and gulls went over.")]
+                ),
+                self.payload([]),  # the veto triggers a feedback pass; the model declines
+            ]
+        )
+        result = self.arm(vetoes=("punctuation",)).revise(context, PASSAGE)
+        assert result.applied == 0
+        assert any("punctuation shift" in p for p in result.problems)
+        assert any("1 vetoed, 0 recovered" in p for p in result.problems)
+
+    def test_punctuation_veto_allows_an_incremental_change(self) -> None:
+        context, _ = ctx(
+            [
+                self.payload(
+                    [(0, "The wind came off the water in short gusts, and the gulls went over.")]
+                )
+            ]
+        )
+        result = self.arm(vetoes=("punctuation",)).revise(context, PASSAGE)
+        assert result.applied == 1
+        assert not any("feedback" in p for p in result.problems), "nothing was vetoed"
+
+    def test_vetoed_edit_is_recovered_by_feedback(self) -> None:
+        """The retry differs in kind from the dead round-level re-roll: the prompt changes —
+        it now carries the constraint and the measured violation."""
+        context, client = ctx(
+            [
+                self.payload([(0, "Wind.")]),  # collapses: length-vetoed
+                self.payload([(0, "The wind blew off the water in gusts and gulls called.")]),
+            ]
+        )
+        result = self.arm(vetoes=("length",)).revise(context, PASSAGE)
+        assert result.applied == 1
+        assert "The wind blew off the water" in result.text
+        assert len(client.prompts) == 2
+        assert "rejected: length" in client.prompts[1]
+        assert PARA_A in client.prompts[1], "the feedback prompt shows the original sentence"
+        assert any("1 vetoed, 1 recovered" in p for p in result.problems)
+
+    def test_no_feedback_call_when_nothing_was_vetoed(self) -> None:
+        """FakeClient raises if a second output is requested, so this also asserts cost."""
+        context, client = ctx(
+            [self.payload([(0, "The wind blew off the water in gusts and gulls called.")])]
+        )
+        result = self.arm().revise(context, PASSAGE)
+        assert result.applied == 1
+        assert len(client.prompts) == 1
+
+    def test_feedback_cannot_smuggle_in_an_unvetoed_sentence(self) -> None:
+        context, _ = ctx(
+            [
+                self.payload([(0, "Wind.")]),  # only sentence 0 is vetoed
+                self.payload([(1, "A brand new second sentence smuggled in by the retry.")]),
+            ]
+        )
+        result = self.arm(vetoes=("length",)).revise(context, PASSAGE)
+        assert result.applied == 0
+        assert PARA_B in result.text
+        assert any("unsolicited index 1" in p for p in result.problems)
+
+    def test_still_violating_retry_is_rejected_and_not_retried_again(self) -> None:
+        context, client = ctx(
+            [
+                self.payload([(0, "Wind.")]),
+                self.payload([(0, "Gusts.")]),  # still collapses
+            ]
+        )
+        result = self.arm(vetoes=("length",)).revise(context, PASSAGE)
+        assert result.applied == 0
+        assert len(client.prompts) == 2, "one retry, never a second"
+        assert any("1 vetoed, 0 recovered" in p for p in result.problems)
+
+    def test_unknown_veto_lists_the_extended_set(self) -> None:
+        with pytest.raises(ValueError, match="punctuation"):
+            self.arm(vetoes=("vibes",))
 
 
 class TestProposalTelemetry:

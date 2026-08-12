@@ -1,0 +1,21 @@
+# Arm A2f: A2i with the constraints made visible in the protocol, a punctuation veto, and
+# one per-edit feedback retry (a vetoed edit is re-requested once, with the veto reason
+# stated).
+#
+# Rationale, from measured results:
+# - A2i's rejections were the intended gates firing (6 length, 1 slop of 27 proposals) —
+#   but the model was never told the rules, so every vetoed proposal was doomed before it
+#   was made. The rule text is generated from the enforcing attributes, so protocol and
+#   veto cannot drift apart.
+# - Round-level re-rolling is dead (docs/findings-phase1.md §1): resampling an unchanged
+#   prompt does not move length. This retry differs in kind — per edit, and the prompt
+#   changes: it carries the constraint and the measured violation.
+# - The punctuation veto (docs/design-space.md axis 4, unimplemented until now) targets
+#   the one attractor effect Phase 0 found surviving length control: punctuation
+#   restyling (Woolf's em dashes lost at held length; Hemingway gaining them).
+#
+# Cost bound: at most 2 generations per round (the retry fires only when a veto did).
+extends: base.yaml
+loop:
+  arm: A2f
+  strategy: indexed_fb

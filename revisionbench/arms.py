@@ -44,6 +44,7 @@ from revisionbench.ollama import Generation, GenerationOptions, ModelIdentity, O
 from revisionbench.text import (
     normalise_newlines,
     paragraph_spans,
+    punctuation_counts,
     sentence_spans,
     word_count,
 )
@@ -434,11 +435,13 @@ class IndexedEditList:
 
     #: Replacement word count must fall within these multiples of the original sentence's.
     length_band = (0.5, 2.0)
+    #: Vetoes this arm knows how to apply. Subclasses extend rather than restate.
+    known_vetoes: tuple[str, ...] = ("length", "slop")
 
     def __init__(self, *, vetoes: Sequence[str] = ("length", "slop")) -> None:
-        unknown = [v for v in vetoes if v not in ("length", "slop")]
+        unknown = [v for v in vetoes if v not in self.known_vetoes]
         if unknown:
-            raise ValueError(f"unknown veto(es): {unknown}; known: length, slop")
+            raise ValueError(f"unknown veto(es): {unknown}; known: {', '.join(self.known_vetoes)}")
         self.vetoes = tuple(vetoes)
         self._lexicon = None
 
@@ -483,28 +486,7 @@ class IndexedEditList:
             )
 
         chosen: dict[int, str] = {}
-        rejected = 0
-        for edit in raw_edits:
-            index = edit.get("sentence_index")
-            replacement = edit.get("replacement", "")
-            if not isinstance(index, int) or not 0 <= index < len(spans):
-                rejected += 1
-                problems.append(f"index {index!r} out of range 0..{len(spans) - 1}")
-                continue
-            if index in chosen:
-                rejected += 1
-                problems.append(f"duplicate edit for sentence {index}")
-                continue
-            original = normalised[spans[index][0] : spans[index][1]]
-            veto = self._veto(original, replacement)
-            if veto:
-                rejected += 1
-                problems.append(f"sentence {index}: {veto}")
-                continue
-            if replacement.strip() == original.strip():
-                rejected += 1
-                continue
-            chosen[index] = replacement
+        rejected, _ = self._screen(raw_edits, spans, normalised, chosen, problems)
 
         rebuilt = self._rebuild(normalised, spans, chosen)
         return Proposal(
@@ -516,6 +498,58 @@ class IndexedEditList:
             rejected=rejected,
             problems=problems,
         )
+
+    def _screen(
+        self,
+        raw_edits: Sequence[dict[str, Any]],
+        spans: Sequence[tuple[int, int]],
+        normalised: str,
+        chosen: dict[int, str],
+        problems: list[str],
+        *,
+        eligible: set[int] | None = None,
+        phase: str = "",
+    ) -> tuple[int, list[tuple[int, str, str, str]]]:
+        """Apply index checks and vetoes, adding survivors to ``chosen``.
+
+        Returns ``(rejected_count, vetoed)`` where ``vetoed`` lists
+        ``(index, original, replacement, reason)`` for edits that failed a *veto* — the
+        recoverable class, where a corrected replacement could exist — as opposed to index
+        errors and no-op edits, which have no coherent correction to ask for.
+
+        ``eligible`` restricts which indices may be edited (used by the feedback pass so a
+        retry cannot smuggle in edits to sentences that were never vetoed). ``phase``
+        prefixes problem strings so the artifact shows which pass produced them.
+        """
+        rejected = 0
+        vetoed: list[tuple[int, str, str, str]] = []
+        for edit in raw_edits:
+            index = edit.get("sentence_index")
+            replacement = edit.get("replacement", "")
+            if not isinstance(index, int) or not 0 <= index < len(spans):
+                rejected += 1
+                problems.append(f"{phase}index {index!r} out of range 0..{len(spans) - 1}")
+                continue
+            if eligible is not None and index not in eligible:
+                rejected += 1
+                problems.append(f"{phase}unsolicited index {index}")
+                continue
+            if index in chosen:
+                rejected += 1
+                problems.append(f"{phase}duplicate edit for sentence {index}")
+                continue
+            original = normalised[spans[index][0] : spans[index][1]]
+            veto = self._veto(original, replacement)
+            if veto:
+                rejected += 1
+                problems.append(f"{phase}sentence {index}: {veto}")
+                vetoed.append((index, original, replacement, veto))
+                continue
+            if replacement.strip() == original.strip():
+                rejected += 1
+                continue
+            chosen[index] = replacement
+        return rejected, vetoed
 
     def _veto(self, original: str, replacement: str) -> str:
         if not replacement.strip():
@@ -552,6 +586,183 @@ class IndexedEditList:
 
 
 # --------------------------------------------------------------------------------------
+# A2f — A2i with a constraint-visible protocol, punctuation veto, and feedback retry
+# --------------------------------------------------------------------------------------
+
+
+class FeedbackIndexedEditList(IndexedEditList):
+    """Arm A2f: :class:`IndexedEditList` plus three changes, each aimed at measured headroom.
+
+    **The protocol states its own rules.** A2i's rejections were the intended gates firing
+    (6 length, 1 slop of 27 proposals on its first probe) — but the model was never told
+    the rules, so every one of those proposals was doomed before it was made. The rule text
+    is *generated from the enforcing attributes* (``length_band``, ``punctuation_cap``), so
+    the stated protocol and the applied veto cannot drift apart.
+
+    **A punctuation veto.** Designed in docs/design-space.md (axis 4) and unimplemented
+    until now. Targets the one attractor effect Phase 0 found surviving length control:
+    punctuation restyling (Woolf's em dashes lost at 0.96x length; Hemingway *gaining*
+    dashes). Per edit, the count of each punctuation class may move by at most
+    ``punctuation_cap``. A per-edit cap cannot stop a many-round walk — that is the drift
+    budget's job (design-space axis 5, still unimplemented) — but it blocks the one-shot
+    restyling actually observed.
+
+    **One feedback retry, per edit.** Vetoed edits are re-requested once, with the veto
+    reason stated. This is not the round-level re-roll that failed in findings-phase1.md §1
+    — that resampled an unchanged prompt and found the model holds its target length across
+    seeds. This retry differs in kind: it is per edit, and the prompt *changes* — it now
+    contains the constraint and the measured violation. Only previously-vetoed indices are
+    eligible; a retry cannot smuggle in edits to sentences that were never vetoed.
+    """
+
+    name = "indexed_fb"
+
+    known_vetoes = ("length", "slop", "punctuation")
+    #: Per edit, the count of each punctuation class may change by at most this much.
+    punctuation_cap = 1
+    #: Feedback generations per round (0 disables the retry pass).
+    feedback_attempts = 1
+
+    def __init__(self, *, vetoes: Sequence[str] = ("length", "slop", "punctuation")) -> None:
+        super().__init__(vetoes=vetoes)
+
+    def _veto(self, original: str, replacement: str) -> str:
+        veto = super()._veto(original, replacement)
+        if veto:
+            return veto
+        if "punctuation" in self.vetoes:
+            before = punctuation_counts(original)
+            after = punctuation_counts(replacement)
+            shifted = {
+                name: after[name] - before[name]
+                for name in before
+                if abs(after[name] - before[name]) > self.punctuation_cap
+            }
+            if shifted:
+                detail = ", ".join(f"{name} {d:+d}" for name, d in sorted(shifted.items()))
+                return f"punctuation shift beyond +/-{self.punctuation_cap}: {detail}"
+        return ""
+
+    def _rules(self) -> str:
+        lines = []
+        if "length" in self.vetoes:
+            low, high = self.length_band
+            lines.append(
+                f"- Keep each replacement between {low}x and {high}x of the original "
+                f"sentence's word count."
+            )
+        if "punctuation" in self.vetoes:
+            lines.append(
+                f"- Keep the sentence's punctuation style: do not change the count of any "
+                f"punctuation mark by more than {self.punctuation_cap}."
+            )
+        if "slop" in self.vetoes:
+            lines.append(
+                "- Do not introduce stock phrases or cliches the sentence did not already contain."
+            )
+        if not lines:
+            return ""
+        return (
+            "\nEvery edit is checked mechanically against these rules; a violating edit "
+            "is discarded:\n" + "\n".join(lines) + "\n"
+        )
+
+    def revise(self, ctx: ReviseContext, text: str) -> Proposal:
+        normalised = normalise_newlines(text)
+        spans = sentence_spans(normalised)
+        if not spans:
+            return Proposal(text=text, units=0, problems=["passage has no sentences"])
+
+        numbered = "\n".join(f"[{i}] {normalised[a:b]}" for i, (a, b) in enumerate(spans))
+        prompt = (
+            ctx.template.replace("{word_count}", str(word_count(normalised))).replace(
+                "{passage}", numbered
+            )
+            + "\n"
+            + INDEXED_EDIT_INSTRUCTION
+            + self._rules()
+        )
+        generations = [
+            ctx.client.generate(ctx.model.tag, prompt, ctx.options, schema=INDEXED_EDIT_SCHEMA)
+        ]
+
+        problems: list[str] = []
+        raw_edits, parse_problem = self._payload(generations[-1].text)
+        if parse_problem:
+            return Proposal(
+                text=text, generations=generations, units=len(spans), problems=[parse_problem]
+            )
+
+        chosen: dict[int, str] = {}
+        rejected, vetoed = self._screen(raw_edits, spans, normalised, chosen, problems)
+        proposed = len(raw_edits)
+
+        if vetoed and self.feedback_attempts >= 1:
+            recovered_before = len(chosen)
+            feedback = self._feedback_prompt(vetoed)
+            generations.append(
+                ctx.client.generate(
+                    ctx.model.tag, feedback, ctx.options, schema=INDEXED_EDIT_SCHEMA
+                )
+            )
+            raw_retry, parse_problem = self._payload(generations[-1].text)
+            if parse_problem:
+                problems.append(f"feedback: {parse_problem}")
+            else:
+                proposed += len(raw_retry)
+                retry_rejected, _ = self._screen(
+                    raw_retry,
+                    spans,
+                    normalised,
+                    chosen,
+                    problems,
+                    eligible={index for index, *_ in vetoed},
+                    phase="feedback: ",
+                )
+                rejected += retry_rejected
+            # Informational, in the A2p "rejoined into one" tradition: the artifact must
+            # show the retry ran and what it bought, or a recovered edit is
+            # indistinguishable from a first-pass acceptance.
+            problems.append(
+                f"feedback: {len(vetoed)} vetoed, {len(chosen) - recovered_before} recovered"
+            )
+
+        rebuilt = self._rebuild(normalised, spans, chosen)
+        return Proposal(
+            text=rebuilt,
+            generations=generations,
+            units=len(spans),
+            proposed=proposed,
+            applied=len(chosen),
+            rejected=rejected,
+            problems=problems,
+        )
+
+    @staticmethod
+    def _payload(raw: str) -> tuple[list[dict[str, Any]], str]:
+        try:
+            return json.loads(raw).get("edits", []), ""
+        except json.JSONDecodeError as exc:
+            return [], f"schema-constrained output still did not parse ({exc.msg})"
+
+    def _feedback_prompt(self, vetoed: Sequence[tuple[int, str, str, str]]) -> str:
+        blocks = []
+        for index, original, replacement, reason in vetoed:
+            blocks.append(
+                f"[{index}] original: {original}\n"
+                f"    your replacement: {replacement}\n"
+                f"    rejected: {reason}"
+            )
+        return (
+            "Some of your edits were rejected by mechanical checks:\n\n"
+            + "\n".join(blocks)
+            + "\n\nReturn corrected replacements for these sentence numbers only, or omit "
+            "any you no longer wish to change. Returning no edits is a valid answer.\n"
+            + self._rules()
+        )
+
+
+# --------------------------------------------------------------------------------------
 # Registry
 # --------------------------------------------------------------------------------------
 
@@ -560,6 +771,7 @@ ARMS: dict[str, type] = {
     ParagraphScoped.name: ParagraphScoped,
     EditList.name: EditList,
     IndexedEditList.name: IndexedEditList,
+    FeedbackIndexedEditList.name: FeedbackIndexedEditList,
 }
 
 
