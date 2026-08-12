@@ -6,7 +6,8 @@ When you put an LLM in a loop and ask it to keep improving a piece of prose, the
 not asymptotically approach perfection. This repo measures what it does instead — and
 which loop architectures make revision non-degrading while still fixing real defects.
 
-Status: **planning / Phase 0 in progress.** Licence: Apache-2.0. See
+Status: **Phase 0 and Phase 1 complete; Phase 2 (judge validity) in progress; a
+detect-then-repair harness built and measured.** Licence: Apache-2.0. See
 [`plan.md`](plan.md) for the full research plan and [`AGENTS.md`](AGENTS.md) for the rules
 this code is written under.
 
@@ -31,6 +32,38 @@ The disease is documented in the literature ([plan.md §3](plan.md)); the cure i
 repo occupies that gap with a controlled multi-round comparison of loop architectures,
 with planted defects giving objective fix-recall, stylometric voice-preservation as a hard
 constraint, and the judge's in-loop reports validated against blinded cross-family panels.
+
+## What has been measured so far
+
+Each links to the findings document that states the caveats; none of these numbers should be
+quoted without them.
+
+**The loop degrades text, and compression is the mechanism.** Unconstrained whole-passage
+revision compresses roughly 50%, and most measured voice loss follows from the compression
+rather than from style drift. ([phase 0](docs/findings-phase0.md))
+
+**Prompt-level control fails; structural control works.** Asking for a length is
+model-dependent and resampling does nothing — the model holds a target length across seeds.
+Bounded diffs control length structurally because changing unnamed text becomes impossible
+rather than discouraged. ([phase 1](docs/findings-phase1.md))
+
+**The binding constraint is aim, not application.** The best bounded arm applies edits
+reliably and still lands ~24 edits per defect repaired, ~96% of them on text that was not
+broken. Voice drift also has to be read against a calibrated scale: the entire
+between-author signal in this corpus is 0.194, and the safest arm perturbs 1.6× that.
+([harness gap](docs/harness-gap.md))
+
+**LLM judges are mostly measuring position.** 43–65% of the panel's raw verdicts flip when
+the two options are swapped. On the verdicts that survive an order swap, all three judges
+prefer the human original ~80% of the time — the project's first quality signal. A
+surface-feature classifier identifies the model's edit 66% of the time, but the panel does
+*not* follow it into its errors, which rules that explanation out. ([phase 2](docs/findings-phase2.md))
+
+**Consistency defects need no judge at all.** On a synthetic genre stratum with exact ground
+truth, mechanical detectors find 99–100% of planted cross-chapter contradictions at 88–90%
+precision with zero false positives on clean text, and a complaint-gated repair arm restores
+97% of them while editing **no chapter that had no complaint against it**.
+([litrpg](docs/findings-litrpg.md))
 
 ## What this is, and is not
 
@@ -62,9 +95,12 @@ reviser's family) is served by keeping several distinct families available local
 ```
 plan.md                  research plan; milestones and acceptance criteria
 AGENTS.md                rules for anyone (human or agent) changing this code
+NEXT*.md                 owner direction notes and literature sweeps, absorbed then retired
 configs/                 every constant lives here, never in code
 data/
   corpus/passages/       extracted passages + per-passage provenance (committed)
+  corpus/defects.jsonl   Stratum B planted defects with exact spans
+  litrpg/                generated genre manuscripts + their ground-truth manifests
   slop_lexicon.yaml      versioned, per-entry citations
 revisionbench/
   config.py              YAML loading, strict key checking, config hashing
@@ -72,11 +108,25 @@ revisionbench/
   records.py             crash-safe JSONL artifacts + resume-by-key
   text.py                tokenisation, sentence splitting, punctuation classes
   corpus.py              Gutenberg fetch, licence records, passage extraction
-  metrics/               stylometry, slop, thrash, statistics
+  ollama.py              local inference; model digests are load-bearing
+  loop.py                the revision runner: rounds, resume, stop reasons
+  arms.py                loop architectures (whole / paragraph / edit-list / indexed)
+  inject.py              Stratum B defect injection
+  detect.py              mechanical detectors — never imports the injector
+  judge.py               blinded pairwise panel, position bias, order consistency
+  litrpg.py              synthetic genre world model; the manifest IS the ground truth
+  litrpg_inject.py       cross-chapter contradictions
+  litrpg_detect.py       consistency checks from the manuscript alone
+  litrpg_repair.py       A2d: complaint-gated repair with a mechanical acceptance rule
+  metrics/               stylometry, slop, thrash, defects, statistics
 scripts/                 one command per phase
+docs/                    findings, design space, and the harness gap analysis
 results/                 JSONL artifacts + figures, committed per phase
-tests/                   offline, hermetic
+tests/                   offline, hermetic — no network, no GPU
 ```
+
+A companion app, [RevisionJudge](../RevisionJudge), serves the blinded human-judging
+subsample. It is a separate repo because it is a UI rather than measurement code.
 
 ## Quickstart
 
@@ -110,7 +160,54 @@ uv run python scripts/phase0.py --config configs/phase0.yaml
 uv run python scripts/phase0_metrics.py && uv run python scripts/phase0_plots.py
 ```
 
-Findings so far live in [`docs/findings-phase0.md`](docs/findings-phase0.md).
+### The detect-then-repair harness
+
+This is the part closest to a usable tool, and the only pipeline here that needs no judge.
+It runs on a synthetic genre corpus whose ground truth is exact by construction — the world
+is generated as a state machine first and the prose written from it, so a contradiction is a
+provable disagreement with a table rather than a matter of opinion.
+
+Score the detectors. No model calls, no GPU, a few seconds:
+
+```bash
+uv run python scripts/litrpg_eval.py --manuscripts 20
+```
+
+Run the repair arm. Only complained-of spans are eligible to be edited, and a repair is kept
+only if the manuscript's total complaint count strictly falls:
+
+```bash
+uv run python scripts/litrpg_repair_run.py --manuscripts 10 --model phi4:latest
+```
+
+Regenerate the corpus with model-written chapters instead of templated ones. Every chapter
+is validated against the manifest before it is kept, because a model that invents state
+produces contradictions the ground truth cannot adjudicate:
+
+```bash
+uv run python scripts/litrpg_generate.py --manuscripts 8 --chapters 14
+```
+
+Then pass `--corpus data/litrpg` to either script above to score against it.
+
+### Judge validity
+
+```bash
+uv run python scripts/self_preference.py
+```
+
+```bash
+uv run python scripts/surface_predictability.py --all-edits
+```
+
+```bash
+uv run python scripts/panel_vs_surface.py
+```
+
+Findings live in [`docs/`](docs): [phase 0](docs/findings-phase0.md),
+[phase 1](docs/findings-phase1.md), [phase 2](docs/findings-phase2.md),
+[litrpg](docs/findings-litrpg.md), plus [the design space](docs/design-space.md) and
+[what stands between this and a usable harness](docs/harness-gap.md).
 
 ## Related work in this portfolio
 
