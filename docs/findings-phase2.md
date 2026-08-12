@@ -280,13 +280,87 @@ slightly different stimuli. Accepted deliberately — the alternative is an unre
 undetectable failure rather than a stated one — but it belongs beside the agreement number
 whenever that number is reported.
 
-## 12. Where this leaves Phase 2
+## 12. A bag of counts identifies the model's edit 66% of the time
+
+`scripts/surface_predictability.py`. §10's quality signal — all three judges prefer the
+human original on ~80% of order-consistent verdicts — has two readings, and they imply
+opposite things about the panel. Either the judges read the prose, or the model's edit
+carries a surface regularity and the judges key on it. The second is testable with no human
+input at all: fit a classifier that sees only counts (words, punctuation classes,
+type-token ratio, subordinator rate — no semantics, no model) and ask how well it separates
+edit from original.
+
+| set | n | cross-validated accuracy | 95% CI |
+|---|---:|---:|---|
+| the 92 pairs the panel judged | 92 | 60.9% | [42.4%, 71.8%] |
+| **the full edit pool** | **1385** | **66.1%** | **[60.9%, 68.0%]** |
+| full pool, punctuation normalised | 1385 | 65.6% | [60.4%, 67.8%] |
+
+Null is 50%. Folded by passage, so no passage trains and tests at once; symmetric pair
+encoding so the fit has no intercept and chance really is 50%.
+
+Two things worth separating. Normalising punctuation barely moves the number, so **this is
+not the typographic tell from §11** — parenthesis, question-mark and quote rates carry it,
+and those are structural choices rather than typesetting. And the 92-pair estimate spans
+chance: **the human calibration set was underpowered for this question before anyone judged
+anything**, which is worth knowing independently of whether a human ever judges it.
+
+66% is not 80%, and "identify the edit" is not "prefer the original". But it is a floor
+obtained from counts alone, so §10's 80% cannot be read as evidence of aesthetic judgement
+until the surface explanation is ruled out. Which is the next section.
+
+## 13. The panel does not follow surface features into error
+
+`scripts/panel_vs_surface.py`. Agreement between the panel and the §12 classifier would not
+settle anything, because both could be independently right — the edits really are flatter
+*and* the originals really are better prose. The two readings come apart on the pairs where
+the classifier is **wrong**: if the panel keys on surface features, it should follow the
+classifier into its errors and its preference for the original should collapse.
+
+Pooled over order-consistent verdicts from all three judges:
+
+| | rate | 95% CI | n |
+|---|---:|---|---:|
+| where the surface classifier is **right** | 83% | [75%, 90%] | 92 |
+| where the surface classifier is **wrong** | 77% | [66%, 87%] | 61 |
+| gap | **+6%** | — | |
+
+Per judge the gap is +12% (gemma3:4b), +4% (phi4), +2% (qwen3), and every interval overlaps
+its partner heavily. On pairs where the surface evidence points at the original as if it
+were the edit, the panel still prefers the original 77% of the time.
+
+**So the surface explanation is ruled out, and §10's quality signal survives its first real
+challenge.** State the ceiling precisely, because this is easy to overclaim:
+
+- It rules out *this feature set*. A panel keying on a surface regularity these 23 features
+  do not capture — a lexical preference, a syntactic template — would pass this test
+  unchanged. The check is only as strong as the features it uses, and extending them is
+  cheap.
+- It does not show the judges read *well*, only that whatever they respond to is not a bag
+  of counts.
+- n=61 in the decisive cell. The gap could be anywhere from clearly zero to moderately
+  positive.
+
+What makes it worth having anyway: it is the first check in this project to *strengthen* a
+claim rather than qualify one, it cost no GPU-hours and no human labels, and it is the
+template for the rest — take the alternative explanation seriously enough to construct the
+subset where it makes a different prediction, then look there.
+
+## 14. Where this leaves Phase 2
 
 - **A quality claim now exists**, with three caveats attached: small n, local 4B–14B
   judges, and no human calibration.
 - **Blinding is a property to be tested, not assumed.** §11 found the pairs de-blindable by
   punctuation alone. The check — sweep every surface feature, flag any that is decisive on
   5+ pairs at 85%+ precision — is cheap and now automated; it should run on every export.
+- **The quality signal survived its first challenge without a human** (§12–§13). The
+  surface-feature explanation for §10's 80% is ruled out for the features tested. This does
+  not remove the need for calibration, but it does mean the panel is responding to something
+  a count-based model cannot see, which was not established before.
+- **Adversarial subsetting is the cheapest tool here.** Both §12 and §13 cost zero GPU-hours
+  and zero labels. The pattern — name the alternative explanation, find the subset where it
+  predicts something different, look there — should be tried before any experiment that
+  needs new generations.
 - **The human subsample is now the critical path**, not a formality. plan.md §11 says the
   panel is trusted only where it agrees with a human, and §9–§10 have just shown the panel
   needs that anchor more than assumed: most of its raw verdicts are positional, and the

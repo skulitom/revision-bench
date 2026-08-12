@@ -140,6 +140,65 @@ def _fit(x: np.ndarray, y: np.ndarray, *, steps: int = 600, lr: float = 1.0) -> 
     return w
 
 
+def out_of_fold_margins(
+    deltas: np.ndarray, *, folds: int = 8, seed: int = 0, groups: np.ndarray | None = None
+) -> np.ndarray:
+    """Signed decision value per pair, from a fit that never saw that pair's group.
+
+    Positive means "``version_2`` is the model's edit". Exposed separately from accuracy
+    because the sharper question is not how well surface features score, but whether the
+    *panel's* verdicts move with them — see `scripts/panel_vs_surface.py`. A margin that
+    leaked would make the panel look surface-driven purely by construction.
+    """
+    margins = np.full(len(deltas), np.nan)
+    for train_pairs, test_pairs in _fold_indices(deltas, folds=folds, seed=seed, groups=groups):
+        mean, scale, w = _fit_fold(deltas, train_pairs)
+        margins[test_pairs] = ((deltas[test_pairs] - mean) / scale) @ w
+    return margins
+
+
+def _fold_indices(
+    deltas: np.ndarray, *, folds: int, seed: int, groups: np.ndarray | None
+) -> list[tuple[np.ndarray, np.ndarray]]:
+    """Group-respecting fold split, shared so accuracy and margins cannot disagree."""
+    if groups is None:
+        groups = np.arange(len(deltas))
+    rng = random.Random(seed)
+    unique = sorted({int(g) for g in groups})
+    rng.shuffle(unique)
+    rows_of = {g: np.flatnonzero(groups == g) for g in unique}
+
+    out = []
+    for k in range(folds):
+        test_groups = unique[k::folds]
+        held_out = set(test_groups)
+        if not test_groups:
+            continue
+        train_groups = [g for g in unique if g not in held_out]
+        if not train_groups:
+            continue
+        out.append(
+            (
+                np.concatenate([rows_of[g] for g in train_groups]),
+                np.concatenate([rows_of[g] for g in test_groups]),
+            )
+        )
+    return out
+
+
+def _fit_fold(
+    deltas: np.ndarray, train_pairs: np.ndarray
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Standardise on the training fold only, then fit. Returns (mean, scale, weights)."""
+    # Symmetric expansion: every pair appears as +delta (label 1) and -delta (label 0).
+    train_x = np.vstack([deltas[train_pairs], -deltas[train_pairs]])
+    train_y = np.concatenate([np.ones(len(train_pairs)), np.zeros(len(train_pairs))])
+    mean = train_x.mean(axis=0)
+    scale = train_x.std(axis=0)
+    scale[scale == 0] = 1.0
+    return mean, scale, _fit((train_x - mean) / scale, train_y)
+
+
 def cross_validated_accuracy(
     deltas: np.ndarray, *, folds: int = 8, seed: int = 0, groups: np.ndarray | None = None
 ) -> tuple[float, np.ndarray]:
@@ -152,38 +211,14 @@ def cross_validated_accuracy(
     63.0% with a 95% interval of [57.6%, 78.3%], where the whole upper tail was the model
     scoring itself on rows it had already seen. Folding by group removes it.
     """
-    if groups is None:
-        groups = np.arange(len(deltas))
-    rng = random.Random(seed)
-    unique = sorted({int(g) for g in groups})
-    rng.shuffle(unique)
-    rows_of = {g: np.flatnonzero(groups == g) for g in unique}
-
     correct = 0
     weights = []
-    for k in range(folds):
-        test_groups = unique[k::folds]
-        held_out = set(test_groups)
-        test_pairs = np.concatenate([rows_of[g] for g in test_groups]) if test_groups else []
-        train_groups = [g for g in unique if g not in held_out]
-        train_pairs = np.concatenate([rows_of[g] for g in train_groups]) if train_groups else []
-        if not len(train_pairs) or not len(test_pairs):
-            continue
-
-        # Symmetric expansion: every pair appears as +delta (label 1) and -delta (label 0).
-        train_x = np.vstack([deltas[train_pairs], -deltas[train_pairs]])
-        train_y = np.concatenate([np.ones(len(train_pairs)), np.zeros(len(train_pairs))])
-
-        mean = train_x.mean(axis=0)
-        scale = train_x.std(axis=0)
-        scale[scale == 0] = 1.0
-        w = _fit((train_x - mean) / scale, train_y)
+    for train_pairs, test_pairs in _fold_indices(deltas, folds=folds, seed=seed, groups=groups):
+        mean, scale, w = _fit_fold(deltas, train_pairs)
         weights.append(w / scale)
-
         # Score the +delta direction only: predicting >0.5 means "the edit is side A",
         # which is the right answer for every test row by construction.
-        test_x = (deltas[test_pairs] - mean) / scale
-        correct += int(((test_x @ w) > 0).sum())
+        correct += int(((((deltas[test_pairs] - mean) / scale) @ w) > 0).sum())
 
     return correct / len(deltas), np.mean(weights, axis=0)
 
