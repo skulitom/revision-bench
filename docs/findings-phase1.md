@@ -6,10 +6,16 @@ architecture comparison that followed found the first mechanism that does contro
 project's central deliverable, and the first result here that can falsify an architecture
 rather than describe one.
 
-**The headline is in §3.4, and it is not in the table.** The bounded arms now apply edits
-reliably (74% apply rate, zero protocol failures) but apply roughly **24 edits per planted
-defect repaired**. The bottleneck has moved from *how much* a loop changes to *what it
-chooses to change*. Next, per `NEXT.md`: Phase 2 judge validity at per-edit granularity.
+**The headline is in §3.4 and §4, and it is not in the tables.** The bounded arms now apply
+edits reliably, but at **24–38 edits per planted defect repaired**. §4 adds a fifth arm
+(A2f) that reaches the best operating point yet — 14 of 16 defects the destructive arms fix,
+at 3% of their removal rate — and shows it does so by *volume rather than aim*. The
+mechanical detector in §4.3 lands 61% of its complaints on a real defect against A2f's 2.6%,
+at zero compute.
+
+So the missing piece is no longer the application mechanism; it is the **eligibility rule**.
+Next, per `NEXT.md`: Phase 2 judge validity at per-edit granularity, with the detector
+included as a candidate gate signal.
 
 Phase 0 is written up separately in [`findings-phase0.md`](findings-phase0.md).
 
