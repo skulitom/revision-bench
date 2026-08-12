@@ -238,10 +238,55 @@ The alternative reading is not excluded: Woolf and Hemingway may simply be harde
 improve than Richardson, which predicts the same pattern. The obscure cells hold 11–23
 verdicts, so this check narrows the space rather than settling it.
 
-## 11. Where this leaves Phase 2
+## 11. The human subsample is not blind by default — a result about the corpus
+
+The export in `scripts/export_human_pairs.py` is a *blinded* comparison only if the two
+versions are indistinguishable except as prose. On this corpus they were not. Measured
+across the 92 subjective pairs in the export:
+
+| feature | decisive on | points to | precision |
+| --- | ---: | --- | ---: |
+| spaced en dash | 7 pairs | the model's edit | 100% |
+| curly double quote | 8 pairs | the model's edit | 88% |
+| curly single quote | 7 pairs | the model's edit | 86% |
+| straight double quote | 7 pairs | the original | 86% |
+
+("Decisive" = present on one side and absent on the other; a feature on both sides is
+invisible to a judge, and one pointing both ways equally is noise.)
+
+Together these give a rule covering roughly 17% of pairs at near-perfect precision. The
+cause is mundane and was already on record: §5.1 of the Phase 0 findings noted that models
+re-typeset Gutenberg's `--` as an em dash, which is why `text.py` folds dash runs before
+computing punctuation profiles. The same re-typesetting that would have manufactured fake
+voice drift in M2 turns out to de-blind a human A/B test.
+
+**This does not affect the model panel.** Each judge call is independent with no memory
+across pairs, so there is nothing to learn a rule *from*. It is specific to a person doing
+104 pairs in a sitting, and it is the worst kind of failure for this dataset: a judge who
+notices on pair 30 has contaminated every verdict after it, and nothing in the artifact
+says which one that was.
+
+RevisionJudge normalises punctuation to one convention on both versions and on the context,
+at render time only — the pair file keeps the text as generated. That takes the exploitable
+count to zero, with no feature decisive on ≥5 pairs above 75%. Length, worth checking
+because Phase 0's headline finding is ~50% compression, carries no signal here: the edit is
+shorter in 47% of pairs, because these are per-edit sentence pairs rather than whole-passage
+revisions. **A future export at passage granularity would hand the judge "pick the longer
+one" as a near-perfect rule**, and must re-run the check.
+
+Standing caveat on everything that comes out of this: the panel judged un-normalised text
+and the human judges normalised text, so panel-vs-human agreement is measured across
+slightly different stimuli. Accepted deliberately — the alternative is an unrecoverable and
+undetectable failure rather than a stated one — but it belongs beside the agreement number
+whenever that number is reported.
+
+## 12. Where this leaves Phase 2
 
 - **A quality claim now exists**, with three caveats attached: small n, local 4B–14B
   judges, and no human calibration.
+- **Blinding is a property to be tested, not assumed.** §11 found the pairs de-blindable by
+  punctuation alone. The check — sweep every surface feature, flag any that is decisive on
+  5+ pairs at 85%+ precision — is cheap and now automated; it should run on every export.
 - **The human subsample is now the critical path**, not a formality. plan.md §11 says the
   panel is trusted only where it agrees with a human, and §9–§10 have just shown the panel
   needs that anchor more than assumed: most of its raw verdicts are positional, and the
