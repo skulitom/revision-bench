@@ -74,9 +74,9 @@ to quote them without the caveats will be strongest.
 - **The detectors were built against this injector's five types.** They are not a general
   consistency checker, and recall on defect classes nobody thought to plant is unmeasured —
   the same caveat Stratum B carries.
-- **No repair step exists yet.** Detection is half of detect-then-repair. The acceptance
-  rule — *the repair is accepted if the complaint it cites resolves and no new complaint
-  appears* — is implementable from here but unbuilt.
+- **The repair step is now built** (§6) but runs one model, phi4:latest, on templated prose.
+  Model-dependence is unmeasured, and NEXT.md's standing rule requires it before any
+  threshold ships.
 
 ## 5. Bugs worth recording
 
@@ -98,13 +98,70 @@ A fourth was a presentation error rather than a code one: every defect was flagg
 `cross_chapter=True`, so the cross-chapter recall line read 153/153 and meant nothing. Two
 of the five types are detectable within a single chapter; the corrected split is 76 of 153.
 
-## 6. Where this leaves the plan
+## 6. A2d — the repair half, with a mechanical acceptance rule
+
+`revisionbench/litrpg_repair.py`, `scripts/litrpg_repair_run.py`. 10 manuscripts × 14
+chapters, 63 planted defects, **phi4:latest, 21 seconds total**:
+
+| | |
+|---|---:|
+| complaints | 68 → **5** |
+| proposals | 67 |
+| accepted | 57 (85%) |
+| defect resolved | 57/63 = **90%** |
+| **exactly restored** (corruption gone *and* manifest text back) | 53/63 = **84%** |
+| **chapters edited that had no defect in them** | **0** |
+
+Rejections: 4 `out_of_scope`, 4 `changed_form`, 2 `complaint_persists`.
+
+Two properties do the work, and neither is a prompt instruction:
+
+- **Eligibility is structural.** The model never sees the manuscript — it sees one complaint
+  and one span, and returns replacement text for that span. "Leave everything else alone" is
+  not an instruction it could ignore; there is no channel through which it could disobey.
+  Same move that fixed length in Phase 1.
+- **Acceptance is mechanical.** A repair is applied only if the manuscript's total complaint
+  count strictly falls. No judge, no model call, no threshold.
+
+The last row is the one that matters. `harness-gap.md` §1.1 measured revise-then-gate at
+**~24 applied edits per defect repaired**, with ~96% of what it touched not broken, and
+called that the product blocker. A2d applied 57 edits and repaired 57 defects, and **not one
+chapter without a complaint against it was modified at all.**
+
+The gap between 90% resolved and 84% exactly restored is the honest part: 6 defects were
+made to *stop complaining* without the manifest's text coming back. Only a stratum with
+byte-exact ground truth can see that difference, and every metric this project had before
+would have scored those as clean repairs.
+
+### 6.1 Two holes in the acceptance rule, found by testing it
+
+Both let a repair pass by **destroying the evidence** rather than fixing the fact, and both
+are general — any verifier that only asks "did the complaint go away" has them.
+
+1. **Field deletion.** The cheapest way to resolve "Strength changes 10 → 14 with no
+   level-up" is to stop mentioning Strength. Complaint gone, count down, every check passed,
+   a fact silently lost from the manuscript.
+2. **The mirror image.** Replacing a *prose* span with `  Level: 999` also resolves its
+   complaint, because the offending phrase is gone. An earlier version of the guard
+   protected status fields only and accepted this.
+
+Both are closed by a symmetric form check: a status field must come back as the same status
+field, and prose must come back as prose. Enforced structurally, for the same reason
+eligibility is — a rule the model can ignore is not a rule.
+
+A third issue was in the rule's identity function. Complaints were compared by message, but
+messages carry the offending values, so a repair that changed `falls to 3` into `falls to 2`
+registered as resolving one complaint and introducing another when it had simply failed.
+Counting complaints instead cannot be fooled that way: fix one and break one and the total
+is unchanged, which is a rejection.
+
+## 7. Where this leaves the plan
 
 The judge is not on the critical path for this class of defect, and this is the first
 measurement in the project that shows it rather than argues it. Next, in order:
 
-1. **The repair half** — A2d, scoped to one complaint, accepted only if the cited complaint
-   resolves and no new one appears.
+1. ~~**The repair half**~~ — built, §6. Next on this axis: the 6 defects that resolved
+   without restoring, which is where a repair still degrades the manuscript undetectably.
 2. **Model-written chapters** (`litrpg.prompt_for_chapter`) instead of templated ones, with
    the same manifest as ground truth. That measures how much of the 88% survives real prose,
    and it is the single most informative follow-up.
