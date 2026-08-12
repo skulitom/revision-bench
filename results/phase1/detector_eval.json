@@ -1,0 +1,54 @@
+{
+  "clean": {
+    "complaints_by_type": {
+      "echo": 1,
+      "name_variant": 2,
+      "tense_outlier": 13
+    },
+    "passages": 10,
+    "per_1000_words": 1.7150820023582376,
+    "per_passage": 1.6,
+    "per_passage_detail": {
+      "hemingway-01": 4,
+      "hemingway-02": 1,
+      "hemingway-03": 2,
+      "richardson-01": 0,
+      "richardson-02": 2,
+      "richardson-03": 2,
+      "woolf-01": 2,
+      "woolf-02": 3,
+      "woolf-03": 0,
+      "woolf-04": 0
+    },
+    "total": 16,
+    "words": 9329
+  },
+  "corrupted": {
+    "complaints_by_type": {
+      "echo": 2,
+      "name_variant": 4,
+      "overlong_sentence": 3,
+      "tense_outlier": 19
+    },
+    "landing_on_a_defect": 17,
+    "precision_vs_planted": 0.6071428571428571,
+    "total": 28
+  },
+  "recall_upper_bound": {
+    "caught": {
+      "clunker": 3,
+      "echo": 5,
+      "name_drift": 2,
+      "number_drift": 1,
+      "tense_slip": 6
+    },
+    "overall": 0.425,
+    "planted": {
+      "clunker": 9,
+      "echo": 8,
+      "name_drift": 3,
+      "number_drift": 10,
+      "tense_slip": 10
+    }
+  }
+}
