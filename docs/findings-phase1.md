@@ -277,3 +277,91 @@ this evidence it should not be carried into Phase 2.
 - **No quality judgment anywhere.** Every column is mechanical movement. Whether A2i's
   surviving prose actually *reads* better than A0's is exactly the question Phase 2 exists
   to answer, and nothing here bears on it.
+
+---
+
+## 4. A2f, and the detector: two ways to buy recall
+
+Two additions since §3, run on the same corpus and scored the same way.
+
+### 4.1 A2f joins the frontier
+
+A2f is A2i with the veto rules stated in the protocol (generated from the enforcing
+attributes, so what the model is told and what is enforced cannot drift apart), a
+punctuation veto capping per-edit change in *either* direction, and one per-edit feedback
+retry that re-requests a vetoed edit with the violation named.
+
+| arm | length | drift | slop | recall | removed | fixed | applied | rounds |
+|---|---|---|---|---|---|---|---|---|
+| *unrevised (floor)* | 1.05 | 0.12 | 0.52 | 0.00 | 0.00 | 0 | 0 | — |
+| A0 whole | 0.59 | 0.96 | 2.31 | 0.73 | **0.45** | 16 | 48 | 4.9 |
+| A2p paragraph | 0.93 | 0.84 | 3.29 | 0.59 | 0.33 | 16 | 719 | 5.0 |
+| A2e edit-list | 1.02 | 0.13 | 0.86 | 0.15 | 0.00 | 6 | 208 | 2.5 |
+| A2i indexed | 1.03 | 0.31 | 0.43 | 0.22 | 0.07 | 8 | 195 | 2.4 |
+| **A2f feedback** | 0.99 | 0.37 | **0.44** | **0.36** | **0.03** | **14** | 529 | 4.7 |
+
+**A2f is the best operating point found so far.** It repairs 14 defects against A0's 16 —
+while cutting the region on 3% of defects rather than 45%, holding length at 0.99 rather
+than 0.59, drifting 0.37 rather than 0.96, and keeping slop *below* the unrevised floor.
+It also keeps working: 4.7 rounds against A2i's 2.4, because stating the rules and offering
+a retry means a round rarely ends with nothing applied.
+
+### 4.2 But it buys recall with volume, not with aim
+
+The honest reading of the same row: A2f applied **529 edits to fix 14 defects — 38 per
+fix**, against A2i's 195 for 8, which is 24 per fix. Its aim is *worse*. It found more
+defects by making 2.7× as many edits, and drift rose 0.31 → 0.37 accordingly.
+
+**A2f moves further along the frontier; it does not shift the frontier.** Recall, drift and
+edit volume all rise together, roughly in step. Nothing in §3 or §4 has yet produced an arm
+that fixes more while touching less.
+
+(One unit caveat: `applied` counts individual edits for A2e/A2i/A2f but whole changed units
+for A0/A2p, so A0's 48 is not comparable to A2f's 529. The comparison that holds is between
+the three edit-list arms.)
+
+### 4.3 The detector is the first thing with better aim
+
+`revisionbench/detect.py` — four mechanical detectors, no model, no network — scored
+against the same Stratum B:
+
+| measurement | value |
+|---|---|
+| **spurious complaints on clean prose** | 16 across 10 passages / 9329 words = **1.6 per passage** |
+| recall against planted defects (**upper bound**) | 17/40 = 0.42 |
+| **complaints landing on a real defect** | 17 of 28 = **61%** |
+
+Against A2f's 14 of 529 applied edits landing on a defect (**2.6%**), that is roughly a
+**23× improvement in aim**, and it costs nothing to compute.
+
+The circularity guard matters here and is documented in the module: the detectors never
+import the injector (enforced by an AST test), and *recall* is labelled an upper bound
+because the corpus's flaws are ones this repo planted. The number that is not circular is
+the false-positive rate on clean prose, because nothing was planted there.
+
+Even that has a caveat worth keeping: Woolf and Richardson genuinely repeat phrases and
+genuinely shift register, so some of those 16 complaints are the detector noticing
+something real rather than erring. 1.6 per passage is an upper bound on spurious
+complaints.
+
+### 4.4 What this jointly implies
+
+The arms improve aim slowly and volume quickly; the detector starts with aim an order of
+magnitude better and no volume at all. That is the case for **detect-then-repair** stated
+in numbers rather than in principle:
+
+- a detect-then-repair pass over a 100k-word manuscript would put ~175 complaints in front
+  of a model (1.6 per 900 words), 61% of them on something genuinely wrong;
+- A2f over the same manuscript would apply ~5,800 edits, 2.6% of them on something wrong.
+
+The missing piece is no longer the application mechanism — A2f applies edits safely and
+holds length, punctuation and slop. It is the *eligibility* rule. Nothing here has yet run
+a loop in which only flagged spans may be edited, and that is the next arm to build.
+
+### 4.5 What none of this establishes
+
+Unchanged from §3.6 and worth repeating because §4 adds numbers that invite over-reading:
+one model, one prompt, five rounds, ten passages, 40 synthetic defects, and **no quality
+judgment anywhere**. A2f fixing 14 defects and drifting 0.37 does not mean its prose reads
+well; it means it moved less on mechanical measures than the alternatives while repairing
+more of what was planted. Whether any of it reads better is Phase 2.

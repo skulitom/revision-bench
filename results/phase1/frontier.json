@@ -49,6 +49,22 @@
       "surviving": 40
     },
     {
+      "applied": 529,
+      "arm": "A2f",
+      "drift": 0.3700149097613467,
+      "fixed": 14,
+      "length_ratio": 0.9917816362338214,
+      "passages": 10,
+      "planted": 40,
+      "present": 25,
+      "recall": 0.358974358974359,
+      "removal_rate": 0.025,
+      "removed": 1,
+      "rounds": 4.7,
+      "slop": 0.44065541119472174,
+      "surviving": 39
+    },
+    {
       "applied": 195,
       "arm": "A2i",
       "drift": 0.3066404290525566,
