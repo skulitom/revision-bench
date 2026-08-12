@@ -50,8 +50,13 @@ class StubClient:
 
     def generate(self, tag, prompt, options, schema=None, think=None):
         self.prompts.append(prompt)
-        reply = self.replies.pop(0) if self.replies else '{"replacement": ""}'
-        return _Generation(text=reply)
+        # Repeat the last scripted reply rather than falling back to a hardcoded empty.
+        # With best-of-N the runner asks several times per complaint, and a fallback that
+        # happens to *parse* would be ranked and screened alongside the reply under test —
+        # which silently changed two tests' rejection reasons to "empty".
+        if self.replies:
+            self.last = self.replies.pop(0)
+        return _Generation(text=getattr(self, "last", '{"replacement": ""}'))
 
 
 def _corrupted() -> tuple[str, list]:
@@ -175,6 +180,91 @@ class TestLooping:
             client = StubClient([reply] * 60)
             report = repair_manuscript(client, "stub", text, OPTIONS, max_rounds=2)
             assert report.complaints_after <= report.complaints_before
+
+
+class TestBestOfN:
+    """Ranked by minimal intervention, not by order of generation or by length."""
+
+    LEVEL_TEXT = "Chapter 1\n  Level: 5\n\nprose.\n\nChapter 2\n  Level: 3\n\nprose.\n"
+
+    def test_edit_distance_ranks_the_least_invasive_repair_first(self) -> None:
+        from revisionbench.litrpg_repair import edit_distance
+
+        original = "  Level: 3"
+        assert edit_distance(original, "  Level: 5") == 1
+        assert edit_distance(original, "  Level: 5 (after the trial)") > 1
+        assert edit_distance(original, original) == 0
+
+    def test_the_smallest_clearing_candidate_wins_not_the_first(self) -> None:
+        """The point of best-of-N: a later, smaller candidate beats an earlier valid one.
+
+        Both proposals clear the complaint. The first generated rewrites more than it needs
+        to; the second changes one character. Without ranking, the first would land.
+        """
+        client = StubClient(
+            ['{"replacement": "  Level: 5 at last"}', '{"replacement": "  Level: 5"}']
+        )
+        report = repair_manuscript(
+            client, "stub", self.LEVEL_TEXT, OPTIONS, max_rounds=1, candidates=2
+        )
+        assert [o.reason for o in report.outcomes] == ["accepted"]
+        assert report.outcomes[0].proposed == "  Level: 5"
+        assert report.outcomes[0].candidates_seen == 2
+
+    def test_a_failing_smallest_candidate_falls_through_to_the_next(self) -> None:
+        """Ranking picks the order to *try*, not the winner. Verification still decides."""
+        client = StubClient(['{"replacement": "  Level: 4"}', '{"replacement": "  Level: 5"}'])
+        report = repair_manuscript(
+            client, "stub", self.LEVEL_TEXT, OPTIONS, max_rounds=1, candidates=2
+        )
+        # "Level: 4" is distance 1 and still a regression from 5; "Level: 5" is also
+        # distance 1 but clears it. Whichever is tried first, only the clearing one lands.
+        assert [o.reason for o in report.outcomes] == ["accepted"]
+        assert report.outcomes[0].proposed == "  Level: 5"
+
+    def test_identical_candidates_are_deduplicated(self) -> None:
+        """Three seeds agreeing is one candidate, and the record should say so."""
+        client = StubClient(['{"replacement": "  Level: 5"}'])
+        report = repair_manuscript(
+            client, "stub", self.LEVEL_TEXT, OPTIONS, max_rounds=1, candidates=3
+        )
+        assert len(client.prompts) == 3  # still paid for three generations
+        assert report.outcomes[0].candidates_seen == 1  # but there was only one proposal
+
+    def test_later_candidates_are_sampled_not_just_reseeded(self) -> None:
+        """The bug this pins cost 2.5x GPU time for zero variation.
+
+        At temperature 0 decoding is deterministic, so changing only the seed returns N
+        byte-identical strings — measured as candidates_seen == 1 on all 67 complaints of
+        a real run. The first candidate stays greedy so the primary proposal is
+        reproducible; every later one must actually sample.
+        """
+        seen: list[tuple[int, float]] = []
+
+        class SeedRecorder(StubClient):
+            def generate(self, tag, prompt, options, schema=None, think=None):
+                seen.append((options.seed, options.temperature))
+                return super().generate(tag, prompt, options, schema, think)
+
+        repair_manuscript(
+            SeedRecorder(['{"replacement": "  Level: 5"}']),
+            "stub",
+            self.LEVEL_TEXT,
+            OPTIONS,
+            max_rounds=1,
+            candidates=3,
+        )
+        assert len({s for s, _ in seen[:3]}) == 3, seen
+        assert seen[0][1] == OPTIONS.temperature, "the first candidate must stay greedy"
+        assert all(t > 0 for _, t in seen[1:3]), f"later candidates were not sampled: {seen}"
+
+    def test_candidates_one_is_the_old_single_proposal_behaviour(self) -> None:
+        client = StubClient(['{"replacement": "  Level: 5"}'])
+        report = repair_manuscript(
+            client, "stub", self.LEVEL_TEXT, OPTIONS, max_rounds=1, candidates=1
+        )
+        assert len(client.prompts) == 1
+        assert [o.reason for o in report.outcomes] == ["accepted"]
 
 
 @pytest.mark.parametrize("seed", range(3))

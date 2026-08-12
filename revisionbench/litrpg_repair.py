@@ -36,7 +36,7 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from typing import Any
 
 from revisionbench.detect import Complaint
@@ -77,6 +77,12 @@ class RepairOutcome:
     #: ``new_complaint`` means the verifier caught collateral damage a reviewer would not.
     reason: str
     new_complaints: int = 0
+    #: How many distinct candidates the model produced for this complaint, and which rank
+    #: (0-based, ascending edit distance) was accepted. ``chosen_rank > 0`` is a repair
+    #: best-of-N found that a single proposal would have missed — the measurement that says
+    #: whether the extra generations bought anything.
+    candidates_seen: int = 1
+    chosen_rank: int = 0
 
     def as_dict(self) -> dict[str, Any]:
         data = asdict(self)
@@ -152,6 +158,40 @@ def _same_form(original: str, replacement: str) -> bool:
     return bool(candidate) and candidate.group(1) == field.group(1)
 
 
+def edit_distance(a: str, b: str) -> int:
+    """Levenshtein distance. Used to rank candidate repairs by how little they change.
+
+    Not "shortest replacement": a candidate that deletes the span is shortest by length and
+    maximal by damage. Distance from the span being replaced is the quantity that means
+    *minimal intervention*, which is the property this arm is for.
+    """
+    if a == b:
+        return 0
+    previous = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        current = [i]
+        for j, cb in enumerate(b, 1):
+            current.append(min(previous[j] + 1, current[j - 1] + 1, previous[j - 1] + (ca != cb)))
+        previous = current
+    return previous[-1]
+
+
+def _screen(original: str, replacement: str) -> str:
+    """Cheap structural checks. Returns a rejection reason, or "" to proceed.
+
+    Extracted when best-of-N arrived: every candidate must face the identical gate, and a
+    screen that drifted between the first candidate and the rest would silently make later
+    candidates easier to accept.
+    """
+    if not replacement.strip():
+        return "empty"
+    if len(replacement) > max(40, len(original) * MAX_GROWTH):
+        return "out_of_scope"
+    if not _same_form(original, replacement):
+        return "changed_form"
+    return ""
+
+
 def _apply(text: str, span: tuple[int, int], replacement: str) -> str:
     return text[: span[0]] + replacement + text[span[1] :]
 
@@ -174,6 +214,8 @@ def repair_manuscript(
     *,
     manuscript_id: str = "",
     max_rounds: int = 3,
+    candidates: int = 3,
+    candidate_temperature: float = 0.7,
     think: bool | None = False,
 ) -> RepairReport:
     """Detect, repair one complaint at a time, verify, and keep only what survives.
@@ -206,79 +248,127 @@ def repair_manuscript(
                 continue
 
             original = text[match.span[0] : match.span[1]]
-            generation = client.generate(
-                tag, repair_prompt(text, match), options, schema=REPAIR_SCHEMA, think=think
-            )
-            try:
-                replacement = json.loads(generation.text)["replacement"]
-            except (json.JSONDecodeError, KeyError, TypeError):
+            prompt = repair_prompt(text, match)
+
+            # Best-of-N, ranked by minimal intervention. Edit-level best-of-N is live where
+            # round-level re-rolling was dead (findings-phase1): candidates for a *named*
+            # fix genuinely vary, whereas whole-round lengths did not, because the model
+            # held a target length across seeds. Distinct seeds, deduplicated, then tried
+            # in ascending edit distance from the span being replaced — so the least
+            # invasive repair that survives verification is the one that lands.
+            proposals: list[str] = []
+            raw_first = ""
+            for index in range(max(1, candidates)):
+                # The first candidate is generated exactly as configured — normally greedy,
+                # so the primary proposal stays reproducible. The rest are *sampled*, and
+                # that is not optional: at temperature 0 decoding is deterministic and the
+                # seed changes nothing, so N generations return N byte-identical strings.
+                # Measured: candidates_seen was 1 for all 67 complaints, at 2.5x the GPU
+                # time for zero variation. That is the same trap findings-phase1 recorded
+                # for round-level resampling, arriving one level down.
+                attempt = (
+                    options
+                    if index == 0
+                    else replace(
+                        options,
+                        seed=options.seed + index,
+                        temperature=max(options.temperature, candidate_temperature),
+                    )
+                )
+                generation = client.generate(
+                    tag,
+                    prompt,
+                    attempt,
+                    schema=REPAIR_SCHEMA,
+                    think=think,
+                )
+                raw_first = raw_first or generation.text
+                try:
+                    proposal = json.loads(generation.text)["replacement"]
+                except (json.JSONDecodeError, KeyError, TypeError):
+                    continue
+                if proposal not in proposals:
+                    proposals.append(proposal)
+
+            if not proposals:
                 outcomes.append(
                     RepairOutcome(
                         match.type,
                         match.span,
                         original,
-                        generation.text[:200],
+                        raw_first[:200],
                         False,
                         "no_valid_proposal",
+                        candidates_seen=candidates,
                     )
                 )
                 continue
 
-            if not replacement.strip():
-                outcomes.append(
-                    RepairOutcome(match.type, match.span, original, replacement, False, "empty")
-                )
-                continue
-            if len(replacement) > max(40, len(original) * MAX_GROWTH):
-                outcomes.append(
-                    RepairOutcome(
-                        match.type, match.span, original, replacement, False, "out_of_scope"
-                    )
-                )
-                continue
-
-            if not _same_form(original, replacement):
-                # A status field replaced by a different field is not a repair, it is a
-                # deletion — and deleting the evidence resolves the complaint. Enforced
-                # structurally rather than asked for in the prompt, for the same reason
-                # eligibility is: a rule the model could ignore is not a rule.
-                outcomes.append(
-                    RepairOutcome(
-                        match.type, match.span, original, replacement, False, "changed_form"
-                    )
-                )
-                continue
-
-            candidate = _apply(text, match.span, replacement)
+            ranked = sorted(proposals, key=lambda p: edit_distance(original, p))
             before_count = len(detect_all_litrpg(text))
-            after = detect_all_litrpg(candidate)
+            rejected: RepairOutcome | None = None
+            accepted: RepairOutcome | None = None
 
-            # Net improvement, counted. Identity-based comparison was the first design and
-            # it is wrong: complaint messages carry the offending values, so a repair that
-            # changed 3 to 2 "resolved" one complaint and "introduced" another when it had
-            # merely failed. Counting cannot be fooled that way — fix one and break one and
-            # the total is unchanged, which is a rejection.
-            if len(after) >= before_count:
-                still_present = any(c.type == match.type for c in after)
-                introduced = _signature(after) - baseline
-                outcomes.append(
-                    RepairOutcome(
+            for rank, replacement in enumerate(ranked):
+                verdict = _screen(original, replacement)
+                if verdict:
+                    rejected = rejected or RepairOutcome(
+                        match.type,
+                        match.span,
+                        original,
+                        replacement,
+                        False,
+                        verdict,
+                        candidates_seen=len(ranked),
+                    )
+                    continue
+
+                candidate = _apply(text, match.span, replacement)
+                after = detect_all_litrpg(candidate)
+                if len(after) >= before_count:
+                    still_present = any(c.type == match.type for c in after)
+                    rejected = rejected or RepairOutcome(
                         match.type,
                         match.span,
                         original,
                         replacement,
                         False,
                         "complaint_persists" if still_present else "new_complaint",
-                        len(introduced),
+                        len(_signature(after) - baseline),
+                        len(ranked),
+                    )
+                    continue
+
+                accepted = RepairOutcome(
+                    match.type,
+                    match.span,
+                    original,
+                    replacement,
+                    True,
+                    "accepted",
+                    candidates_seen=len(ranked),
+                    chosen_rank=rank,
+                )
+                break
+
+            if accepted is None:
+                outcomes.append(
+                    rejected
+                    or RepairOutcome(
+                        match.type,
+                        match.span,
+                        original,
+                        ranked[0],
+                        False,
+                        "empty",
+                        candidates_seen=len(ranked),
                     )
                 )
                 continue
 
-            text = candidate
+            text = _apply(text, match.span, accepted.proposed)
             accepted_this_round += 1
-            outcomes.append(
-                RepairOutcome(match.type, match.span, original, replacement, True, "accepted")
-            )
+            outcomes.append(accepted)
 
         if accepted_this_round == 0:
             break

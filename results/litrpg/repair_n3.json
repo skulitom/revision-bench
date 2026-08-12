@@ -1,0 +1,2080 @@
+{
+  "accepted_rank": {
+    "0": 57,
+    "1": 3,
+    "2": 1
+  },
+  "candidates": 3,
+  "chapters": 14,
+  "collateral_chapters": [],
+  "complaints_after": 1,
+  "complaints_before": 68,
+  "elapsed_seconds": 52.6,
+  "manuscripts": 10,
+  "model": "phi4:latest",
+  "model_digest": "ac896e5b8b34a1f4efa7b14d7520725140d5512484457fab45d2a4ea14c69dba",
+  "planted": 63,
+  "reasons": {
+    "accepted": 61,
+    "empty": 2
+  },
+  "resolved": 61,
+  "restored": 55,
+  "runs": [
+    {
+      "complaints_after": 0,
+      "complaints_before": 6,
+      "manuscript_id": "ms-000",
+      "outcomes": [
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "Glass Chant",
+          "proposed": "Glass Song",
+          "reason": "accepted",
+          "span": [
+            799,
+            810
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "stat_drift",
+          "new_complaints": 0,
+          "original": "  Agility: 10",
+          "proposed": "  Agility: 8",
+          "reason": "accepted",
+          "span": [
+            1061,
+            1074
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "copper ring",
+          "proposed": "folded map",
+          "reason": "accepted",
+          "span": [
+            2824,
+            2835
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "stat_drift",
+          "new_complaints": 0,
+          "original": "  Agility: 7",
+          "proposed": "  Agility: 8",
+          "reason": "accepted",
+          "span": [
+            2919,
+            2931
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "folded chart",
+          "proposed": "folded map",
+          "reason": "accepted",
+          "span": [
+            5220,
+            5232
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "bone charm",
+          "proposed": "folded map, copper ring",
+          "reason": "accepted",
+          "span": [
+            7896,
+            7906
+          ]
+        }
+      ],
+      "planted": [
+        {
+          "chapter": 3,
+          "char_span": [
+            1062,
+            1075
+          ],
+          "clean_line": "  Agility: 10",
+          "corrupt_fragment": "  Agility: 10",
+          "cross_chapter": true,
+          "defect_id": "ms-000-stat_drift-003",
+          "established_in": 2,
+          "injector_version": 1,
+          "manuscript_id": "ms-000",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "  Agility: 8",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 6,
+          "char_span": [
+            2922,
+            2934
+          ],
+          "clean_line": "  Agility: 7",
+          "corrupt_fragment": "  Agility: 7",
+          "cross_chapter": true,
+          "defect_id": "ms-000-stat_drift-006",
+          "established_in": 5,
+          "injector_version": 1,
+          "manuscript_id": "ms-000",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "  Agility: 8",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 13,
+          "char_span": [
+            7897,
+            7911
+          ],
+          "clean_line": "Afterwards Bright counted what was left: the bone charm, and not much else.",
+          "corrupt_fragment": "the bone charm",
+          "cross_chapter": false,
+          "defect_id": "ms-000-inventory_ghost-013",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-000",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "the folded map",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 5,
+          "char_span": [
+            2822,
+            2837
+          ],
+          "clean_line": "Afterwards Bright counted what was left: the copper ring, and not much else.",
+          "corrupt_fragment": "the copper ring",
+          "cross_chapter": false,
+          "defect_id": "ms-000-inventory_ghost-005",
+          "established_in": 5,
+          "injector_version": 1,
+          "manuscript_id": "ms-000",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "the folded map",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 2,
+          "char_span": [
+            799,
+            810
+          ],
+          "clean_line": "Bright brought up Glass Chant without thinking about it, and the corridor answered. Whatever Nel had come to say went unsaid a while longer.",
+          "corrupt_fragment": "Glass Chant",
+          "cross_chapter": false,
+          "defect_id": "ms-000-entity_rename-002",
+          "established_in": 2,
+          "injector_version": 1,
+          "manuscript_id": "ms-000",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "Glass Song",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 9,
+          "char_span": [
+            5223,
+            5235
+          ],
+          "clean_line": "Afterwards Bright counted what was left: the folded chart, and not much else.",
+          "corrupt_fragment": "folded chart",
+          "cross_chapter": false,
+          "defect_id": "ms-000-entity_rename-009",
+          "established_in": 9,
+          "injector_version": 1,
+          "manuscript_id": "ms-000",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "folded map",
+          "type": "entity_rename"
+        }
+      ],
+      "rounds": 2
+    },
+    {
+      "complaints_after": 0,
+      "complaints_before": 9,
+      "manuscript_id": "ms-001",
+      "outcomes": [
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "stat_drift",
+          "new_complaints": 0,
+          "original": "  Agility: 7",
+          "proposed": "  Agility: 8",
+          "reason": "accepted",
+          "span": [
+            1201,
+            1213
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "Blood Tally",
+          "proposed": "Blood Ledger",
+          "reason": "accepted",
+          "span": [
+            2145,
+            2156
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 1,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "brass compass",
+          "proposed": "cracked whetstone",
+          "reason": "accepted",
+          "span": [
+            2945,
+            2958
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "stat_drift",
+          "new_complaints": 0,
+          "original": "  Intellect: 14",
+          "proposed": "  Intellect: 12",
+          "reason": "accepted",
+          "span": [
+            4389,
+            4404
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "level_regression",
+          "new_complaints": 0,
+          "original": "  Level: 2",
+          "proposed": "  Level: 3",
+          "reason": "accepted",
+          "span": [
+            5011,
+            5021
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "cracked grindstone",
+          "proposed": "cracked whetstone",
+          "reason": "accepted",
+          "span": [
+            7663,
+            7681
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 1,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "copper ring",
+          "proposed": "cracked whetstone",
+          "reason": "accepted",
+          "span": [
+            8427,
+            8438
+          ]
+        }
+      ],
+      "planted": [
+        {
+          "chapter": 3,
+          "char_span": [
+            1201,
+            1213
+          ],
+          "clean_line": "  Agility: 7",
+          "corrupt_fragment": "  Agility: 7",
+          "cross_chapter": true,
+          "defect_id": "ms-001-stat_drift-003",
+          "established_in": 2,
+          "injector_version": 1,
+          "manuscript_id": "ms-001",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "  Agility: 8",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 8,
+          "char_span": [
+            4384,
+            4399
+          ],
+          "clean_line": "  Intellect: 14",
+          "corrupt_fragment": "  Intellect: 14",
+          "cross_chapter": true,
+          "defect_id": "ms-001-stat_drift-008",
+          "established_in": 7,
+          "injector_version": 1,
+          "manuscript_id": "ms-001",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "  Intellect: 12",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 9,
+          "char_span": [
+            5006,
+            5016
+          ],
+          "clean_line": "  Level: 2",
+          "corrupt_fragment": "  Level: 2",
+          "cross_chapter": true,
+          "defect_id": "ms-001-level_regression-009",
+          "established_in": 8,
+          "injector_version": 1,
+          "manuscript_id": "ms-001",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "  Level: 3",
+          "type": "level_regression"
+        },
+        {
+          "chapter": 13,
+          "char_span": [
+            8419,
+            8434
+          ],
+          "clean_line": "Afterwards Kaelen counted what was left: the copper ring, and not much else.",
+          "corrupt_fragment": "the copper ring",
+          "cross_chapter": false,
+          "defect_id": "ms-001-inventory_ghost-013",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-001",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "the cracked whetstone",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 5,
+          "char_span": [
+            2940,
+            2957
+          ],
+          "clean_line": "Afterwards Kaelen counted what was left: the brass compass, and not much else.",
+          "corrupt_fragment": "the brass compass",
+          "cross_chapter": false,
+          "defect_id": "ms-001-inventory_ghost-005",
+          "established_in": 5,
+          "injector_version": 1,
+          "manuscript_id": "ms-001",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "the cracked whetstone",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 4,
+          "char_span": [
+            2145,
+            2156
+          ],
+          "clean_line": "The threshold broke somewhere behind Kaelen's eyes, and the world resolved one notch sharper. Level 2. Blood Tally settled into place alongside the rest.",
+          "corrupt_fragment": "Blood Tally",
+          "cross_chapter": false,
+          "defect_id": "ms-001-entity_rename-004",
+          "established_in": 4,
+          "injector_version": 1,
+          "manuscript_id": "ms-001",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "Blood Ledger",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 12,
+          "char_span": [
+            7658,
+            7676
+          ],
+          "clean_line": "Afterwards Kaelen counted what was left: the cracked grindstone, and not much else.",
+          "corrupt_fragment": "cracked grindstone",
+          "cross_chapter": false,
+          "defect_id": "ms-001-entity_rename-012",
+          "established_in": 12,
+          "injector_version": 1,
+          "manuscript_id": "ms-001",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "cracked whetstone",
+          "type": "entity_rename"
+        }
+      ],
+      "rounds": 2
+    },
+    {
+      "complaints_after": 0,
+      "complaints_before": 9,
+      "manuscript_id": "ms-002",
+      "outcomes": [
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "stat_drift",
+          "new_complaints": 0,
+          "original": "  Agility: 11",
+          "proposed": "  Agility: 12",
+          "reason": "accepted",
+          "span": [
+            583,
+            596
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "stat_drift",
+          "new_complaints": 0,
+          "original": "  Vitality: 12",
+          "proposed": "  Vitality: 10",
+          "reason": "accepted",
+          "span": [
+            1119,
+            1133
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "skill_before_acquisition",
+          "new_complaints": 0,
+          "original": "Ash Beckon",
+          "proposed": "Silent Palm",
+          "reason": "accepted",
+          "span": [
+            2575,
+            2585
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "iron key",
+          "proposed": "sealed vial",
+          "reason": "accepted",
+          "span": [
+            3339,
+            3347
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "skill_before_acquisition",
+          "new_complaints": 0,
+          "original": "Glass Song",
+          "proposed": "(unlisted)",
+          "reason": "accepted",
+          "span": [
+            3783,
+            3793
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "Ash Summons",
+          "proposed": "Ash Beckon",
+          "reason": "accepted",
+          "span": [
+            4390,
+            4401
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "grey cloak",
+          "proposed": "sealed vial, iron key",
+          "reason": "accepted",
+          "span": [
+            6381,
+            6391
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "Mind Lance",
+          "proposed": "Mind Spike",
+          "reason": "accepted",
+          "span": [
+            8215,
+            8225
+          ]
+        }
+      ],
+      "planted": [
+        {
+          "chapter": 2,
+          "char_span": [
+            583,
+            596
+          ],
+          "clean_line": "  Agility: 11",
+          "corrupt_fragment": "  Agility: 11",
+          "cross_chapter": true,
+          "defect_id": "ms-002-stat_drift-002",
+          "established_in": 1,
+          "injector_version": 1,
+          "manuscript_id": "ms-002",
+          "notes": "planted 8 of 10 requested",
+          "original_fragment": "  Agility: 12",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 3,
+          "char_span": [
+            1119,
+            1133
+          ],
+          "clean_line": "  Vitality: 12",
+          "corrupt_fragment": "  Vitality: 12",
+          "cross_chapter": true,
+          "defect_id": "ms-002-stat_drift-003",
+          "established_in": 2,
+          "injector_version": 1,
+          "manuscript_id": "ms-002",
+          "notes": "planted 8 of 10 requested",
+          "original_fragment": "  Vitality: 10",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 7,
+          "char_span": [
+            3779,
+            3789
+          ],
+          "clean_line": "The threshold broke somewhere behind Odile's eyes, and the world resolved one notch sharper. Level 3. Glass Song settled into place alongside the rest.",
+          "corrupt_fragment": "Glass Song",
+          "cross_chapter": true,
+          "defect_id": "ms-002-skill_before_acquisition-007",
+          "established_in": 10,
+          "injector_version": 1,
+          "manuscript_id": "ms-002",
+          "notes": "planted 8 of 10 requested",
+          "original_fragment": "Ash Beckon",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 5,
+          "char_span": [
+            2575,
+            2585
+          ],
+          "clean_line": "Odile brought up Ash Beckon without thinking about it, and the corridor answered. Whatever Bex had come to say went unsaid a while longer.",
+          "corrupt_fragment": "Ash Beckon",
+          "cross_chapter": true,
+          "defect_id": "ms-002-skill_before_acquisition-005",
+          "established_in": 7,
+          "injector_version": 1,
+          "manuscript_id": "ms-002",
+          "notes": "planted 8 of 10 requested",
+          "original_fragment": "Quickstep",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 11,
+          "char_span": [
+            6374,
+            6388
+          ],
+          "clean_line": "Afterwards Odile counted what was left: the grey cloak, and not much else.",
+          "corrupt_fragment": "the grey cloak",
+          "cross_chapter": false,
+          "defect_id": "ms-002-inventory_ghost-011",
+          "established_in": 11,
+          "injector_version": 1,
+          "manuscript_id": "ms-002",
+          "notes": "planted 8 of 10 requested",
+          "original_fragment": "the sealed vial",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 6,
+          "char_span": [
+            3334,
+            3346
+          ],
+          "clean_line": "Afterwards Odile counted what was left: the iron key, and not much else.",
+          "corrupt_fragment": "the iron key",
+          "cross_chapter": false,
+          "defect_id": "ms-002-inventory_ghost-006",
+          "established_in": 6,
+          "injector_version": 1,
+          "manuscript_id": "ms-002",
+          "notes": "planted 8 of 10 requested",
+          "original_fragment": "the sealed vial",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 8,
+          "char_span": [
+            4386,
+            4397
+          ],
+          "clean_line": "Odile brought up Ash Summons without thinking about it, and the corridor answered. Whatever Warden Ott had come to say went unsaid a while longer.",
+          "corrupt_fragment": "Ash Summons",
+          "cross_chapter": false,
+          "defect_id": "ms-002-entity_rename-008",
+          "established_in": 8,
+          "injector_version": 1,
+          "manuscript_id": "ms-002",
+          "notes": "planted 8 of 10 requested",
+          "original_fragment": "Ash Beckon",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 14,
+          "char_span": [
+            8201,
+            8211
+          ],
+          "clean_line": "Odile brought up Mind Lance without thinking about it, and the corridor answered. Whatever Nel had come to say went unsaid a while longer.",
+          "corrupt_fragment": "Mind Lance",
+          "cross_chapter": false,
+          "defect_id": "ms-002-entity_rename-014",
+          "established_in": 14,
+          "injector_version": 1,
+          "manuscript_id": "ms-002",
+          "notes": "planted 8 of 10 requested",
+          "original_fragment": "Mind Spike",
+          "type": "entity_rename"
+        }
+      ],
+      "rounds": 2
+    },
+    {
+      "complaints_after": 1,
+      "complaints_before": 6,
+      "manuscript_id": "ms-003",
+      "outcomes": [
+        {
+          "applied": false,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "skill_before_acquisition",
+          "new_complaints": 0,
+          "original": "Silent Palm",
+          "proposed": " ",
+          "reason": "empty",
+          "span": [
+            1924,
+            1935
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "brass compass",
+          "proposed": "bone charm",
+          "reason": "accepted",
+          "span": [
+            3251,
+            3264
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "skill_before_acquisition",
+          "new_complaints": 0,
+          "original": "Stone Ward",
+          "proposed": "a defensive spell",
+          "reason": "accepted",
+          "span": [
+            4877,
+            4887
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "Stone Guard",
+          "proposed": "Stone Ward",
+          "reason": "accepted",
+          "span": [
+            5501,
+            5512
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "iron latchkey",
+          "proposed": "iron key",
+          "reason": "accepted",
+          "span": [
+            6124,
+            6137
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "tin lantern",
+          "proposed": "iron key, brass compass",
+          "reason": "accepted",
+          "span": [
+            8274,
+            8285
+          ]
+        },
+        {
+          "applied": false,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "skill_before_acquisition",
+          "new_complaints": 0,
+          "original": "Silent Palm",
+          "proposed": " ",
+          "reason": "empty",
+          "span": [
+            1924,
+            1935
+          ]
+        }
+      ],
+      "planted": [
+        {
+          "chapter": 4,
+          "char_span": [
+            1924,
+            1935
+          ],
+          "clean_line": "The threshold broke somewhere behind Rhys's eyes, and the world resolved one notch sharper. Level 2. Silent Palm settled into place alongside the rest.",
+          "corrupt_fragment": "Silent Palm",
+          "cross_chapter": true,
+          "defect_id": "ms-003-skill_before_acquisition-004",
+          "established_in": 7,
+          "injector_version": 1,
+          "manuscript_id": "ms-003",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "Glass Song",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 9,
+          "char_span": [
+            4880,
+            4890
+          ],
+          "clean_line": "Rhys brought up Stone Ward without thinking about it, and the corridor answered. Whatever Bex had come to say went unsaid a while longer.",
+          "corrupt_fragment": "Stone Ward",
+          "cross_chapter": true,
+          "defect_id": "ms-003-skill_before_acquisition-009",
+          "established_in": 10,
+          "injector_version": 1,
+          "manuscript_id": "ms-003",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "Silent Palm",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 14,
+          "char_span": [
+            8272,
+            8287
+          ],
+          "clean_line": "Afterwards Rhys counted what was left: the tin lantern, and not much else.",
+          "corrupt_fragment": "the tin lantern",
+          "cross_chapter": false,
+          "defect_id": "ms-003-inventory_ghost-014",
+          "established_in": 14,
+          "injector_version": 1,
+          "manuscript_id": "ms-003",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "the iron key",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 6,
+          "char_span": [
+            3247,
+            3264
+          ],
+          "clean_line": "Afterwards Rhys counted what was left: the brass compass, and not much else.",
+          "corrupt_fragment": "the brass compass",
+          "cross_chapter": false,
+          "defect_id": "ms-003-inventory_ghost-006",
+          "established_in": 6,
+          "injector_version": 1,
+          "manuscript_id": "ms-003",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "the tin lantern",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 10,
+          "char_span": [
+            5497,
+            5508
+          ],
+          "clean_line": "The threshold broke somewhere behind Rhys's eyes, and the world resolved one notch sharper. Level 4. Stone Guard settled into place alongside the rest.",
+          "corrupt_fragment": "Stone Guard",
+          "cross_chapter": false,
+          "defect_id": "ms-003-entity_rename-010",
+          "established_in": 10,
+          "injector_version": 1,
+          "manuscript_id": "ms-003",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "Stone Ward",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 11,
+          "char_span": [
+            6121,
+            6134
+          ],
+          "clean_line": "Warden Ott pressed a iron latchkey into Rhys's hand and said nothing.",
+          "corrupt_fragment": "iron latchkey",
+          "cross_chapter": false,
+          "defect_id": "ms-003-entity_rename-011",
+          "established_in": 11,
+          "injector_version": 1,
+          "manuscript_id": "ms-003",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "iron key",
+          "type": "entity_rename"
+        }
+      ],
+      "rounds": 2
+    },
+    {
+      "complaints_after": 0,
+      "complaints_before": 8,
+      "manuscript_id": "ms-004",
+      "outcomes": [
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "skill_before_acquisition",
+          "new_complaints": 0,
+          "original": "Quickstep",
+          "proposed": "a movement instinct",
+          "reason": "accepted",
+          "span": [
+            1385,
+            1394
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 2,
+          "complaint_type": "skill_before_acquisition",
+          "new_complaints": 0,
+          "original": "Thorn Coil",
+          "proposed": "... Skills: Echo Sight, Frost Nail ...",
+          "reason": "accepted",
+          "span": [
+            2004,
+            2014
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "cracked grindstone",
+          "proposed": "cracked whetstone",
+          "reason": "accepted",
+          "span": [
+            2645,
+            2663
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "stat_drift",
+          "new_complaints": 0,
+          "original": "  Strength: 11",
+          "proposed": "  Strength: 10",
+          "reason": "accepted",
+          "span": [
+            4252,
+            4266
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "grey cloak",
+          "proposed": "bone charm",
+          "reason": "accepted",
+          "span": [
+            5310,
+            5320
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "Iron Hide",
+          "proposed": "Iron Skin",
+          "reason": "accepted",
+          "span": [
+            6902,
+            6911
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "grey cloak",
+          "proposed": "bone charm",
+          "reason": "accepted",
+          "span": [
+            7774,
+            7784
+          ]
+        }
+      ],
+      "planted": [
+        {
+          "chapter": 8,
+          "char_span": [
+            4215,
+            4229
+          ],
+          "clean_line": "  Strength: 11",
+          "corrupt_fragment": "  Strength: 11",
+          "cross_chapter": true,
+          "defect_id": "ms-004-stat_drift-008",
+          "established_in": 7,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "  Strength: 10",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 4,
+          "char_span": [
+            1994,
+            2004
+          ],
+          "clean_line": "The threshold broke somewhere behind Odile's eyes, and the world resolved one notch sharper. Level 2. Thorn Coil settled into place alongside the rest.",
+          "corrupt_fragment": "Thorn Coil",
+          "cross_chapter": true,
+          "defect_id": "ms-004-skill_before_acquisition-004",
+          "established_in": 7,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "Frost Nail",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 3,
+          "char_span": [
+            1385,
+            1394
+          ],
+          "clean_line": "Odile brought up Quickstep without thinking about it, and the corridor answered. Whatever Bex had come to say went unsaid a while longer.",
+          "corrupt_fragment": "Quickstep",
+          "cross_chapter": true,
+          "defect_id": "ms-004-skill_before_acquisition-003",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "Echo Sight",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 9,
+          "char_span": [
+            5269,
+            5283
+          ],
+          "clean_line": "Afterwards Odile counted what was left: the grey cloak, and not much else.",
+          "corrupt_fragment": "the grey cloak",
+          "cross_chapter": false,
+          "defect_id": "ms-004-inventory_ghost-009",
+          "established_in": 9,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "the bone charm",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 13,
+          "char_span": [
+            7733,
+            7747
+          ],
+          "clean_line": "Afterwards Odile counted what was left: the grey cloak, and not much else.",
+          "corrupt_fragment": "the grey cloak",
+          "cross_chapter": false,
+          "defect_id": "ms-004-inventory_ghost-013",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "the bone charm",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 12,
+          "char_span": [
+            6865,
+            6874
+          ],
+          "clean_line": "Odile brought up Iron Hide without thinking about it, and the corridor answered. Whatever the Tallyman had come to say went unsaid a while longer.",
+          "corrupt_fragment": "Iron Hide",
+          "cross_chapter": false,
+          "defect_id": "ms-004-entity_rename-012",
+          "established_in": 12,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "Iron Skin",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 5,
+          "char_span": [
+            2607,
+            2625
+          ],
+          "clean_line": "Bex pressed a cracked grindstone into Odile's hand and said nothing.",
+          "corrupt_fragment": "cracked grindstone",
+          "cross_chapter": false,
+          "defect_id": "ms-004-entity_rename-005",
+          "established_in": 5,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "cracked whetstone",
+          "type": "entity_rename"
+        }
+      ],
+      "rounds": 2
+    },
+    {
+      "complaints_after": 0,
+      "complaints_before": 5,
+      "manuscript_id": "ms-005",
+      "outcomes": [
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "stat_drift",
+          "new_complaints": 0,
+          "original": "  Strength: 10",
+          "proposed": "  Strength: 12",
+          "reason": "accepted",
+          "span": [
+            1163,
+            1177
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "skill_before_acquisition",
+          "new_complaints": 0,
+          "original": "Echo Sight",
+          "proposed": "Quickstep",
+          "reason": "accepted",
+          "span": [
+            2078,
+            2088
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "salt sack",
+          "proposed": "salt pouch",
+          "reason": "accepted",
+          "span": [
+            3305,
+            3314
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "sealed vial",
+          "proposed": "salt pouch",
+          "reason": "accepted",
+          "span": [
+            4878,
+            4889
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "cracked whetstone",
+          "proposed": "brass compass",
+          "reason": "accepted",
+          "span": [
+            7990,
+            8007
+          ]
+        }
+      ],
+      "planted": [
+        {
+          "chapter": 3,
+          "char_span": [
+            1163,
+            1177
+          ],
+          "clean_line": "  Strength: 10",
+          "corrupt_fragment": "  Strength: 10",
+          "cross_chapter": true,
+          "defect_id": "ms-005-stat_drift-003",
+          "established_in": 2,
+          "injector_version": 1,
+          "manuscript_id": "ms-005",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "  Strength: 12",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 4,
+          "char_span": [
+            2078,
+            2088
+          ],
+          "clean_line": "The threshold broke somewhere behind Sorrel's eyes, and the world resolved one notch sharper. Level 2. Echo Sight settled into place alongside the rest.",
+          "corrupt_fragment": "Echo Sight",
+          "cross_chapter": true,
+          "defect_id": "ms-005-skill_before_acquisition-004",
+          "established_in": 7,
+          "injector_version": 1,
+          "manuscript_id": "ms-005",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "Frost Nail",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 13,
+          "char_span": [
+            7987,
+            8008
+          ],
+          "clean_line": "Afterwards Sorrel counted what was left: the cracked whetstone, and not much else.",
+          "corrupt_fragment": "the cracked whetstone",
+          "cross_chapter": false,
+          "defect_id": "ms-005-inventory_ghost-013",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-005",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "the salt pouch",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 8,
+          "char_span": [
+            4874,
+            4889
+          ],
+          "clean_line": "Afterwards Sorrel counted what was left: the sealed vial, and not much else.",
+          "corrupt_fragment": "the sealed vial",
+          "cross_chapter": false,
+          "defect_id": "ms-005-inventory_ghost-008",
+          "established_in": 8,
+          "injector_version": 1,
+          "manuscript_id": "ms-005",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "the salt pouch",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 2,
+          "char_span": [
+            909,
+            919
+          ],
+          "clean_line": "Sorrel brought up Quicksteps without thinking about it, and the corridor answered. Whatever Nel had come to say went unsaid a while longer.",
+          "corrupt_fragment": "Quicksteps",
+          "cross_chapter": false,
+          "defect_id": "ms-005-entity_rename-002",
+          "established_in": 2,
+          "injector_version": 1,
+          "manuscript_id": "ms-005",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "Quickstep",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 6,
+          "char_span": [
+            3306,
+            3315
+          ],
+          "clean_line": "the Tallyman pressed a salt sack into Sorrel's hand and said nothing.",
+          "corrupt_fragment": "salt sack",
+          "cross_chapter": false,
+          "defect_id": "ms-005-entity_rename-006",
+          "established_in": 6,
+          "injector_version": 1,
+          "manuscript_id": "ms-005",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "salt pouch",
+          "type": "entity_rename"
+        }
+      ],
+      "rounds": 2
+    },
+    {
+      "complaints_after": 0,
+      "complaints_before": 5,
+      "manuscript_id": "ms-006",
+      "outcomes": [
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "grey mantle",
+          "proposed": "grey cloak",
+          "reason": "accepted",
+          "span": [
+            988,
+            999
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "copper ring",
+          "proposed": "grey cloak",
+          "reason": "accepted",
+          "span": [
+            1496,
+            1507
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "grey mantle",
+          "proposed": "grey cloak",
+          "reason": "accepted",
+          "span": [
+            3277,
+            3288
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "brass compass",
+          "proposed": "copper ring",
+          "reason": "accepted",
+          "span": [
+            7828,
+            7841
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "stat_drift",
+          "new_complaints": 0,
+          "original": "  Intellect: 8",
+          "proposed": "  Intellect: 9",
+          "reason": "accepted",
+          "span": [
+            7939,
+            7953
+          ]
+        }
+      ],
+      "planted": [
+        {
+          "chapter": 14,
+          "char_span": [
+            7944,
+            7958
+          ],
+          "clean_line": "  Intellect: 8",
+          "corrupt_fragment": "  Intellect: 8",
+          "cross_chapter": true,
+          "defect_id": "ms-006-stat_drift-014",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-006",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "  Intellect: 9",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 13,
+          "char_span": [
+            7827,
+            7844
+          ],
+          "clean_line": "Afterwards Sorrel counted what was left: the brass compass, and not much else.",
+          "corrupt_fragment": "the brass compass",
+          "cross_chapter": false,
+          "defect_id": "ms-006-inventory_ghost-013",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-006",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "the grey cloak",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 3,
+          "char_span": [
+            1493,
+            1508
+          ],
+          "clean_line": "Afterwards Sorrel counted what was left: the copper ring, and not much else.",
+          "corrupt_fragment": "the copper ring",
+          "cross_chapter": false,
+          "defect_id": "ms-006-inventory_ghost-003",
+          "established_in": 3,
+          "injector_version": 1,
+          "manuscript_id": "ms-006",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "the grey cloak",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 6,
+          "char_span": [
+            3279,
+            3290
+          ],
+          "clean_line": "Afterwards Sorrel counted what was left: the grey mantle, and not much else.",
+          "corrupt_fragment": "grey mantle",
+          "cross_chapter": false,
+          "defect_id": "ms-006-entity_rename-006",
+          "established_in": 6,
+          "injector_version": 1,
+          "manuscript_id": "ms-006",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "grey cloak",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 2,
+          "char_span": [
+            988,
+            999
+          ],
+          "clean_line": "Afterwards Sorrel counted what was left: the grey mantle, and not much else.",
+          "corrupt_fragment": "grey mantle",
+          "cross_chapter": false,
+          "defect_id": "ms-006-entity_rename-002",
+          "established_in": 2,
+          "injector_version": 1,
+          "manuscript_id": "ms-006",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "grey cloak",
+          "type": "entity_rename"
+        }
+      ],
+      "rounds": 2
+    },
+    {
+      "complaints_after": 0,
+      "complaints_before": 9,
+      "manuscript_id": "ms-007",
+      "outcomes": [
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "stat_drift",
+          "new_complaints": 0,
+          "original": "  Agility: 10",
+          "proposed": "  Agility: 8",
+          "reason": "accepted",
+          "span": [
+            563,
+            576
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "Stone Guard",
+          "proposed": "Stone Ward",
+          "reason": "accepted",
+          "span": [
+            1921,
+            1932
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "Stone Guard",
+          "proposed": "Stone Ward",
+          "reason": "accepted",
+          "span": [
+            2595,
+            2606
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "stat_drift",
+          "new_complaints": 0,
+          "original": "  Intellect: 8",
+          "proposed": "  Intellect: 9",
+          "reason": "accepted",
+          "span": [
+            2875,
+            2889
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "level_regression",
+          "new_complaints": 0,
+          "original": "  Level: 3",
+          "proposed": "  Level: 4",
+          "reason": "accepted",
+          "span": [
+            6623,
+            6633
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "tin lantern",
+          "proposed": "sealed vial, salt pouch",
+          "reason": "accepted",
+          "span": [
+            7916,
+            7927
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "tin lantern",
+          "proposed": "grey cloak",
+          "reason": "accepted",
+          "span": [
+            8591,
+            8602
+          ]
+        }
+      ],
+      "planted": [
+        {
+          "chapter": 6,
+          "char_span": [
+            2878,
+            2892
+          ],
+          "clean_line": "  Intellect: 8",
+          "corrupt_fragment": "  Intellect: 8",
+          "cross_chapter": true,
+          "defect_id": "ms-007-stat_drift-006",
+          "established_in": 5,
+          "injector_version": 1,
+          "manuscript_id": "ms-007",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "  Intellect: 9",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 2,
+          "char_span": [
+            563,
+            576
+          ],
+          "clean_line": "  Agility: 10",
+          "corrupt_fragment": "  Agility: 10",
+          "cross_chapter": true,
+          "defect_id": "ms-007-stat_drift-002",
+          "established_in": 1,
+          "injector_version": 1,
+          "manuscript_id": "ms-007",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "  Agility: 8",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 12,
+          "char_span": [
+            6626,
+            6636
+          ],
+          "clean_line": "  Level: 3",
+          "corrupt_fragment": "  Level: 3",
+          "cross_chapter": true,
+          "defect_id": "ms-007-level_regression-012",
+          "established_in": 11,
+          "injector_version": 1,
+          "manuscript_id": "ms-007",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "  Level: 4",
+          "type": "level_regression"
+        },
+        {
+          "chapter": 13,
+          "char_span": [
+            7915,
+            7930
+          ],
+          "clean_line": "Afterwards Ilrid counted what was left: the tin lantern, and not much else.",
+          "corrupt_fragment": "the tin lantern",
+          "cross_chapter": false,
+          "defect_id": "ms-007-inventory_ghost-013",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-007",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "the sealed vial",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 14,
+          "char_span": [
+            8578,
+            8593
+          ],
+          "clean_line": "Afterwards Ilrid counted what was left: the tin lantern, and not much else.",
+          "corrupt_fragment": "the tin lantern",
+          "cross_chapter": false,
+          "defect_id": "ms-007-inventory_ghost-014",
+          "established_in": 14,
+          "injector_version": 1,
+          "manuscript_id": "ms-007",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "the sealed vial",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 5,
+          "char_span": [
+            2597,
+            2608
+          ],
+          "clean_line": "Ilrid brought up Stone Guard without thinking about it, and the corridor answered. Whatever Warden Ott had come to say went unsaid a while longer.",
+          "corrupt_fragment": "Stone Guard",
+          "cross_chapter": false,
+          "defect_id": "ms-007-entity_rename-005",
+          "established_in": 5,
+          "injector_version": 1,
+          "manuscript_id": "ms-007",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "Stone Ward",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 4,
+          "char_span": [
+            1922,
+            1933
+          ],
+          "clean_line": "The threshold broke somewhere behind Ilrid's eyes, and the world resolved one notch sharper. Level 2. Stone Guard settled into place alongside the rest.",
+          "corrupt_fragment": "Stone Guard",
+          "cross_chapter": false,
+          "defect_id": "ms-007-entity_rename-004",
+          "established_in": 4,
+          "injector_version": 1,
+          "manuscript_id": "ms-007",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "Stone Ward",
+          "type": "entity_rename"
+        }
+      ],
+      "rounds": 2
+    },
+    {
+      "complaints_after": 0,
+      "complaints_before": 6,
+      "manuscript_id": "ms-008",
+      "outcomes": [
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "skill_before_acquisition",
+          "new_complaints": 0,
+          "original": "Ember Lash",
+          "proposed": "Ash Beckon",
+          "reason": "accepted",
+          "span": [
+            899,
+            909
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "grey cloak",
+          "proposed": ", and not much else.",
+          "reason": "accepted",
+          "span": [
+            1599,
+            1609
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "Ember Whip",
+          "proposed": "Ember Lash",
+          "reason": "accepted",
+          "span": [
+            2061,
+            2071
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "sealed vial",
+          "proposed": "salt pouch",
+          "reason": "accepted",
+          "span": [
+            3393,
+            3404
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "skill_before_acquisition",
+          "new_complaints": 0,
+          "original": "Stone Ward",
+          "proposed": "Ash Beckon",
+          "reason": "accepted",
+          "span": [
+            5607,
+            5617
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "grey mantle",
+          "proposed": "grey cloak",
+          "reason": "accepted",
+          "span": [
+            6765,
+            6776
+          ]
+        }
+      ],
+      "planted": [
+        {
+          "chapter": 10,
+          "char_span": [
+            5598,
+            5608
+          ],
+          "clean_line": "The threshold broke somewhere behind Sorrel's eyes, and the world resolved one notch sharper. Level 4. Stone Ward settled into place alongside the rest.",
+          "corrupt_fragment": "Stone Ward",
+          "cross_chapter": true,
+          "defect_id": "ms-008-skill_before_acquisition-010",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-008",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "Blood Ledger",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 2,
+          "char_span": [
+            899,
+            909
+          ],
+          "clean_line": "Sorrel brought up Ember Lash without thinking about it, and the corridor answered. Whatever Warden Ott had come to say went unsaid a while longer.",
+          "corrupt_fragment": "Ember Lash",
+          "cross_chapter": true,
+          "defect_id": "ms-008-skill_before_acquisition-002",
+          "established_in": 4,
+          "injector_version": 1,
+          "manuscript_id": "ms-008",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "Ash Beckon",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 6,
+          "char_span": [
+            3379,
+            3394
+          ],
+          "clean_line": "Afterwards Sorrel counted what was left: the sealed vial, and not much else.",
+          "corrupt_fragment": "the sealed vial",
+          "cross_chapter": false,
+          "defect_id": "ms-008-inventory_ghost-006",
+          "established_in": 6,
+          "injector_version": 1,
+          "manuscript_id": "ms-008",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "the salt pouch",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 3,
+          "char_span": [
+            1595,
+            1609
+          ],
+          "clean_line": "Afterwards Sorrel counted what was left: the grey cloak, and not much else.",
+          "corrupt_fragment": "the grey cloak",
+          "cross_chapter": false,
+          "defect_id": "ms-008-inventory_ghost-003",
+          "established_in": 3,
+          "injector_version": 1,
+          "manuscript_id": "ms-008",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "the salt pouch",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 4,
+          "char_span": [
+            2051,
+            2061
+          ],
+          "clean_line": "The threshold broke somewhere behind Sorrel's eyes, and the world resolved one notch sharper. Level 2. Ember Whip settled into place alongside the rest.",
+          "corrupt_fragment": "Ember Whip",
+          "cross_chapter": false,
+          "defect_id": "ms-008-entity_rename-004",
+          "established_in": 4,
+          "injector_version": 1,
+          "manuscript_id": "ms-008",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "Ember Lash",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 12,
+          "char_span": [
+            6756,
+            6767
+          ],
+          "clean_line": "Nel pressed a grey mantle into Sorrel's hand and said nothing.",
+          "corrupt_fragment": "grey mantle",
+          "cross_chapter": false,
+          "defect_id": "ms-008-entity_rename-012",
+          "established_in": 12,
+          "injector_version": 1,
+          "manuscript_id": "ms-008",
+          "notes": "planted 6 of 10 requested",
+          "original_fragment": "grey cloak",
+          "type": "entity_rename"
+        }
+      ],
+      "rounds": 2
+    },
+    {
+      "complaints_after": 0,
+      "complaints_before": 5,
+      "manuscript_id": "ms-009",
+      "outcomes": [
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "Ash Summons",
+          "proposed": "Ash Beckon",
+          "reason": "accepted",
+          "span": [
+            790,
+            801
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "tin lantern",
+          "proposed": "copper ring",
+          "reason": "accepted",
+          "span": [
+            2697,
+            2708
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
+          "complaint_type": "stat_drift",
+          "new_complaints": 0,
+          "original": "  Strength: 14",
+          "proposed": "  Strength: 12",
+          "reason": "accepted",
+          "span": [
+            2776,
+            2790
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
+          "complaint_type": "entity_rename",
+          "new_complaints": 0,
+          "original": "Echo Vision",
+          "proposed": "Echo Sight",
+          "reason": "accepted",
+          "span": [
+            6750,
+            6761
+          ]
+        },
+        {
+          "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 1,
+          "complaint_type": "inventory_ghost",
+          "new_complaints": 0,
+          "original": "copper ring",
+          "proposed": "tin lantern",
+          "reason": "accepted",
+          "span": [
+            7614,
+            7625
+          ]
+        }
+      ],
+      "planted": [
+        {
+          "chapter": 6,
+          "char_span": [
+            2777,
+            2791
+          ],
+          "clean_line": "  Strength: 14",
+          "corrupt_fragment": "  Strength: 14",
+          "cross_chapter": true,
+          "defect_id": "ms-009-stat_drift-006",
+          "established_in": 5,
+          "injector_version": 1,
+          "manuscript_id": "ms-009",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "  Strength: 12",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 13,
+          "char_span": [
+            7612,
+            7627
+          ],
+          "clean_line": "Afterwards Rhys counted what was left: the copper ring, and not much else.",
+          "corrupt_fragment": "the copper ring",
+          "cross_chapter": false,
+          "defect_id": "ms-009-inventory_ghost-013",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-009",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "the tin lantern",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 5,
+          "char_span": [
+            2694,
+            2709
+          ],
+          "clean_line": "Afterwards Rhys counted what was left: the tin lantern, and not much else.",
+          "corrupt_fragment": "the tin lantern",
+          "cross_chapter": false,
+          "defect_id": "ms-009-inventory_ghost-005",
+          "established_in": 5,
+          "injector_version": 1,
+          "manuscript_id": "ms-009",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "the grey cloak",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 2,
+          "char_span": [
+            790,
+            801
+          ],
+          "clean_line": "Rhys brought up Ash Summons without thinking about it, and the corridor answered. Whatever Nel had come to say went unsaid a while longer.",
+          "corrupt_fragment": "Ash Summons",
+          "cross_chapter": false,
+          "defect_id": "ms-009-entity_rename-002",
+          "established_in": 2,
+          "injector_version": 1,
+          "manuscript_id": "ms-009",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "Ash Beckon",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 12,
+          "char_span": [
+            6751,
+            6762
+          ],
+          "clean_line": "Rhys brought up Echo Vision without thinking about it, and the corridor answered. Whatever Bex had come to say went unsaid a while longer.",
+          "corrupt_fragment": "Echo Vision",
+          "cross_chapter": false,
+          "defect_id": "ms-009-entity_rename-012",
+          "established_in": 12,
+          "injector_version": 1,
+          "manuscript_id": "ms-009",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "Echo Sight",
+          "type": "entity_rename"
+        }
+      ],
+      "rounds": 2
+    }
+  ],
+  "total_chapters": 140,
+  "untouched_chapters": 79
+}

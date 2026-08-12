@@ -250,12 +250,56 @@ tracking is what moved it.
 raise recall specifically on the relational classes. All three cross-chapter defect types
 are detected at 100%.
 
-**One specified element is still missing.** The sweep asks for **best-of-N per finding,
-keeping the *smallest* candidate that clears it** — arguing that edit-level best-of-N is
-live where round-level re-rolling was dead, because candidates for a *named* fix vary while
-whole-round lengths did not. A2d keeps the *first* acceptable candidate. This is the
-cheapest remaining improvement and it aims squarely at §6's gap: repairs that stop the
-complaint without restoring the fact (90% resolved vs 84% restored on templated prose).
+**The last specified element is now built — see §8.1.**
+
+### 8.1 Best-of-N, ranked by minimal intervention
+
+The sweep asked for best-of-N per finding, keeping the **smallest** candidate that clears
+it, arguing that edit-level best-of-N is live where round-level re-rolling was dead: the
+candidates for a *named* fix genuinely vary, whereas whole-round lengths did not. Built, and
+the argument holds — but only after the first implementation of it did nothing at all.
+
+Ranking is by **Levenshtein distance from the span being replaced**, not by length. A
+candidate that deletes the span is shortest by length and maximal by damage; distance from
+what is being replaced is what "minimal intervention" actually means.
+
+Templated corpus, 63 planted defects:
+
+| | N=1 | N=3 |
+|---|---:|---:|
+| complaints remaining | 5 | **1** |
+| proposals accepted | 57 (85%) | **61 (97%)** |
+| defect resolved | 90% | **97%** |
+| exactly restored | 84% | **87%** |
+| chapters edited with no defect | 0 | 0 |
+| wall clock | 23s | 53s |
+
+Sampling produced genuine variation on **43 of 63** complaints (2–3 distinct candidates
+after deduplication). Of the 61 accepted repairs, 57 landed at rank 0 — the smallest
+candidate was both available and correct — and **4 landed at rank 1 or 2**, which is exactly
+the 57→61 gain. Those four are repairs a single proposal would have missed.
+
+On the model-written corpus the arm was already at its ceiling (97%/97% at N=1), and N=3
+holds it there while cutting residual complaints from 1 to 1 — no gain, and none available.
+
+### 8.2 The first implementation was a no-op, and the cause is a repeat offender
+
+The first version varied only the **seed** across candidates. The runner generates at
+**temperature 0**, where decoding is deterministic — so three generations returned three
+byte-identical strings, deduplication collapsed them to one, and the run cost 2.5× the GPU
+time for exactly zero variation. Measured before the fix: `candidates_seen == 1` on all 67
+complaints, and every headline number identical to N=1 to the digit.
+
+This is `findings-phase1.md`'s resampling result arriving one level down. There, re-rolling a
+whole round did nothing because the model held a target length across seeds; here,
+re-rolling an edit did nothing because greedy decoding has no seed dependence at all. The
+sweep's claim that "candidates for a named fix vary" was right, but it silently assumed
+sampling.
+
+The fix keeps candidate 0 exactly as configured — normally greedy, so the primary proposal
+stays reproducible — and samples every later candidate at `candidate_temperature` (0.7).
+Pinned by a test that asserts the temperature actually rises, not merely that the seeds
+differ: the earlier test checked seeds and passed throughout the no-op.
 
 ## 9. Where this leaves the plan
 

@@ -229,12 +229,17 @@ being the manifest and the verification being a strict fall in total complaint c
 falsifiable prediction — that recall rises specifically on relational classes — held: the
 three cross-chapter defect types are detected at 100%.
 
-**One specified element is not built.** The sweep asks for **best-of-N per finding, keeping
-the *smallest* candidate that clears it**, on the argument that edit-level best-of-N is live
-where round-level re-rolling was dead (candidates for a named fix vary; whole-round lengths
-did not). A2d currently keeps the *first* acceptable candidate. This is the cheapest
-remaining improvement and it targets the exact gap `findings-litrpg.md` §6 identifies —
-repairs that stop the complaint without restoring the fact.
+**Best-of-N is now built** (`findings-litrpg.md` §8.1), and the sweep's argument held:
+resolution rose 90% → 97% and restoration 84% → 87% on the templated corpus, with 4 of 61
+accepted repairs landing on a candidate past the smallest — repairs a single proposal would
+have missed. Ranking is by edit distance from the replaced span, not by length, because the
+shortest candidate is the one that deletes it.
+
+One correction to the sweep's reasoning, recorded because it cost a wasted run: the claim
+that "candidates for a named fix vary" silently assumed sampling. Varying only the seed at
+temperature 0 returns byte-identical candidates, so the first implementation cost 2.5x the
+GPU time for zero variation — `findings-phase1.md`'s dead-resampling result arriving one
+level down.
 
 ## 16. A second defect corpus exists, contamination-robust — **open**
 

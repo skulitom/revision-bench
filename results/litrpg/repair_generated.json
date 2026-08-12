@@ -1,9 +1,13 @@
 {
+  "accepted_rank": {
+    "0": 36
+  },
+  "candidates": 3,
   "chapters": 14,
   "collateral_chapters": [],
   "complaints_after": 1,
   "complaints_before": 41,
-  "elapsed_seconds": 12.2,
+  "elapsed_seconds": 34.0,
   "manuscripts": 8,
   "model": "phi4:latest",
   "model_digest": "ac896e5b8b34a1f4efa7b14d7520725140d5512484457fab45d2a4ea14c69dba",
@@ -22,6 +26,8 @@
       "outcomes": [
         {
           "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "folded chart",
@@ -34,10 +40,12 @@
         },
         {
           "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
           "complaint_type": "stat_drift",
           "new_complaints": 0,
           "original": "  Agility: 10  ",
-          "proposed": "Agility: 8",
+          "proposed": "  Agility: 8  ",
           "reason": "accepted",
           "span": [
             3993,
@@ -46,38 +54,44 @@
         },
         {
           "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "Mind Lance",
           "proposed": "Mind Spike",
           "reason": "accepted",
           "span": [
-            10292,
-            10302
+            10296,
+            10306
           ]
         },
         {
           "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
           "complaint_type": "stat_drift",
           "new_complaints": 0,
           "original": "  Agility: 7  ",
-          "proposed": "Agility: 8",
+          "proposed": "  Agility: 8  ",
           "reason": "accepted",
           "span": [
-            11142,
-            11156
+            11146,
+            11160
           ]
         },
         {
           "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
           "complaint_type": "inventory_ghost",
           "new_complaints": 0,
           "original": "bone charm",
           "proposed": "folded map",
           "reason": "accepted",
           "span": [
-            25326,
-            25336
+            25334,
+            25344
           ]
         }
       ],
@@ -177,6 +191,8 @@
       "outcomes": [
         {
           "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
           "complaint_type": "stat_drift",
           "new_complaints": 0,
           "original": "  Agility: 7  ",
@@ -189,6 +205,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "cracked grindstone",
@@ -201,6 +219,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
           "complaint_type": "stat_drift",
           "new_complaints": 0,
           "original": "  Intellect: 14  ",
@@ -213,10 +233,12 @@
         },
         {
           "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
           "complaint_type": "level_regression",
           "new_complaints": 0,
           "original": "  Level: 2  ",
-          "proposed": "  Level: 3",
+          "proposed": "  Level: 3  ",
           "reason": "accepted",
           "span": [
             16389,
@@ -225,14 +247,16 @@
         },
         {
           "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "Thorn Vine",
           "proposed": "Thorn Coil",
           "reason": "accepted",
           "span": [
-            27213,
-            27223
+            27215,
+            27225
           ]
         }
       ],
@@ -332,10 +356,12 @@
       "outcomes": [
         {
           "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
           "complaint_type": "stat_drift",
           "new_complaints": 0,
           "original": "  Agility: 11  ",
-          "proposed": "Agility: 12",
+          "proposed": "  Agility: 12",
           "reason": "accepted",
           "span": [
             1766,
@@ -344,38 +370,44 @@
         },
         {
           "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
           "complaint_type": "stat_drift",
           "new_complaints": 0,
           "original": "  Vitality: 12  ",
           "proposed": "  Vitality: 10  ",
           "reason": "accepted",
           "span": [
-            3696,
-            3712
+            3698,
+            3714
           ]
         },
         {
           "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
           "complaint_type": "skill_before_acquisition",
           "new_complaints": 0,
           "original": "Ash Beckon",
           "proposed": "Silent Palm",
           "reason": "accepted",
           "span": [
-            8843,
-            8853
+            8845,
+            8855
           ]
         },
         {
           "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
           "complaint_type": "skill_before_acquisition",
           "new_complaints": 0,
           "original": "Glass Song",
           "proposed": "Silent Palm",
           "reason": "accepted",
           "span": [
-            13125,
-            13135
+            13127,
+            13137
           ]
         }
       ],
@@ -458,6 +490,8 @@
       "outcomes": [
         {
           "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
           "complaint_type": "skill_before_acquisition",
           "new_complaints": 0,
           "original": "Silent Palm",
@@ -470,6 +504,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "Glass Chant",
@@ -482,6 +518,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
           "complaint_type": "skill_before_acquisition",
           "new_complaints": 0,
           "original": "Stone Ward",
@@ -494,6 +532,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "Stone Guard",
@@ -506,6 +546,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
           "complaint_type": "inventory_ghost",
           "new_complaints": 0,
           "original": "tin lantern",
@@ -613,10 +655,12 @@
       "outcomes": [
         {
           "applied": false,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
           "complaint_type": "skill_before_acquisition",
           "new_complaints": 0,
           "original": "Quickstep",
-          "proposed": "the skill that allowed her to move swiftly and silently through crowds, a technique she had mastered over time",
+          "proposed": "the skill that allowed her to move quickly and silently through the crowd",
           "reason": "out_of_scope",
           "span": [
             4813,
@@ -625,6 +669,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
           "complaint_type": "skill_before_acquisition",
           "new_complaints": 0,
           "original": "Thorn Coil",
@@ -637,6 +683,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "cracked grindstone",
@@ -649,6 +697,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
           "complaint_type": "stat_drift",
           "new_complaints": 0,
           "original": "  Strength: 11  ",
@@ -661,6 +711,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
           "complaint_type": "inventory_ghost",
           "new_complaints": 0,
           "original": "grey cloak",
@@ -673,6 +725,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "Iron Hide",
@@ -685,10 +739,12 @@
         },
         {
           "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
           "complaint_type": "inventory_ghost",
           "new_complaints": 0,
           "original": "grey cloak",
-          "proposed": "bone charm that hung around her neck",
+          "proposed": "bone charm",
           "reason": "accepted",
           "span": [
             26378,
@@ -697,10 +753,12 @@
         },
         {
           "applied": false,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
           "complaint_type": "skill_before_acquisition",
           "new_complaints": 0,
           "original": "Quickstep",
-          "proposed": "the skill that allowed her to move swiftly and silently through crowds, a technique she had mastered over time",
+          "proposed": "the skill that allowed her to move quickly and silently through the crowd",
           "reason": "out_of_scope",
           "span": [
             4813,
@@ -838,6 +896,8 @@
       "outcomes": [
         {
           "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
           "complaint_type": "stat_drift",
           "new_complaints": 0,
           "original": "  Strength: 10  ",
@@ -850,6 +910,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
           "complaint_type": "skill_before_acquisition",
           "new_complaints": 0,
           "original": "Echo Sight",
@@ -862,6 +924,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "cracked grindstone",
@@ -874,6 +938,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "Thorn Vine",
@@ -964,6 +1030,8 @@
       "outcomes": [
         {
           "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "grey mantle",
@@ -976,6 +1044,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "grey mantle",
@@ -988,6 +1058,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
           "complaint_type": "stat_drift",
           "new_complaints": 0,
           "original": "  Intellect: 8  ",
@@ -1061,6 +1133,8 @@
       "outcomes": [
         {
           "applied": true,
+          "candidates_seen": 3,
+          "chosen_rank": 0,
           "complaint_type": "skill_before_acquisition",
           "new_complaints": 0,
           "original": "Echo Sight",
@@ -1073,6 +1147,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 2,
+          "chosen_rank": 0,
           "complaint_type": "skill_before_acquisition",
           "new_complaints": 0,
           "original": "Ash Beckon",
@@ -1085,6 +1161,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "sealed phial",
@@ -1097,6 +1175,8 @@
         },
         {
           "applied": true,
+          "candidates_seen": 1,
+          "chosen_rank": 0,
           "complaint_type": "entity_rename",
           "new_complaints": 0,
           "original": "Blood Tally",

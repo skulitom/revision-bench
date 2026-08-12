@@ -78,6 +78,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--max-rounds", type=int, default=2)
     parser.add_argument(
+        "--candidates",
+        type=int,
+        default=3,
+        help="best-of-N per complaint, tried in ascending edit distance from the span. "
+        "1 reproduces the single-proposal behaviour.",
+    )
+    parser.add_argument(
         "--out", type=Path, default=REPO_ROOT / "results" / "litrpg" / "repair.json"
     )
     args = parser.parse_args(argv)
@@ -97,6 +104,7 @@ def main(argv: list[str] | None = None) -> int:
     client.warm_up(args.model, options, think=False)
 
     reasons: Counter[str] = Counter()
+    ranks: Counter[int] = Counter()
     resolved = restored = planted_total = 0
     untouched_chapters = total_chapters = 0
     collateral_chapters: list[tuple[str, int]] = []
@@ -129,11 +137,14 @@ def main(argv: list[str] | None = None) -> int:
             options,
             manuscript_id=manuscript_id,
             max_rounds=args.max_rounds,
+            candidates=args.candidates,
         )
         complaints_before += report.complaints_before
         complaints_after += report.complaints_after
         for outcome in report.outcomes:
             reasons[outcome.reason] += 1
+            if outcome.applied:
+                ranks[outcome.chosen_rank] += 1
 
         corrupt_chapters = _chapters(corrupt)
         fixed_chapters = _chapters(report.text)
@@ -212,6 +223,8 @@ def main(argv: list[str] | None = None) -> int:
             "resolved": resolved,
             "restored": restored,
             "reasons": dict(reasons),
+            "candidates": args.candidates,
+            "accepted_rank": {str(k): v for k, v in ranks.items()},
             "complaints_before": complaints_before,
             "complaints_after": complaints_after,
             "untouched_chapters": untouched_chapters,
