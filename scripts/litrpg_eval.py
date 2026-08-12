@@ -30,7 +30,6 @@ not as a forecast — and see `litrpg.py` for the rest of the caveats.
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from collections import defaultdict
 from pathlib import Path
