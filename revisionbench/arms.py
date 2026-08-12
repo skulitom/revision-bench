@@ -18,6 +18,10 @@ Implemented here:
 - :class:`EditList` — arm A2e. The model returns a list of find/replace operations and only
   unambiguous ones are applied. The strongest bounded-diff form available without a judge,
   and the one the downstream harness (plan.md §10) actually needs.
+- :class:`IndexedEditList` — arm A2i. Edits addressed by sentence number under an enforced
+  schema, with per-edit mechanical vetoes. Removes A2e's two measured failure classes.
+- :class:`FeedbackIndexedEditList` — arm A2f. A2i with the vetoes stated in the protocol,
+  a punctuation veto, and one per-edit feedback retry for vetoed edits.
 
 **The trap this module is written around.** An arm that fails to parse, or proposes
 nothing, returns the text unchanged — and unchanged text scores as *perfect* voice
@@ -48,6 +52,7 @@ __all__ = [
     "ARMS",
     "INDEXED_EDIT_SCHEMA",
     "EditList",
+    "FeedbackIndexedEditList",
     "IndexedEditList",
     "ParagraphScoped",
     "Proposal",
