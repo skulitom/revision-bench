@@ -346,7 +346,35 @@ claim rather than qualify one, it cost no GPU-hours and no human labels, and it 
 template for the rest — take the alternative explanation seriously enough to construct the
 subset where it makes a different prediction, then look there.
 
-## 14. Where this leaves Phase 2
+## 14. The anchor itself is biased — absorbed from the literature sweeps
+
+Recorded here because it qualifies everything above. Preference data carries a **typicality
+bias**: annotators systematically favour familiar, fluent, predictable text
+([`literature.md`](literature.md) §2). This is the mechanism behind post-training mode
+collapse, and it applies to *any* pairwise preference — human or model, reliable or not.
+
+So the ~100-pair human subsample this phase treats as its calibration anchor is a valid
+anchor for **"is this fix an improvement?"** and structurally blind to **"does this preserve
+what is distinctive?"** The second question asks about the tails that the first penalises.
+Now promoted to plan.md §2, with the consequence spelled out: **the preservation constraint
+is load-bearing even under a perfect human judge**, not a workaround for unreliable ones.
+
+Two practical corrections follow for this phase:
+
+- **§10's 80% cannot be read as "the panel has taste"** even if a human agrees with it. A
+  human and a model panel that share a typicality bias will agree *because* they share it.
+  Agreement between two typicality-biased judges is not independent evidence.
+- **LitBench is not the shortcut it looked like.** The sweep proposed pre-validating judge
+  configurations against its human-labelled test set. Checked: the released test set ships
+  **no text** — 2,381 rows of Reddit comment IDs requiring API rehydration — its labels are
+  upvote-derived (popularity, and typicality-biased in exactly the relevant way), and its
+  pairs compare two *different stories* rather than two versions of one text.
+  [`literature.md`](literature.md) §10 records the substitute found instead
+  ([IteraTeR](https://huggingface.co/datasets/wanyu/IteraTeR_human_sent), Apache-2.0, 4,018
+  human before/after revision pairs), and why its reversed edit direction tests something
+  this corpus cannot.
+
+## 15. Where this leaves Phase 2
 
 - **A quality claim now exists**, with three caveats attached: small n, local 4B–14B
   judges, and no human calibration.

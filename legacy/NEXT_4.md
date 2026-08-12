@@ -1,3 +1,8 @@
+> **Retired 2026-08-12.** Absorbed into `docs/literature.md` (consolidated, with a
+> status against each claim), plus targeted edits to `plan.md` sections 2, 4, 7 and 8,
+> `docs/findings-phase2.md` section 14 and `docs/findings-litrpg.md` section 8.
+> Kept for provenance per the note lifecycle in `NEXT.md`.
+
 # NEXT_4 — external research notes: the architecture beyond A2i (2026-08-12)
 
 Owner-initiated literature sweep, prompted by the four-arm frontier result (A2i recall

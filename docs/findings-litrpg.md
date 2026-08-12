@@ -232,7 +232,32 @@ model-introduced drift. They are not — they are the injector's own variant swa
 `whetstone→grindstone` and `Coil→Vine`, so they were planted defects found and repaired
 correctly. Only the `salt` complaints were true false positives.)
 
-## 8. Where this leaves the plan
+## 8. What this answers from the literature sweeps
+
+`NEXT_4.md` (retired to `legacy/`, absorbed into [`literature.md`](literature.md) §14–§15)
+predicted this work before it was built, and two of its claims are now settled.
+
+**Detection was the bottleneck, not repair.** The sweep argued A2i's 0.22 recall was
+structurally capped because three defect classes are *relational* — the evidence spans
+sentences, so a per-sentence editor never holds both halves of the contradiction in one
+decision. It prescribed decomposing M5 into detection recall versus repair success, on the
+grounds that the pooled number could not distinguish an architectural cap from a repair
+failure. Decomposed here: detection recall 99–100%, repair clears 97% of what it is handed.
+**The number that looked like a repair problem was a detection problem**, and explicit state
+tracking is what moved it.
+
+**The falsifiable prediction held.** The sweep predicted a detect–repair–verify arm would
+raise recall specifically on the relational classes. All three cross-chapter defect types
+are detected at 100%.
+
+**One specified element is still missing.** The sweep asks for **best-of-N per finding,
+keeping the *smallest* candidate that clears it** — arguing that edit-level best-of-N is
+live where round-level re-rolling was dead, because candidates for a *named* fix vary while
+whole-round lengths did not. A2d keeps the *first* acceptable candidate. This is the
+cheapest remaining improvement and it aims squarely at §6's gap: repairs that stop the
+complaint without restoring the fact (90% resolved vs 84% restored on templated prose).
+
+## 9. Where this leaves the plan
 
 The judge is not on the critical path for this class of defect, and this is the first
 measurement in the project that shows it rather than argues it. Next, in order:

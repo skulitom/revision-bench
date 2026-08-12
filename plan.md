@@ -29,6 +29,10 @@ An unbounded revision loop with an LLM in the "is this better?" seat does not as
 
 "Perfecting" only converges when there is a trustworthy signal of *better*. For prose aesthetics no such signal exists off the shelf: LLM judges have self-preference bias and drift. The research question is therefore not "how do we write a better improve-prompt" but **"under what acceptance architecture is iterative revision provably non-degrading while retaining genuine fixes?"**
 
+**And the human anchor cannot close the gap either.** Preference data carries a *typicality bias* — annotators systematically favour familiar, fluent, predictable text (`docs/literature.md` §2). That is the mechanism behind post-training mode collapse, and it applies to any pairwise preference, human or model. So a preference judge is a valid anchor for **"is this fix an improvement?"** and is structurally blind to **"does this preserve what is distinctive?"** — the second question is about the *tails* the first question penalises.
+
+The consequence is load-bearing for every arm in §8: **the preservation constraint (voice veto, bounded diffs, frozen spans) is not a workaround for unreliable judges. It remains necessary under a perfect human judge**, because no pairwise preference — at any level of reliability — measures distinctiveness. Plan accordingly: preservation is a separate mechanism from acceptance, and neither substitutes for the other.
+
 ---
 
 ## 3. Prior art and the gap (verified 2026-08-11 via web search)
@@ -51,11 +55,15 @@ The *disease* is documented; the *cure* is not.
 
 ## 4. Central hypothesis: the attractor model
 
-A revision loop pulls text toward a **model-specific stylistic attractor** ("house style"). Degradation is not noise; it is convergence toward that attractor. Falsifiable predictions:
+A revision loop pulls text toward a **model-specific stylistic attractor** ("house style"). Degradation is not noise; it is convergence toward that attractor.
+
+**This is the LLM instance of a known result, not a new conjecture.** Iterated-learning theory proves a chain of Bayesian learners, each learning from the previous one's output, converges to the learners' *prior* regardless of the starting data (`docs/literature.md` §1). An unconstrained revision loop is a single-agent chain. Two consequences: **A0 is a prior probe**, not only a control — its fixed point *measures* the house style; and the theory predicts drift toward the prior **cannot be prompted away, only structurally anchored**, which is what Phase 0/1 measured when prompt and sampler both failed and A2i's untouched-span anchor worked.
+
+Falsifiable predictions:
 
 - **H1 (homogenization):** under an unconstrained loop, mean pairwise stylometric distance between texts by *different* authors shrinks monotonically with round number.
 - **H2 (position-dependence):** quality change depends on where the source starts relative to the attractor — deliberately weak drafts improve, distinctive strong prose degrades, and both end near the same endpoint.
-- **H3 (model-specificity):** final-round texts cluster by *reviser model family*, not by source author (measurable: cluster purity of endpoint embeddings/stylometrics).
+- **H3 (model-specificity):** final-round texts cluster by *reviser model family*, not by source author (measurable: cluster purity of endpoint embeddings/stylometrics). **Sharpened by §1 of `docs/literature.md`:** the prediction is not merely that endpoints cluster by family but that they approach the reviser's *unconditional* prose. Cheap test — generate unconditional fiction from each reviser and check whether A0 endpoints are stylometrically closer to it than to their own round 0.
 - **H4 (report–state divergence):** the in-loop judge's acceptance reports ("improved") diverge from blinded cross-family panel verdicts, and the divergence grows with round number.
 - **H5 (the cure):** a loop with scoped edits + blinded cross-family accept gate with margin θ + stylometric voice veto ε + dismissal memory (arm A5, §8) reaches a fixed point voluntarily, fixes planted defects at near-control recall, and holds stylometric drift ≈ 0 with final blinded quality ≥ round 0.
 
@@ -101,7 +109,7 @@ All computed from saved round artifacts; M1–M3 and M6 are pure Python, zero AP
 - **M2 Homogenization:** mean pairwise inter-author stylometric + embedding distance per round (H1's direct measure).
 - **M3 Slop index:** frequency per 1k words of a versioned LLM-tell lexicon (curated data file, cited sources) + formulaic-construction counts.
 - **M4 Blinded quality:** position-randomized pairwise comparisons across rounds (round 0 vs k, k vs k+1), judged by a panel of ≥3 models from *different families than the reviser*; Bradley–Terry fit → quality-vs-round curve with CIs. Human spot-validation: ~100 blinded pairs judged by the project author; panel is trusted only where it agrees with the human subsample.
-- **M5 Defect-fix recall/precision:** planted defects fixed (recall); spurious "fixes" to non-defective spans (a precision proxy for overreach).
+- **M5 Defect-fix recall/precision, decomposed:** report **detection recall** (was the defect *named*?) and **repair success** (did the edit clear it?) separately, never only their product. Three of the seven defect classes are *relational* — the evidence spans sentences — so a per-sentence editor cannot hold both halves of the contradiction in one decision and its ceiling on those classes is chance. A pooled number cannot distinguish that architectural cap from a repair failure, and A2i's 0.22 stayed uninterpretable for exactly that reason (`docs/literature.md` §14). Also report **spurious "fixes" to non-defective spans** — the precision proxy for overreach, and under a detect-then-repair arm the binding constraint outright, since a false complaint is a *licensed* unnecessary edit.
 - **M6 Thrash:** sentence-level alignment across consecutive versions; fraction of round-k edits reverted or re-rewritten by round k+2; convergence = rounds-to-fixed-point (no accepted edits), if reached.
 - **M7 Judge validity (H4):** per-round agreement between the in-loop judge's accept decisions and the blinded panel verdict on the same pairs; plotted against round number.
 
@@ -117,6 +125,9 @@ Each arm runs to a 15-round cap or a fixed point (loop proposes no further accep
 - **A3 — gated:** proposal accepted only if a blinded, position-swapped cross-family panel prefers it over the current version with margin > θ (majority + margin; θ swept in Phase 3).
 - **A4 — gated + voice veto:** A3, plus reject any proposal moving the stylometric fingerprint > ε from the *round-0* baseline (ε swept).
 - **A5 — full stack:** scoped + gated + voice veto + **dismissal memory** (a rejected proposal class is recorded and never re-proposed; re-running on unchanged text must yield zero new proposals — the idempotence requirement).
+- **A2d — detect, then repair, then verify** *(added 2026-08-12; built for the genre stratum)*. Every arm above shares one shape: **revise, then gate**. The model is invited to improve a unit and something downstream decides how much to keep. Bounded diffs made the *keeping* safe and did nothing about the *inviting*, which is where the ~24:1 overreach comes from — a model asked to improve a paragraph will always find something to change, because that is what it was asked for. The inversion: **only a span with a located, checkable complaint against it is eligible to be edited; everything else is frozen.** Three stages — detect (compile the text into a state/fact ledger, find contradictions *in the ledger*, map back to spans), repair (one complaint, one span, A2i's machinery unchanged), verify (accept only if the cited complaint resolves and no new complaint appears). Two properties are structural rather than prompted: the model never sees the whole manuscript, so it *cannot* edit an unflagged span; and acceptance is mechanical, so no judge is on the critical path for any defect class a linter can state. Measured in [`docs/findings-litrpg.md`](docs/findings-litrpg.md). **Overreach under this design is bounded by detector precision, which is measurable, rather than by a model's restraint, which is not.**
+
+**What the bounded arms give up, named:** sentence-indexed edits are structurally capped at *surface* and *microstructure* changes on the Faigley–Witte taxonomy, so A2i — and A2d more so — is a **novice-shaped editor by construction** (`docs/literature.md` §12). That is the right trade for a safety layer. It also means the downstream harness's ambitions eventually require macrostructure operations, which will need their own bounded representation (scene- or beat-level ops with their own vetoes), *not* an unbounding of A2i.
 
 **Success criterion for H5 (A5):** defect-fix recall within ~10 points of A0; M1 drift and M3 slop flat across rounds; final M4 Bradley–Terry ≥ round 0; voluntary halting before the round cap on a majority of passages.
 

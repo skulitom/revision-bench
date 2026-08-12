@@ -95,7 +95,8 @@ reviser's family) is served by keeping several distinct families available local
 ```
 plan.md                  research plan; milestones and acceptance criteria
 AGENTS.md                rules for anyone (human or agent) changing this code
-NEXT*.md                 owner direction notes and literature sweeps, absorbed then retired
+NEXT*.md                 owner direction notes; absorbed, then retired to legacy/
+legacy/                  retired notes, kept for provenance with an absorption header
 configs/                 every constant lives here, never in code
 data/
   corpus/passages/       extracted passages + per-passage provenance (committed)
@@ -120,7 +121,7 @@ revisionbench/
   litrpg_repair.py       A2d: complaint-gated repair with a mechanical acceptance rule
   metrics/               stylometry, slop, thrash, defects, statistics
 scripts/                 one command per phase
-docs/                    findings, design space, and the harness gap analysis
+docs/                    findings, design space, harness gap, and external evidence
 results/                 JSONL artifacts + figures, committed per phase
 tests/                   offline, hermetic — no network, no GPU
 ```
