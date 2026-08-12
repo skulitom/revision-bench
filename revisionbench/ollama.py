@@ -227,7 +227,9 @@ class OllamaClient:
         installed = ", ".join(sorted(str(m.get("name")) for m in models)) or "(none)"
         raise OllamaError(f"model {tag!r} is not installed. Installed: {installed}")
 
-    def warm_up(self, tag: str, options: GenerationOptions) -> Generation:
+    def warm_up(
+        self, tag: str, options: GenerationOptions, *, think: bool | None = False
+    ) -> Generation:
         """Run and discard one generation, so the next call is a warm one.
 
         The first generation after a load is irreproducible (module docstring), so the
@@ -246,7 +248,10 @@ class OllamaClient:
             num_predict=8,
             repeat_penalty=options.repeat_penalty,
         )
-        return self.generate(tag, "Say the single word: ready.", probe)
+        # `think=False` by default: the probe's 8-token budget is far below any reasoning
+        # model's chain of thought, so warming qwen3 or deepseek-r1 would otherwise fail
+        # on the warm-up rather than on anything real.
+        return self.generate(tag, "Say the single word: ready.", probe, think=think)
 
     def generate(
         self,
@@ -254,6 +259,7 @@ class OllamaClient:
         prompt: str,
         options: GenerationOptions,
         schema: dict[str, Any] | None = None,
+        think: bool | None = None,
     ) -> Generation:
         """Run one completion.
 
@@ -271,6 +277,13 @@ class OllamaClient:
             "keep_alive": self.keep_alive,
             "options": options.as_ollama_options(),
         }
+        if think is not None:
+            # Reasoning models (qwen3, deepseek-r1) put their chain of thought in a
+            # separate `thinking` field. Left on, it consumes the whole token budget and
+            # `response` comes back EMPTY with done_reason "length" — which for a judge
+            # would read as an abstention rather than as a failure. `think: false`
+            # suppresses it. See the guard in the empty-response branch below.
+            payload["think"] = think
         if schema is not None:
             # Constrained decoding. Under a schema, malformed output is not merely unlikely
             # but unrepresentable — the sampler cannot emit a token that would break it.
@@ -283,6 +296,16 @@ class OllamaClient:
 
         text = data.get("response", "")
         if not text.strip():
+            thinking = data.get("thinking") or ""
+            if thinking:
+                raise OllamaError(
+                    f"{tag} returned an empty completion but {len(thinking)} characters of "
+                    f"`thinking` (done_reason={data.get('done_reason')!r}). This is a "
+                    f"reasoning model whose chain of thought consumed the token budget "
+                    f"before it answered. Pass think=False, or raise num_predict well "
+                    f"above the reasoning length. Silently accepting the empty string "
+                    f"would score as an abstention rather than a failure."
+                )
             raise OllamaError(
                 f"{tag} returned an empty completion (done_reason="
                 f"{data.get('done_reason')!r}); this is not a revision and must not be "

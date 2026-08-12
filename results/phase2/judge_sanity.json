@@ -1,0 +1,289 @@
+{
+  "agreement": {
+    "deepseek-r1:8b vs gemma3:4b": 0.6875,
+    "deepseek-r1:8b vs llama3.2:latest": 0.5,
+    "deepseek-r1:8b vs qwen3:4b": 0.5625,
+    "gemma3:4b vs llama3.2:latest": 0.6875,
+    "gemma3:4b vs qwen3:4b": 0.6875,
+    "llama3.2:latest vs qwen3:4b": 0.6875
+  },
+  "gate_signals": {
+    "deepseek-r1:8b alone": {
+      "accuracy": 0.65625,
+      "answered": 32,
+      "correct": 21,
+      "coverage": 1.0,
+      "members": [
+        "deepseek-r1:8b"
+      ],
+      "total": 32
+    },
+    "full panel": {
+      "accuracy": 0.92,
+      "answered": 25,
+      "correct": 23,
+      "coverage": 0.78125,
+      "members": [
+        "gemma3:4b",
+        "llama3.2:latest",
+        "qwen3:4b",
+        "deepseek-r1:8b"
+      ],
+      "total": 32
+    },
+    "gemma3:4b alone": {
+      "accuracy": 0.78125,
+      "answered": 32,
+      "correct": 25,
+      "coverage": 1.0,
+      "members": [
+        "gemma3:4b"
+      ],
+      "total": 32
+    },
+    "llama3.2:latest alone": {
+      "accuracy": 0.65625,
+      "answered": 32,
+      "correct": 21,
+      "coverage": 1.0,
+      "members": [
+        "llama3.2:latest"
+      ],
+      "total": 32
+    },
+    "panel minus position-biased": {
+      "accuracy": 1.0,
+      "answered": 18,
+      "correct": 18,
+      "coverage": 0.5625,
+      "members": [
+        "qwen3:4b",
+        "deepseek-r1:8b"
+      ],
+      "total": 32
+    },
+    "phi4:latest alone": {
+      "accuracy": 0.96875,
+      "answered": 32,
+      "correct": 31,
+      "coverage": 1.0,
+      "members": [
+        "phi4:latest"
+      ],
+      "total": 32
+    },
+    "qwen3:4b alone": {
+      "accuracy": 0.90625,
+      "answered": 32,
+      "correct": 29,
+      "coverage": 1.0,
+      "members": [
+        "qwen3:4b"
+      ],
+      "total": 32
+    }
+  },
+  "judges": {
+    "deepseek-r1:8b": {
+      "accuracy": 0.65625,
+      "by_kind": {
+        "clunker": {
+          "correct": 5,
+          "n": 9
+        },
+        "name_drift": {
+          "correct": 2,
+          "n": 3
+        },
+        "number_drift": {
+          "correct": 8,
+          "n": 10
+        },
+        "tense_slip": {
+          "correct": 6,
+          "n": 10
+        }
+      },
+      "correct": 21,
+      "failures": 0,
+      "n": 32,
+      "position_a_rate": 0.625,
+      "role": "panel"
+    },
+    "gemma3:4b": {
+      "accuracy": 0.78125,
+      "by_kind": {
+        "clunker": {
+          "correct": 8,
+          "n": 9
+        },
+        "name_drift": {
+          "correct": 2,
+          "n": 3
+        },
+        "number_drift": {
+          "correct": 8,
+          "n": 10
+        },
+        "tense_slip": {
+          "correct": 7,
+          "n": 10
+        }
+      },
+      "correct": 25,
+      "failures": 0,
+      "n": 32,
+      "position_a_rate": 0.28125,
+      "role": "panel"
+    },
+    "llama3.2:latest": {
+      "accuracy": 0.65625,
+      "by_kind": {
+        "clunker": {
+          "correct": 6,
+          "n": 9
+        },
+        "name_drift": {
+          "correct": 2,
+          "n": 3
+        },
+        "number_drift": {
+          "correct": 6,
+          "n": 10
+        },
+        "tense_slip": {
+          "correct": 7,
+          "n": 10
+        }
+      },
+      "correct": 21,
+      "failures": 0,
+      "n": 32,
+      "position_a_rate": 0.21875,
+      "role": "panel"
+    },
+    "phi4:latest": {
+      "accuracy": 0.96875,
+      "by_kind": {
+        "clunker": {
+          "correct": 8,
+          "n": 9
+        },
+        "name_drift": {
+          "correct": 3,
+          "n": 3
+        },
+        "number_drift": {
+          "correct": 10,
+          "n": 10
+        },
+        "tense_slip": {
+          "correct": 10,
+          "n": 10
+        }
+      },
+      "correct": 31,
+      "failures": 0,
+      "n": 32,
+      "position_a_rate": 0.4375,
+      "role": "SELF"
+    },
+    "qwen3:4b": {
+      "accuracy": 0.90625,
+      "by_kind": {
+        "clunker": {
+          "correct": 9,
+          "n": 9
+        },
+        "name_drift": {
+          "correct": 3,
+          "n": 3
+        },
+        "number_drift": {
+          "correct": 9,
+          "n": 10
+        },
+        "tense_slip": {
+          "correct": 8,
+          "n": 10
+        }
+      },
+      "correct": 29,
+      "failures": 0,
+      "n": 32,
+      "position_a_rate": 0.5,
+      "role": "panel"
+    }
+  },
+  "provenance": {
+    "artifacts": {
+      "judges": {
+        "deepseek-r1:8b": {
+          "digest": "6995872bfe4c521a67b32da386cd21d5c6e819b6e0d62f79f64ec83be99f5763",
+          "family": "qwen3",
+          "ollama_version": "0.32.8",
+          "parameter_size": "8.2B",
+          "quantization_level": "Q4_K_M",
+          "tag": "deepseek-r1:8b"
+        },
+        "gemma3:4b": {
+          "digest": "a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+          "family": "gemma3",
+          "ollama_version": "0.32.8",
+          "parameter_size": "4.3B",
+          "quantization_level": "Q4_K_M",
+          "tag": "gemma3:4b"
+        },
+        "llama3.2:latest": {
+          "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "family": "llama",
+          "ollama_version": "0.32.8",
+          "parameter_size": "3.2B",
+          "quantization_level": "Q4_K_M",
+          "tag": "llama3.2:latest"
+        },
+        "phi4:latest": {
+          "digest": "ac896e5b8b34a1f4efa7b14d7520725140d5512484457fab45d2a4ea14c69dba",
+          "family": "phi3",
+          "ollama_version": "0.32.8",
+          "parameter_size": "14.7B",
+          "quantization_level": "Q4_K_M",
+          "tag": "phi4:latest"
+        },
+        "qwen3:4b": {
+          "digest": "359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7",
+          "family": "qwen3",
+          "ollama_version": "0.32.8",
+          "parameter_size": "4.0B",
+          "quantization_level": "Q4_K_M",
+          "tag": "qwen3:4b"
+        }
+      },
+      "n_pairs": 32,
+      "panel": [
+        "gemma3:4b",
+        "llama3.2:latest",
+        "qwen3:4b",
+        "deepseek-r1:8b"
+      ],
+      "seed": 0,
+      "self_judge": "phi4:latest"
+    },
+    "config_hash": "n/a",
+    "git": {
+      "branch": "main",
+      "dirty": true,
+      "sha": "a12921d500701f1ed81c5faae5e82f66f48ae401"
+    },
+    "hostname": "rivskiy",
+    "packages": {
+      "numpy": "2.5.2",
+      "pyyaml": "6.0.3",
+      "requests": "2.34.2"
+    },
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.13.2",
+    "run_id": "judge-sanity",
+    "started_at": "2026-08-12T00:53:44Z"
+  }
+}
