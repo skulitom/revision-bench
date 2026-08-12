@@ -1,7 +1,10 @@
 # Phase 2 findings — judge validity
 
-Status: **M2-a complete.** The panel has been put through a positive control before being
-asked anything subtle. The result disqualifies half of it.
+Status: **M2-a and M2-b complete.** The panel was put through a positive control before
+being asked anything subtle (§1–§7); it disqualified half of it. M2-b then asked the panel
+about real edits, and found that **most of its verdicts are positional artifacts** — but
+that the verdicts which survive an order swap carry the project's first quality signal, and
+it points the opposite way to "revision improves prose" (§8–§10).
 
 Phases 0 and 1: [`findings-phase0.md`](findings-phase0.md), [`findings-phase1.md`](findings-phase1.md).
 
@@ -104,9 +107,12 @@ self-judges. (Phase 2 measures this; do not assume.)"* On this evidence, at this
 axis that matters is not family diversity but per-judge competence — and competence is
 cheaply measurable with exactly this control.
 
-**Provisional recommendation for the Phase-3 gate:** screen candidate judges on this
+~~**Provisional recommendation for the Phase-3 gate:** screen candidate judges on this
 control, drop anything with a position-A rate outside 0.35–0.65 or accuracy below ~0.85,
-and prefer two competent judges over four diverse ones. Do not fix a threshold on 32 pairs.
+and prefer two competent judges over four diverse ones.~~ **Retracted in §9:** position
+bias measured on this control does not transfer to the real task — qwen3 scores 0.50 here
+and 0.22 on actual edits. The competence half of the recommendation stands; the
+impartiality half must be re-measured on the task of interest.
 
 ## 6. A reproducibility bug worth recording
 
@@ -129,4 +135,118 @@ adding models to a sweep can silently invalidate one done earlier.**
 - **No human anchor yet.** plan.md §11 requires the panel to be calibrated against a
   blinded human subsample before it is trusted; that is the next step and it needs the
   project owner, not a model.
-- **Self-preference is unmeasured.** §3 explains why phi4's score here is not it.
+- **Self-preference is unmeasured** *at the time of M2-a*. §3 explains why phi4's score
+  here is not it; §8 measures it properly and does not detect it.
+
+
+---
+
+# M2-b — self-preference, and what the panel says about real edits
+
+`uv run python scripts/self_preference.py --both-orders`
+
+## 8. Self-preference: not detected, by a design that could have detected it
+
+Asking "does phi4 prefer phi4's edits more than the panel does" confounds bias with
+competence — phi4 scored 0.97 on the §3 control against qwen3's 0.91, so it may simply
+judge better. The separation comes from a **difference in differences**, which Phase 0's
+artifacts happen to support: two revisers (phi4, gemma3:4b) ran the same passages under the
+same prompts, so each is both an author and a judge, with a third judge holding no stake.
+
+| judge \ edits from | phi4 | gemma3 | own − other |
+|---|---|---|---|
+| **phi4** | 0.35 *(self)* | 0.37 | −0.02 |
+| **gemma3** | 0.32 | 0.50 *(self)* | +0.18 |
+| qwen3 *(neutral)* | 0.33 | 0.32 | — |
+
+Values are the rate at which the judge prefers the *edited* sentence. Subtracting the
+neutral judge's view of the genuine quality gap between the two revisers:
+
+| reviser | self-preference | 95% CI |
+|---|---|---|
+| phi4 | **−0.03** | [−0.27, +0.20] |
+| gemma3:4b | **+0.20** | [−0.03, +0.43] |
+
+**Neither is conclusive at 60 edits per cell.** phi4 shows nothing; gemma3 shows a
+suggestive +0.20 whose interval still contains zero. The design absorbs a judge's general
+leniency and, to first order, its position bias — but it cannot manufacture power, and the
+honest statement is that this sample did not detect self-preference rather than that there
+is none.
+
+## 9. Position bias is task-dependent — which invalidates §5's recommendation
+
+M2-a recommended screening judges on the objective control and keeping those with a
+position-A rate inside 0.35–0.65. **That screen does not transfer.**
+
+| judge | position-A on the objective control (§2) | position-A on real edits |
+|---|---|---|
+| qwen3:4b | 0.50 | **0.22** |
+| gemma3:4b | 0.28 | 0.19 |
+| phi4:latest | 0.44 | 0.31 |
+
+qwen3 was the one judge that looked perfectly unbiased on the control and is heavily
+positional here. Slot assignment was verified balanced (version 1 occupied slot A on
+0.44–0.52 of pairs), so this is the judges, not the randomisation.
+
+**Retract the §5 screening rule.** A judge must be characterised on the task it will
+actually be used for; competence on a floor task predicts neither competence nor
+impartiality on the real one.
+
+## 10. The order-consistency filter, and the first quality signal in this project
+
+Asking each pair twice with the order swapped, and keeping only verdicts that name the same
+*text* both times:
+
+| judge | order-consistent | retained | prefers the edit |
+|---|---|---|---|
+| phi4:latest | 68 / 120 | 0.57 | **0.19** |
+| gemma3:4b | 43 / 120 | 0.36 | **0.21** |
+| qwen3:4b | 42 / 120 | 0.35 | **0.19** |
+
+Two things, and the second is the important one.
+
+**43–65% of these judges' verdicts are positional artifacts.** They vanish when the order
+changes. Any panel statistic computed without this filter — including everything in §8 — is
+a mixture of opinion and seating position.
+
+**On the verdicts that do survive, all three judges independently prefer the ORIGINAL
+sentence about 80% of the time.** Blind, order-controlled, two of the three from different
+families than either reviser.
+
+That is the first evidence in this project that bears on *quality* rather than movement.
+Phases 0 and 1 established that revision loops change prose in measurable ways and could
+not say whether the change was an improvement. This says the panel thinks it is not.
+
+### The contamination check, which the corpus was built for
+
+The originals are famous published prose, and a judge may prefer them because it has read
+them. plan.md §5's obscure-author control speaks to this directly:
+
+| judge | prefers the edit — famous originals | — obscure (Richardson) |
+|---|---|---|
+| phi4 | 6/45 = 0.13 | 7/23 = 0.30 |
+| gemma3 | 5/32 = 0.16 | 4/11 = 0.36 |
+| qwen3 | 5/30 = 0.17 | 3/12 = 0.25 |
+
+Every judge defends the famous originals about twice as hard as the obscure ones, which is
+the direction memorisation predicts — **but the effect survives the control**: even on
+Richardson, judges prefer the original 64–75% of the time. Read the famous/obscure gap
+(~0.15) as an upper bound on how much familiarity contributes, and the remainder as a
+preference for the writing.
+
+The alternative reading is not excluded: Woolf and Hemingway may simply be harder to
+improve than Richardson, which predicts the same pattern. The obscure cells hold 11–23
+verdicts, so this check narrows the space rather than settling it.
+
+## 11. Where this leaves Phase 2
+
+- **A quality claim now exists**, with three caveats attached: small n, local 4B–14B
+  judges, and no human calibration.
+- **The human subsample is now the critical path**, not a formality. plan.md §11 says the
+  panel is trusted only where it agrees with a human, and §9–§10 have just shown the panel
+  needs that anchor more than assumed: most of its raw verdicts are positional, and the
+  filter that fixes this costs two-thirds of its coverage.
+- **Order-consistency filtering should be standard** for any judge used as a gate here, and
+  its retention rate reported — the same discipline as recall-with-removal-rate and
+  panel-accuracy-with-coverage. A gate that discards 65% of its own opinions is viable; one
+  that hides that it should have is not.

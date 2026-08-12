@@ -134,15 +134,24 @@ def judge_pair(
     *,
     seed: int = 0,
     context_chars: int = 700,
+    force_slot_a: str | None = None,
 ) -> JudgeVerdict:
     """Ask one judge which version is better, with position randomised.
+
+    Args:
+        force_slot_a: Put this version ("version_1" or "version_2") in slot A instead of
+            randomising. Used to ask the *same* comparison in both orders, so that a
+            verdict which flips with the order can be identified as positional rather than
+            substantive — see :func:`order_consistent`.
 
     Raises:
         OllamaError: The judge failed or returned something unusable. Never silently
             defaulted to a choice — an invented verdict is worse than a missing one, since
             it enters the agreement statistics as if it were data.
     """
-    slot_a = _slot_a_holds(pair.pair_id, model.tag, seed)
+    if force_slot_a is not None and force_slot_a not in ("version_1", "version_2"):
+        raise ValueError(f"force_slot_a must name a version, got {force_slot_a!r}")
+    slot_a = force_slot_a or _slot_a_holds(pair.pair_id, model.tag, seed)
     a_text = pair.version_1 if slot_a == "version_1" else pair.version_2
     b_text = pair.version_2 if slot_a == "version_1" else pair.version_1
 
@@ -188,6 +197,33 @@ def position_bias(verdicts: Sequence[JudgeVerdict]) -> float | None:
     if not verdicts:
         return None
     return sum(1 for v in verdicts if v.chose_slot == "A") / len(verdicts)
+
+
+def order_consistent(
+    forward: Sequence[JudgeVerdict], reversed_: Sequence[JudgeVerdict]
+) -> dict[str, str]:
+    """Verdicts that survive asking the same comparison in both orders.
+
+    Returns ``pair_id -> chosen version`` for pairs where the judge named the same *content*
+    both times, and omits the rest.
+
+    This is the only filter here that separates opinion from position at the level of an
+    individual verdict. A judge with a strong slot preference answers a two-way comparison
+    the same way whichever text is in front of it, so its verdict flips when the order does;
+    a judge responding to the writing gives the same answer twice.
+
+    It costs a second call per pair and it costs coverage — a judge that is mostly
+    positional will be consistent on few pairs — so report the retained fraction alongside
+    anything computed from the survivors, exactly as panel accuracy is reported with its
+    abstention rate.
+    """
+    first = {v.pair_id: v.chose for v in forward}
+    second = {v.pair_id: v.chose for v in reversed_}
+    return {
+        pair_id: choice
+        for pair_id, choice in first.items()
+        if pair_id in second and second[pair_id] == choice
+    }
 
 
 def agreement_matrix(verdicts: Sequence[JudgeVerdict]) -> dict[tuple[str, str], float]:

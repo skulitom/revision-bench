@@ -1,0 +1,139 @@
+{
+  "counts": {
+    "gemma3:4b|gemma3:4b": 60,
+    "gemma3:4b|phi4:latest": 60,
+    "phi4:latest|gemma3:4b": 60,
+    "phi4:latest|phi4:latest": 60,
+    "qwen3:4b|gemma3:4b": 60,
+    "qwen3:4b|phi4:latest": 60
+  },
+  "n_verdicts": 360,
+  "order_consistency": {
+    "gemma3:4b": {
+      "asked": 120,
+      "by_source": {
+        "gemma3:4b": 0.35294117647058826,
+        "phi4:latest": 0.11538461538461539
+      },
+      "consistent": 43,
+      "prefers_edit": 0.20930232558139536,
+      "retained": 0.35833333333333334
+    },
+    "phi4:latest": {
+      "asked": 120,
+      "by_source": {
+        "gemma3:4b": 0.3055555555555556,
+        "phi4:latest": 0.0625
+      },
+      "consistent": 68,
+      "prefers_edit": 0.19117647058823528,
+      "retained": 0.5666666666666667
+    },
+    "qwen3:4b": {
+      "asked": 120,
+      "by_source": {
+        "gemma3:4b": 0.25,
+        "phi4:latest": 0.1111111111111111
+      },
+      "consistent": 42,
+      "prefers_edit": 0.19047619047619047,
+      "retained": 0.35
+    }
+  },
+  "position_bias": {
+    "gemma3:4b": 0.19166666666666668,
+    "phi4:latest": 0.3,
+    "qwen3:4b": 0.21666666666666667
+  },
+  "prefer_rates": {
+    "gemma3:4b": {
+      "gemma3:4b": 0.5,
+      "phi4:latest": 0.31666666666666665
+    },
+    "phi4:latest": {
+      "gemma3:4b": 0.38333333333333336,
+      "phi4:latest": 0.35
+    },
+    "qwen3:4b": {
+      "gemma3:4b": 0.31666666666666665,
+      "phi4:latest": 0.3333333333333333
+    }
+  },
+  "provenance": {
+    "artifacts": {
+      "judges": {
+        "gemma3:4b": {
+          "digest": "a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+          "family": "gemma3",
+          "ollama_version": "0.32.8",
+          "parameter_size": "4.3B",
+          "quantization_level": "Q4_K_M",
+          "tag": "gemma3:4b"
+        },
+        "phi4:latest": {
+          "digest": "ac896e5b8b34a1f4efa7b14d7520725140d5512484457fab45d2a4ea14c69dba",
+          "family": "phi3",
+          "ollama_version": "0.32.8",
+          "parameter_size": "14.7B",
+          "quantization_level": "Q4_K_M",
+          "tag": "phi4:latest"
+        },
+        "qwen3:4b": {
+          "digest": "359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7",
+          "family": "qwen3",
+          "ollama_version": "0.32.8",
+          "parameter_size": "4.0B",
+          "quantization_level": "Q4_K_M",
+          "tag": "qwen3:4b"
+        }
+      },
+      "neutral": "qwen3:4b",
+      "per_reviser": 60,
+      "revisers": [
+        "phi4:latest",
+        "gemma3:4b"
+      ],
+      "seed": 0
+    },
+    "config_hash": "n/a",
+    "git": {
+      "branch": "main",
+      "dirty": true,
+      "sha": "721ec5a0ae42288c2a60d8df04e53dbf8df955d3"
+    },
+    "hostname": "rivskiy",
+    "packages": {
+      "numpy": "2.5.2",
+      "pyyaml": "6.0.3",
+      "requests": "2.34.2"
+    },
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.13.2",
+    "run_id": "self-preference",
+    "started_at": "2026-08-12T01:22:17Z"
+  },
+  "self_preference": {
+    "gemma3:4b": {
+      "ci": [
+        -0.033333333333333326,
+        0.4333333333333334
+      ],
+      "n_other": 60,
+      "n_own": 60,
+      "neutral_baseline": -0.016666666666666663,
+      "own_gap": 0.18333333333333335,
+      "self_preference": 0.2
+    },
+    "phi4:latest": {
+      "ci": [
+        -0.2833333333333334,
+        0.1833333333333334
+      ],
+      "n_other": 60,
+      "n_own": 60,
+      "neutral_baseline": 0.016666666666666663,
+      "own_gap": -0.03333333333333338,
+      "self_preference": -0.050000000000000044
+    }
+  }
+}
