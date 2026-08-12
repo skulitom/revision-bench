@@ -32,6 +32,7 @@ from __future__ import annotations
 import argparse
 import sys
 from collections import defaultdict
+from dataclasses import replace
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -42,6 +43,7 @@ from revisionbench.litrpg import build_manifest, render_manuscript  # noqa: E402
 from revisionbench.litrpg_detect import detect_all_litrpg  # noqa: E402
 from revisionbench.litrpg_inject import inject_manuscript  # noqa: E402
 from revisionbench.records import write_json  # noqa: E402
+from scripts.litrpg_generate import load_corpus  # noqa: E402
 
 
 def _overlaps(a: tuple[int, int], b: tuple[int, int]) -> bool:
@@ -51,6 +53,14 @@ def _overlaps(a: tuple[int, int], b: tuple[int, int]) -> bool:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--manuscripts", type=int, default=20)
+    parser.add_argument(
+        "--corpus",
+        type=Path,
+        default=None,
+        help="directory of model-written chapters from litrpg_generate.py. Without it, "
+        "the templated prose is used and the numbers are the upper bound reported in "
+        "findings-litrpg.md section 4 rather than a measurement on realistic text.",
+    )
     parser.add_argument("--chapters", type=int, default=16)
     parser.add_argument("--per-type", type=int, default=2)
     parser.add_argument("--out", type=Path, default=REPO_ROOT / "results" / "litrpg" / "eval.json")
@@ -67,13 +77,30 @@ def main(argv: list[str] | None = None) -> int:
     for index in range(args.manuscripts):
         manuscript_id = f"ms-{index:03d}"
         manifest = build_manifest(manuscript_id, chapters=args.chapters, seed=index)
+        generated = load_corpus(args.corpus, manuscript_id) if args.corpus else None
+        if args.corpus and not generated:
+            print(f"  {manuscript_id}: not generated, skipped", file=sys.stderr)
+            continue
+        if generated:
+            # Restrict the manifest to the chapters that survived validation, so a missing
+            # chapter is an absent comparison rather than a silently wrong one.
+            manifest = replace(
+                manifest, chapters=tuple(c for c in manifest.chapters if c.chapter in generated)
+            )
 
         # The precision floor: a detector that fires on an uncorrupted manuscript makes
         # every recall number below meaningless, because nothing downstream could tell a
         # real complaint from a reflex.
-        clean_false_positives += len(detect_all_litrpg(render_manuscript(manifest)))
+        clean_text = (
+            "\n".join(generated[c.chapter] for c in manifest.chapters)
+            if generated
+            else render_manuscript(manifest)
+        )
+        clean_false_positives += len(detect_all_litrpg(clean_text))
 
-        text, defects = inject_manuscript(manifest, per_type=args.per_type, seed=index)
+        text, defects = inject_manuscript(
+            manifest, per_type=args.per_type, seed=index, chapters_text=generated
+        )
         complaints = detect_all_litrpg(text)
         planted += len(defects)
 

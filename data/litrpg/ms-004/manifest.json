@@ -1,0 +1,495 @@
+{
+  "chapters": [
+    {
+      "chapter": 1,
+      "inventory": [
+        "grey cloak"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 1,
+      "levelled_up": false,
+      "location": "Kellsmarket",
+      "npc": "Warden Ott",
+      "skill_gained": "",
+      "skills": [
+        "Echo Sight"
+      ],
+      "stats": {
+        "Agility": 10,
+        "Intellect": 11,
+        "Strength": 9,
+        "Vitality": 11
+      }
+    },
+    {
+      "chapter": 2,
+      "inventory": [
+        "grey cloak"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 1,
+      "levelled_up": false,
+      "location": "the Sallow Wood",
+      "npc": "Warden Ott",
+      "skill_gained": "",
+      "skills": [
+        "Echo Sight"
+      ],
+      "stats": {
+        "Agility": 10,
+        "Intellect": 11,
+        "Strength": 9,
+        "Vitality": 11
+      }
+    },
+    {
+      "chapter": 3,
+      "inventory": [
+        "grey cloak",
+        "bone charm"
+      ],
+      "item_gained": "bone charm",
+      "item_lost": "",
+      "level": 1,
+      "levelled_up": false,
+      "location": "Highcut",
+      "npc": "Bex",
+      "skill_gained": "",
+      "skills": [
+        "Echo Sight"
+      ],
+      "stats": {
+        "Agility": 10,
+        "Intellect": 11,
+        "Strength": 9,
+        "Vitality": 11
+      }
+    },
+    {
+      "chapter": 4,
+      "inventory": [
+        "grey cloak",
+        "bone charm"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 2,
+      "levelled_up": true,
+      "location": "Underbridge",
+      "npc": "Warden Ott",
+      "skill_gained": "Frost Nail",
+      "skills": [
+        "Echo Sight",
+        "Frost Nail"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 9,
+        "Vitality": 11
+      }
+    },
+    {
+      "chapter": 5,
+      "inventory": [
+        "grey cloak",
+        "bone charm",
+        "cracked whetstone"
+      ],
+      "item_gained": "cracked whetstone",
+      "item_lost": "",
+      "level": 2,
+      "levelled_up": false,
+      "location": "the Cistern Gate",
+      "npc": "Bex",
+      "skill_gained": "",
+      "skills": [
+        "Echo Sight",
+        "Frost Nail"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 9,
+        "Vitality": 11
+      }
+    },
+    {
+      "chapter": 6,
+      "inventory": [
+        "bone charm",
+        "cracked whetstone"
+      ],
+      "item_gained": "",
+      "item_lost": "grey cloak",
+      "level": 2,
+      "levelled_up": false,
+      "location": "the Cistern Gate",
+      "npc": "Maro",
+      "skill_gained": "",
+      "skills": [
+        "Echo Sight",
+        "Frost Nail"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 9,
+        "Vitality": 11
+      }
+    },
+    {
+      "chapter": 7,
+      "inventory": [
+        "bone charm",
+        "cracked whetstone"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 3,
+      "levelled_up": true,
+      "location": "Kellsmarket",
+      "npc": "Maro",
+      "skill_gained": "Thorn Coil",
+      "skills": [
+        "Echo Sight",
+        "Frost Nail",
+        "Thorn Coil"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 10,
+        "Vitality": 11
+      }
+    },
+    {
+      "chapter": 8,
+      "inventory": [
+        "bone charm"
+      ],
+      "item_gained": "",
+      "item_lost": "cracked whetstone",
+      "level": 3,
+      "levelled_up": false,
+      "location": "the Drowned Steps",
+      "npc": "Nel",
+      "skill_gained": "",
+      "skills": [
+        "Echo Sight",
+        "Frost Nail",
+        "Thorn Coil"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 10,
+        "Vitality": 11
+      }
+    },
+    {
+      "chapter": 9,
+      "inventory": [
+        "bone charm"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 3,
+      "levelled_up": false,
+      "location": "the Cistern Gate",
+      "npc": "Warden Ott",
+      "skill_gained": "",
+      "skills": [
+        "Echo Sight",
+        "Frost Nail",
+        "Thorn Coil"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 10,
+        "Vitality": 11
+      }
+    },
+    {
+      "chapter": 10,
+      "inventory": [
+        "bone charm"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 4,
+      "levelled_up": true,
+      "location": "the Cistern Gate",
+      "npc": "Bex",
+      "skill_gained": "Iron Skin",
+      "skills": [
+        "Echo Sight",
+        "Frost Nail",
+        "Thorn Coil",
+        "Iron Skin"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 12,
+        "Vitality": 11
+      }
+    },
+    {
+      "chapter": 11,
+      "inventory": [
+        "bone charm"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 4,
+      "levelled_up": false,
+      "location": "the Sallow Wood",
+      "npc": "Maro",
+      "skill_gained": "",
+      "skills": [
+        "Echo Sight",
+        "Frost Nail",
+        "Thorn Coil",
+        "Iron Skin"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 12,
+        "Vitality": 11
+      }
+    },
+    {
+      "chapter": 12,
+      "inventory": [
+        "bone charm"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 4,
+      "levelled_up": false,
+      "location": "Highcut",
+      "npc": "the Tallyman",
+      "skill_gained": "",
+      "skills": [
+        "Echo Sight",
+        "Frost Nail",
+        "Thorn Coil",
+        "Iron Skin"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 12,
+        "Vitality": 11
+      }
+    },
+    {
+      "chapter": 13,
+      "inventory": [
+        "bone charm"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 5,
+      "levelled_up": true,
+      "location": "the Drowned Steps",
+      "npc": "Bex",
+      "skill_gained": "Quickstep",
+      "skills": [
+        "Echo Sight",
+        "Frost Nail",
+        "Thorn Coil",
+        "Iron Skin",
+        "Quickstep"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 12,
+        "Strength": 12,
+        "Vitality": 11
+      }
+    },
+    {
+      "chapter": 14,
+      "inventory": [
+        "bone charm",
+        "folded map"
+      ],
+      "item_gained": "folded map",
+      "item_lost": "",
+      "level": 5,
+      "levelled_up": false,
+      "location": "the Ninth Terrace",
+      "npc": "Sister Elspeth",
+      "skill_gained": "",
+      "skills": [
+        "Echo Sight",
+        "Frost Nail",
+        "Thorn Coil",
+        "Iron Skin",
+        "Quickstep"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 12,
+        "Strength": 12,
+        "Vitality": 11
+      }
+    }
+  ],
+  "facts": [
+    {
+      "chapter": 1,
+      "key": "level",
+      "kind": "level",
+      "value": "1"
+    },
+    {
+      "chapter": 1,
+      "key": "Echo Sight",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 1,
+      "key": "grey cloak",
+      "kind": "item_gained",
+      "value": "held"
+    },
+    {
+      "chapter": 1,
+      "key": "Strength",
+      "kind": "stat",
+      "value": "9"
+    },
+    {
+      "chapter": 1,
+      "key": "Agility",
+      "kind": "stat",
+      "value": "10"
+    },
+    {
+      "chapter": 1,
+      "key": "Intellect",
+      "kind": "stat",
+      "value": "11"
+    },
+    {
+      "chapter": 1,
+      "key": "Vitality",
+      "kind": "stat",
+      "value": "11"
+    },
+    {
+      "chapter": 3,
+      "key": "bone charm",
+      "kind": "item_gained",
+      "value": "held"
+    },
+    {
+      "chapter": 4,
+      "key": "level",
+      "kind": "level",
+      "value": "2"
+    },
+    {
+      "chapter": 4,
+      "key": "Agility",
+      "kind": "stat",
+      "value": "12"
+    },
+    {
+      "chapter": 4,
+      "key": "Frost Nail",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 5,
+      "key": "cracked whetstone",
+      "kind": "item_gained",
+      "value": "held"
+    },
+    {
+      "chapter": 6,
+      "key": "grey cloak",
+      "kind": "item_lost",
+      "value": "gone"
+    },
+    {
+      "chapter": 7,
+      "key": "level",
+      "kind": "level",
+      "value": "3"
+    },
+    {
+      "chapter": 7,
+      "key": "Strength",
+      "kind": "stat",
+      "value": "10"
+    },
+    {
+      "chapter": 7,
+      "key": "Thorn Coil",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 8,
+      "key": "cracked whetstone",
+      "kind": "item_lost",
+      "value": "gone"
+    },
+    {
+      "chapter": 10,
+      "key": "level",
+      "kind": "level",
+      "value": "4"
+    },
+    {
+      "chapter": 10,
+      "key": "Strength",
+      "kind": "stat",
+      "value": "12"
+    },
+    {
+      "chapter": 10,
+      "key": "Iron Skin",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 13,
+      "key": "level",
+      "kind": "level",
+      "value": "5"
+    },
+    {
+      "chapter": 13,
+      "key": "Intellect",
+      "kind": "stat",
+      "value": "12"
+    },
+    {
+      "chapter": 13,
+      "key": "Quickstep",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 14,
+      "key": "folded map",
+      "kind": "item_gained",
+      "value": "held"
+    }
+  ],
+  "manifest_version": 1,
+  "manuscript_id": "ms-004",
+  "protagonist": "Odile",
+  "seed": 4
+}

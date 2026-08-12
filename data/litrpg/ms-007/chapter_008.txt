@@ -1,0 +1,23 @@
+Chapter 8
+
+[ STATUS ]  
+  Name: Ilrid  
+  Level: 3  
+  Strength: 8  
+  Agility: 9  
+  Intellect: 9  
+  Vitality: 12  
+  Skills: Ember Lash, Stone Ward, Echo Sight  
+  Inventory: sealed vial, folded map, tin lantern  
+
+The Drowned Steps were a treacherous place, where the air hung heavy with moisture and the ground was slick with algae. Ilrid's boots squelched softly as he navigated the moss-covered stones, each step an exercise in caution. The flickering light from his newly acquired tin lantern cast eerie shadows on the walls of the submerged ruins.
+
+Ahead, Nel stood poised, her eyes scanning the murky depths with a practiced intensity. "We need to find the artifact before anyone else does," she said, her voice barely audible over the distant drip of water.
+
+Ilrid nodded, activating Echo Sight to scan the area for hidden threats or pathways. The skill revealed faint outlines of a tunnel leading further into the depths, its entrance obscured by thick vines. "There's a way in there," he murmured, pointing with his chin.
+
+Nel moved forward, her own lantern illuminating the path they would take. As they approached the tunnel entrance, Ilrid felt a chill run down his spine. The air grew colder, and the sound of water seemed to echo from all around them.
+
+Suddenly, a shadowy figure emerged from behind a crumbling pillar, its intentions unclear. Instinctively, Ilrid raised his hands, readying Stone Ward to protect himself and Nel. The barrier shimmered into existence just as the figure lunged forward, but it was only a harmless creature startled by their presence.
+
+With a quick exchange of glances, Ilrid and Nel continued on, the tin lantern casting a reassuring glow as they ventured deeper into the unknown.

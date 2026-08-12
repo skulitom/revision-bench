@@ -1,0 +1,35 @@
+Chapter 6
+
+[ STATUS ]  
+  Name: Sorrel  
+  Level: 2  
+  Strength: 12  
+  Agility: 13  
+  Intellect: 8  
+  Vitality: 13  
+  Skills: Quickstep, Frost Nail  
+  Inventory: cracked whetstone, salt pouch  
+
+---
+
+The sun was just beginning to dip below the horizon as Sorrel made her way through the bustling streets of Highcut. The city buzzed with life, merchants calling out their wares and travelers weaving through the crowds. Sorrel's eyes scanned the surroundings, her Quickstep skill keeping her nimble amidst the throng.
+
+Her mission was simple yet crucial: find the Tallyman. Rumors had it that he held the key to advancing her level, and she couldn’t afford to waste time. As she navigated through the marketplace, a familiar figure caught her eye. The Tallyman stood near a stall selling spices, his ledger in hand, tallying up accounts with meticulous care.
+
+Approaching cautiously, Sorrel cleared her throat. "Excuse me, sir," she began, trying to sound confident despite the flutter of nerves in her stomach. "I'm looking for some advice on leveling up."
+
+The Tallyman looked up, a hint of curiosity in his eyes. "Ah, you're one of those adventurers, aren't you?" he said with a knowing smile. "What brings you here?"
+
+"I heard you might know how I can progress," Sorrel replied, hoping her words would be persuasive.
+
+The Tallyman chuckled softly, flipping through his ledger. "Progression is all about the right resources," he said, his eyes twinkling. "But first, let me see what you've got."
+
+Sorrel nodded and showed him her inventory: a cracked whetstone and an empty salt pouch. The Tallyman examined them briefly before nodding in approval.
+
+"Alright, I can help with that," he said, reaching into his pocket. He pulled out a small, ornate pouch filled with shimmering white crystals. "This is what you need."
+
+He handed it over to Sorrel, who accepted it gratefully. "A salt pouch," she murmured, examining the contents. "Thank you. What do I owe you?"
+
+The Tallyman waved his hand dismissively. "Just remember, knowledge and preparation are your best allies. Use that Frost Nail wisely."
+
+Sorrel nodded, a sense of determination settling in her chest. With the new salt pouch in her inventory, she felt ready to face whatever challenges lay ahead. She thanked the Tallyman once more before stepping back into the lively streets of Highcut, her mind already racing with plans for her next move.

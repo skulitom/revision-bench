@@ -3,7 +3,7 @@
   "collateral_chapters": [],
   "complaints_after": 5,
   "complaints_before": 68,
-  "elapsed_seconds": 21.0,
+  "elapsed_seconds": 23.7,
   "manuscripts": 10,
   "model": "phi4:latest",
   "model_digest": "ac896e5b8b34a1f4efa7b14d7520725140d5512484457fab45d2a4ea14c69dba",

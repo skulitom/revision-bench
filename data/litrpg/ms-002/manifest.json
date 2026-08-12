@@ -1,0 +1,495 @@
+{
+  "chapters": [
+    {
+      "chapter": 1,
+      "inventory": [
+        "sealed vial"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 1,
+      "levelled_up": false,
+      "location": "Underbridge",
+      "npc": "Sister Elspeth",
+      "skill_gained": "",
+      "skills": [
+        "Silent Palm"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 13,
+        "Vitality": 10
+      }
+    },
+    {
+      "chapter": 2,
+      "inventory": [
+        "sealed vial"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 1,
+      "levelled_up": false,
+      "location": "the Cistern Gate",
+      "npc": "Maro",
+      "skill_gained": "",
+      "skills": [
+        "Silent Palm"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 13,
+        "Vitality": 10
+      }
+    },
+    {
+      "chapter": 3,
+      "inventory": [
+        "sealed vial"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 1,
+      "levelled_up": false,
+      "location": "Underbridge",
+      "npc": "Nel",
+      "skill_gained": "",
+      "skills": [
+        "Silent Palm"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 13,
+        "Vitality": 10
+      }
+    },
+    {
+      "chapter": 4,
+      "inventory": [
+        "sealed vial"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 2,
+      "levelled_up": true,
+      "location": "Kellsmarket",
+      "npc": "Maro",
+      "skill_gained": "Quickstep",
+      "skills": [
+        "Silent Palm",
+        "Quickstep"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 15,
+        "Vitality": 10
+      }
+    },
+    {
+      "chapter": 5,
+      "inventory": [
+        "sealed vial",
+        "grey cloak"
+      ],
+      "item_gained": "grey cloak",
+      "item_lost": "",
+      "level": 2,
+      "levelled_up": false,
+      "location": "the Cistern Gate",
+      "npc": "Bex",
+      "skill_gained": "",
+      "skills": [
+        "Silent Palm",
+        "Quickstep"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 15,
+        "Vitality": 10
+      }
+    },
+    {
+      "chapter": 6,
+      "inventory": [
+        "sealed vial"
+      ],
+      "item_gained": "",
+      "item_lost": "grey cloak",
+      "level": 2,
+      "levelled_up": false,
+      "location": "Underbridge",
+      "npc": "Sister Elspeth",
+      "skill_gained": "",
+      "skills": [
+        "Silent Palm",
+        "Quickstep"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 11,
+        "Strength": 15,
+        "Vitality": 10
+      }
+    },
+    {
+      "chapter": 7,
+      "inventory": [
+        "sealed vial"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 3,
+      "levelled_up": true,
+      "location": "Fenmouth",
+      "npc": "Warden Ott",
+      "skill_gained": "Ash Beckon",
+      "skills": [
+        "Silent Palm",
+        "Quickstep",
+        "Ash Beckon"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 13,
+        "Strength": 15,
+        "Vitality": 10
+      }
+    },
+    {
+      "chapter": 8,
+      "inventory": [
+        "sealed vial"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 3,
+      "levelled_up": false,
+      "location": "the Cistern Gate",
+      "npc": "Warden Ott",
+      "skill_gained": "",
+      "skills": [
+        "Silent Palm",
+        "Quickstep",
+        "Ash Beckon"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 13,
+        "Strength": 15,
+        "Vitality": 10
+      }
+    },
+    {
+      "chapter": 9,
+      "inventory": [
+        "sealed vial"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 3,
+      "levelled_up": false,
+      "location": "Underbridge",
+      "npc": "Nel",
+      "skill_gained": "",
+      "skills": [
+        "Silent Palm",
+        "Quickstep",
+        "Ash Beckon"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 13,
+        "Strength": 15,
+        "Vitality": 10
+      }
+    },
+    {
+      "chapter": 10,
+      "inventory": [
+        "sealed vial"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 4,
+      "levelled_up": true,
+      "location": "the Drowned Steps",
+      "npc": "Maro",
+      "skill_gained": "Glass Song",
+      "skills": [
+        "Silent Palm",
+        "Quickstep",
+        "Ash Beckon",
+        "Glass Song"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 15,
+        "Strength": 15,
+        "Vitality": 10
+      }
+    },
+    {
+      "chapter": 11,
+      "inventory": [
+        "sealed vial",
+        "iron key"
+      ],
+      "item_gained": "iron key",
+      "item_lost": "",
+      "level": 4,
+      "levelled_up": false,
+      "location": "Kellsmarket",
+      "npc": "Nel",
+      "skill_gained": "",
+      "skills": [
+        "Silent Palm",
+        "Quickstep",
+        "Ash Beckon",
+        "Glass Song"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 15,
+        "Strength": 15,
+        "Vitality": 10
+      }
+    },
+    {
+      "chapter": 12,
+      "inventory": [
+        "sealed vial",
+        "iron key",
+        "bone charm"
+      ],
+      "item_gained": "bone charm",
+      "item_lost": "",
+      "level": 4,
+      "levelled_up": false,
+      "location": "Kellsmarket",
+      "npc": "Warden Ott",
+      "skill_gained": "",
+      "skills": [
+        "Silent Palm",
+        "Quickstep",
+        "Ash Beckon",
+        "Glass Song"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 15,
+        "Strength": 15,
+        "Vitality": 10
+      }
+    },
+    {
+      "chapter": 13,
+      "inventory": [
+        "sealed vial",
+        "iron key",
+        "bone charm"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 5,
+      "levelled_up": true,
+      "location": "the Cistern Gate",
+      "npc": "Bex",
+      "skill_gained": "Mind Spike",
+      "skills": [
+        "Silent Palm",
+        "Quickstep",
+        "Ash Beckon",
+        "Glass Song",
+        "Mind Spike"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 15,
+        "Strength": 15,
+        "Vitality": 12
+      }
+    },
+    {
+      "chapter": 14,
+      "inventory": [
+        "sealed vial",
+        "iron key"
+      ],
+      "item_gained": "",
+      "item_lost": "bone charm",
+      "level": 5,
+      "levelled_up": false,
+      "location": "the Sallow Wood",
+      "npc": "Nel",
+      "skill_gained": "",
+      "skills": [
+        "Silent Palm",
+        "Quickstep",
+        "Ash Beckon",
+        "Glass Song",
+        "Mind Spike"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 15,
+        "Strength": 15,
+        "Vitality": 12
+      }
+    }
+  ],
+  "facts": [
+    {
+      "chapter": 1,
+      "key": "level",
+      "kind": "level",
+      "value": "1"
+    },
+    {
+      "chapter": 1,
+      "key": "Silent Palm",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 1,
+      "key": "sealed vial",
+      "kind": "item_gained",
+      "value": "held"
+    },
+    {
+      "chapter": 1,
+      "key": "Strength",
+      "kind": "stat",
+      "value": "13"
+    },
+    {
+      "chapter": 1,
+      "key": "Agility",
+      "kind": "stat",
+      "value": "12"
+    },
+    {
+      "chapter": 1,
+      "key": "Intellect",
+      "kind": "stat",
+      "value": "11"
+    },
+    {
+      "chapter": 1,
+      "key": "Vitality",
+      "kind": "stat",
+      "value": "10"
+    },
+    {
+      "chapter": 4,
+      "key": "level",
+      "kind": "level",
+      "value": "2"
+    },
+    {
+      "chapter": 4,
+      "key": "Strength",
+      "kind": "stat",
+      "value": "15"
+    },
+    {
+      "chapter": 4,
+      "key": "Quickstep",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 5,
+      "key": "grey cloak",
+      "kind": "item_gained",
+      "value": "held"
+    },
+    {
+      "chapter": 6,
+      "key": "grey cloak",
+      "kind": "item_lost",
+      "value": "gone"
+    },
+    {
+      "chapter": 7,
+      "key": "level",
+      "kind": "level",
+      "value": "3"
+    },
+    {
+      "chapter": 7,
+      "key": "Intellect",
+      "kind": "stat",
+      "value": "13"
+    },
+    {
+      "chapter": 7,
+      "key": "Ash Beckon",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 10,
+      "key": "level",
+      "kind": "level",
+      "value": "4"
+    },
+    {
+      "chapter": 10,
+      "key": "Intellect",
+      "kind": "stat",
+      "value": "15"
+    },
+    {
+      "chapter": 10,
+      "key": "Glass Song",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 11,
+      "key": "iron key",
+      "kind": "item_gained",
+      "value": "held"
+    },
+    {
+      "chapter": 12,
+      "key": "bone charm",
+      "kind": "item_gained",
+      "value": "held"
+    },
+    {
+      "chapter": 13,
+      "key": "level",
+      "kind": "level",
+      "value": "5"
+    },
+    {
+      "chapter": 13,
+      "key": "Vitality",
+      "kind": "stat",
+      "value": "12"
+    },
+    {
+      "chapter": 13,
+      "key": "Mind Spike",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 14,
+      "key": "bone charm",
+      "kind": "item_lost",
+      "value": "gone"
+    }
+  ],
+  "manifest_version": 1,
+  "manuscript_id": "ms-002",
+  "protagonist": "Odile",
+  "seed": 2
+}

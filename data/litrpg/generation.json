@@ -1,0 +1,16 @@
+{
+  "attempts": 3,
+  "attempts_used": {
+    "1": 100
+  },
+  "chapters": 14,
+  "elapsed_seconds": 600.1,
+  "failures": [],
+  "fidelity": 1.0,
+  "kept": 112,
+  "manuscripts": 8,
+  "model": "phi4:latest",
+  "model_digest": "ac896e5b8b34a1f4efa7b14d7520725140d5512484457fab45d2a4ea14c69dba",
+  "temperature": 0.4,
+  "total": 112
+}

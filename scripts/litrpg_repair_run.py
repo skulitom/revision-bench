@@ -32,17 +32,19 @@ import argparse
 import sys
 import time
 from collections import Counter
+from dataclasses import replace
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from revisionbench.litrpg import build_manifest, render_manuscript  # noqa: E402
+from revisionbench.litrpg import build_manifest  # noqa: E402
 from revisionbench.litrpg_inject import inject_manuscript  # noqa: E402
 from revisionbench.litrpg_repair import repair_manuscript  # noqa: E402
 from revisionbench.ollama import GenerationOptions, OllamaClient  # noqa: E402
 from revisionbench.records import write_json  # noqa: E402
+from scripts.litrpg_generate import load_corpus  # noqa: E402
 
 
 def _chapters(text: str) -> dict[int, str]:
@@ -63,6 +65,13 @@ def _chapters(text: str) -> dict[int, str]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--manuscripts", type=int, default=5)
+    parser.add_argument(
+        "--corpus",
+        type=Path,
+        default=None,
+        help="directory of model-written chapters from litrpg_generate.py; without it "
+        "the templated prose is used and every number is an upper bound",
+    )
     parser.add_argument("--chapters", type=int, default=12)
     parser.add_argument("--per-type", type=int, default=1)
     parser.add_argument("--model", default="phi4:latest")
@@ -98,8 +107,19 @@ def main(argv: list[str] | None = None) -> int:
     for index in range(args.manuscripts):
         manuscript_id = f"ms-{index:03d}"
         manifest = build_manifest(manuscript_id, chapters=args.chapters, seed=index)
-        clean = render_manuscript(manifest)
-        corrupt, defects = inject_manuscript(manifest, per_type=args.per_type, seed=index)
+        generated = load_corpus(args.corpus, manuscript_id) if args.corpus else None
+        if args.corpus and not generated:
+            print(f"  {manuscript_id}: not generated, skipped", file=sys.stderr)
+            continue
+        if generated:
+            # Restrict to chapters that passed validation, so a missing one is an absent
+            # comparison rather than a silently wrong adjacency.
+            manifest = replace(
+                manifest, chapters=tuple(c for c in manifest.chapters if c.chapter in generated)
+            )
+        corrupt, defects = inject_manuscript(
+            manifest, per_type=args.per_type, seed=index, chapters_text=generated
+        )
         planted_total += len(defects)
 
         report = repair_manuscript(
@@ -115,7 +135,6 @@ def main(argv: list[str] | None = None) -> int:
         for outcome in report.outcomes:
             reasons[outcome.reason] += 1
 
-        clean_chapters = _chapters(clean)
         corrupt_chapters = _chapters(corrupt)
         fixed_chapters = _chapters(report.text)
 

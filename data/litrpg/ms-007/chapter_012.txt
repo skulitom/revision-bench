@@ -1,0 +1,33 @@
+Chapter 12
+
+[ STATUS ]
+  Name: Ilrid
+  Level: 4
+  Strength: 8
+  Agility: 9
+  Intellect: 10
+  Vitality: 12
+  Skills: Ember Lash, Stone Ward, Echo Sight, Ash Beckon
+  Inventory: sealed vial, salt pouch
+
+---
+
+The Underbridge was a place of shadows and whispers, where the air hung heavy with dampness. Ilrid's footsteps echoed softly against the cobblestones as he navigated the dimly lit path. The flickering light from his lantern was swallowed by the darkness, leaving him to rely on Echo Sight to perceive his surroundings.
+
+The Tallyman stood before him, a figure cloaked in mystery, his eyes gleaming with curiosity beneath a wide-brimmed hat. "You're a level 4, huh?" he mused, his voice carrying a hint of amusement. "Not bad for someone who's just started."
+
+Ilrid nodded, feeling the weight of his sealed vial and salt pouch in his belt. He knew these items were crucial, though their purpose remained a mystery for now. "I'm here to learn," he replied, his tone steady.
+
+The Tallyman chuckled softly. "Learning is good, but it's action that counts. Let's see how you handle this." With a flick of his wrist, the Tallyman conjured a small, mischievous imp that darted around Ilrid's feet.
+
+Ilrid raised an eyebrow, then smirked. "Let's do this." He drew upon Ember Lash, the air crackling with energy as he unleashed a fiery whip. The imp danced away, narrowly avoiding the lash, but Ilrid's agility kept him in pursuit.
+
+The Tallyman watched intently, his eyes narrowing as Ilrid closed in. "Not bad," he conceded, clapping slowly. "But can you anticipate?"
+
+Ilrid paused, considering the challenge. He focused, using Echo Sight to predict the imp's movements. With a swift motion, he cast Stone Ward, creating a barrier that guided the imp into a corner.
+
+The Tallyman nodded approvingly. "Good use of your skills. But remember, every action has a consequence."
+
+As Ilrid prepared to call the imp back with Ash Beckon, his mind raced. He needed to be ready for whatever came next. The Underbridge held many secrets, and he was determined to uncover them all.
+
+Suddenly, a gust of wind swept through the area, extinguishing his lantern. Darkness enveloped him, leaving only the faint glow of his skills to guide him forward.

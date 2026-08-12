@@ -1,0 +1,1080 @@
+{
+  "chapters": 14,
+  "clean_false_positives": 0,
+  "corpus": [
+    {
+      "chapters": 14,
+      "complaints": [
+        {
+          "evidence": "canonical: folded map",
+          "message": "'folded chart' looks like a variant of 'folded map'",
+          "span": [
+            2324,
+            2336
+          ],
+          "type": "entity_rename"
+        },
+        {
+          "evidence": "chapter 2: Agility 8",
+          "message": "Agility changes 8 -> 10 between chapters 2 and 3 with no level-up",
+          "span": [
+            3995,
+            4010
+          ],
+          "type": "stat_drift"
+        },
+        {
+          "evidence": "canonical: Mind Spike",
+          "message": "'Mind Lance' looks like a variant of 'Mind Spike'",
+          "span": [
+            10299,
+            10309
+          ],
+          "type": "entity_rename"
+        },
+        {
+          "evidence": "chapter 5: Agility 8",
+          "message": "Agility changes 8 -> 7 between chapters 5 and 6 with no level-up",
+          "span": [
+            11149,
+            11163
+          ],
+          "type": "stat_drift"
+        },
+        {
+          "evidence": "chapter 13 inventory: folded map, copper ring",
+          "message": "'bone charm' is referenced in chapter 13 but is not in inventory here or in the previous chapter",
+          "span": [
+            25337,
+            25347
+          ],
+          "type": "inventory_ghost"
+        }
+      ],
+      "manuscript_id": "ms-000",
+      "planted": [
+        {
+          "chapter": 3,
+          "char_span": [
+            3995,
+            4008
+          ],
+          "clean_line": "  Agility: 10  ",
+          "corrupt_fragment": "  Agility: 10",
+          "cross_chapter": true,
+          "defect_id": "ms-000-stat_drift-003",
+          "established_in": 2,
+          "injector_version": 1,
+          "manuscript_id": "ms-000",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "  Agility: 8",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 6,
+          "char_span": [
+            11149,
+            11161
+          ],
+          "clean_line": "  Agility: 7  ",
+          "corrupt_fragment": "  Agility: 7",
+          "cross_chapter": true,
+          "defect_id": "ms-000-stat_drift-006",
+          "established_in": 5,
+          "injector_version": 1,
+          "manuscript_id": "ms-000",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "  Agility: 8",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 13,
+          "char_span": [
+            25333,
+            25347
+          ],
+          "clean_line": "The sun was just beginning to dip below the horizon, casting long shadows across Highcut's bustling streets. Bright stood at a crossroads, the bone charm in his hand fluttering slightly in the evening breeze. He glanced down at it once more, confirming his route before setting off towards the inn where Bex was supposed to meet him.",
+          "corrupt_fragment": "the bone charm",
+          "cross_chapter": false,
+          "defect_id": "ms-000-inventory_ghost-013",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-000",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "the folded map",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 5,
+          "char_span": [
+            10299,
+            10309
+          ],
+          "clean_line": "As the notes danced through the air, Bright's senses sharpened. He could feel the presence of something nearby, something elusive yet tangible. With a quick flick of his wrist, he unleashed a Mind Lance, sending a probing thought into the ether.",
+          "corrupt_fragment": "Mind Lance",
+          "cross_chapter": false,
+          "defect_id": "ms-000-entity_rename-005",
+          "established_in": 5,
+          "injector_version": 1,
+          "manuscript_id": "ms-000",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "Mind Spike",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 2,
+          "char_span": [
+            2324,
+            2336
+          ],
+          "clean_line": "Bright stood at the edge of Kellsmarket, the bustling hub of commerce and chatter. The air buzzed with the sound of merchants hawking their wares and adventurers sharing tales of distant lands. Bright clutched the folded chart tightly in one hand, feeling the rough texture under their fingertips. It was their only guide in this sprawling labyrinth of stalls and vendors.",
+          "corrupt_fragment": "folded chart",
+          "cross_chapter": false,
+          "defect_id": "ms-000-entity_rename-002",
+          "established_in": 2,
+          "injector_version": 1,
+          "manuscript_id": "ms-000",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "folded map",
+          "type": "entity_rename"
+        }
+      ]
+    },
+    {
+      "chapters": 14,
+      "complaints": [
+        {
+          "evidence": "chapter 2: Agility 8",
+          "message": "Agility changes 8 -> 7 between chapters 2 and 3 with no level-up",
+          "span": [
+            3249,
+            3263
+          ],
+          "type": "stat_drift"
+        },
+        {
+          "evidence": "canonical: cracked whetstone",
+          "message": "'cracked grindstone' looks like a variant of 'cracked whetstone'",
+          "span": [
+            7713,
+            7731
+          ],
+          "type": "entity_rename"
+        },
+        {
+          "evidence": "chapter 7: Intellect 12",
+          "message": "Intellect changes 12 -> 14 between chapters 7 and 8 with no level-up",
+          "span": [
+            14340,
+            14357
+          ],
+          "type": "stat_drift"
+        },
+        {
+          "evidence": "chapter 8: Level 3",
+          "message": "level falls from 3 (chapter 8) to 2 (chapter 9)",
+          "span": [
+            16390,
+            16402
+          ],
+          "type": "level_regression"
+        },
+        {
+          "evidence": "chapter 8: Intellect 14",
+          "message": "Intellect changes 14 -> 12 between chapters 8 and 9 with no level-up",
+          "span": [
+            16436,
+            16453
+          ],
+          "type": "stat_drift"
+        },
+        {
+          "evidence": "chapter 9: Level 2",
+          "message": "level jumps 2 -> 4 between chapters 9 and 10",
+          "span": [
+            18476,
+            18486
+          ],
+          "type": "level_regression"
+        },
+        {
+          "evidence": "canonical: Thorn Coil",
+          "message": "'Thorn Vine' looks like a variant of 'Thorn Coil'",
+          "span": [
+            27216,
+            27226
+          ],
+          "type": "entity_rename"
+        }
+      ],
+      "manuscript_id": "ms-001",
+      "planted": [
+        {
+          "chapter": 3,
+          "char_span": [
+            3249,
+            3261
+          ],
+          "clean_line": "  Agility: 7  ",
+          "corrupt_fragment": "  Agility: 7",
+          "cross_chapter": true,
+          "defect_id": "ms-001-stat_drift-003",
+          "established_in": 2,
+          "injector_version": 1,
+          "manuscript_id": "ms-001",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "  Agility: 8",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 8,
+          "char_span": [
+            14340,
+            14355
+          ],
+          "clean_line": "  Intellect: 14  ",
+          "corrupt_fragment": "  Intellect: 14",
+          "cross_chapter": true,
+          "defect_id": "ms-001-stat_drift-008",
+          "established_in": 7,
+          "injector_version": 1,
+          "manuscript_id": "ms-001",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "  Intellect: 12",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 9,
+          "char_span": [
+            16390,
+            16400
+          ],
+          "clean_line": "  Level: 2  ",
+          "corrupt_fragment": "  Level: 2",
+          "cross_chapter": true,
+          "defect_id": "ms-001-level_regression-009",
+          "established_in": 8,
+          "injector_version": 1,
+          "manuscript_id": "ms-001",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "  Level: 3",
+          "type": "level_regression"
+        },
+        {
+          "chapter": 13,
+          "char_span": [
+            27216,
+            27226
+          ],
+          "clean_line": "Thorn Vine, he realized, was the name of this newfound ability. It would weave thorny barriers around him, repelling any who dared to strike. The knowledge settled into his mind like a well-forged blade, and he knew he had reached a new level of mastery.",
+          "corrupt_fragment": "Thorn Vine",
+          "cross_chapter": false,
+          "defect_id": "ms-001-entity_rename-013",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-001",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "Thorn Coil",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 5,
+          "char_span": [
+            7713,
+            7731
+          ],
+          "clean_line": "The Cistern Gate loomed before Kaelen, its ancient stones whispering secrets of ages past. The air was thick with the scent of moss and damp earth, a testament to the centuries it had stood sentinel over this forgotten place. Kaelen's fingers traced the jagged edges of his cracked grindstone, feeling its familiar weight in his pocket.",
+          "corrupt_fragment": "cracked grindstone",
+          "cross_chapter": false,
+          "defect_id": "ms-001-entity_rename-005",
+          "established_in": 5,
+          "injector_version": 1,
+          "manuscript_id": "ms-001",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "cracked whetstone",
+          "type": "entity_rename"
+        }
+      ]
+    },
+    {
+      "chapters": 14,
+      "complaints": [
+        {
+          "evidence": "chapter 1: Agility 12",
+          "message": "Agility changes 12 -> 11 between chapters 1 and 2 with no level-up",
+          "span": [
+            1766,
+            1781
+          ],
+          "type": "stat_drift"
+        },
+        {
+          "evidence": "chapter 2: Agility 11",
+          "message": "Agility changes 11 -> 12 between chapters 2 and 3 with no level-up",
+          "span": [
+            3666,
+            3681
+          ],
+          "type": "stat_drift"
+        },
+        {
+          "evidence": "chapter 2: Vitality 10",
+          "message": "Vitality changes 10 -> 12 between chapters 2 and 3 with no level-up",
+          "span": [
+            3700,
+            3716
+          ],
+          "type": "stat_drift"
+        },
+        {
+          "evidence": "chapter 5 skills: Silent Palm, Quickstep",
+          "message": "'Ash Beckon' is used in chapter 5 but is first listed as known in chapter 7",
+          "span": [
+            8847,
+            8857
+          ],
+          "type": "skill_before_acquisition"
+        },
+        {
+          "evidence": "chapter 7 skills: Silent Palm, Quickstep, Ash Beckon",
+          "message": "'Glass Song' is used in chapter 7 but is first listed as known in chapter 10",
+          "span": [
+            13128,
+            13138
+          ],
+          "type": "skill_before_acquisition"
+        }
+      ],
+      "manuscript_id": "ms-002",
+      "planted": [
+        {
+          "chapter": 2,
+          "char_span": [
+            1766,
+            1779
+          ],
+          "clean_line": "  Agility: 11  ",
+          "corrupt_fragment": "  Agility: 11",
+          "cross_chapter": true,
+          "defect_id": "ms-002-stat_drift-002",
+          "established_in": 1,
+          "injector_version": 1,
+          "manuscript_id": "ms-002",
+          "notes": "planted 4 of 10 requested",
+          "original_fragment": "  Agility: 12",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 3,
+          "char_span": [
+            3700,
+            3714
+          ],
+          "clean_line": "  Vitality: 12  ",
+          "corrupt_fragment": "  Vitality: 12",
+          "cross_chapter": true,
+          "defect_id": "ms-002-stat_drift-003",
+          "established_in": 2,
+          "injector_version": 1,
+          "manuscript_id": "ms-002",
+          "notes": "planted 4 of 10 requested",
+          "original_fragment": "  Vitality: 10",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 7,
+          "char_span": [
+            13128,
+            13138
+          ],
+          "clean_line": "The Warden gestured towards a patch of earth where a small mound of ash lay. \"Glass Song,\" he said, his eyes gleaming with approval. \"Your task is to master this skill.\"",
+          "corrupt_fragment": "Glass Song",
+          "cross_chapter": true,
+          "defect_id": "ms-002-skill_before_acquisition-007",
+          "established_in": 10,
+          "injector_version": 1,
+          "manuscript_id": "ms-002",
+          "notes": "planted 4 of 10 requested",
+          "original_fragment": "Ash Beckon",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 5,
+          "char_span": [
+            8847,
+            8857
+          ],
+          "clean_line": "They moved silently through the shadows, their steps light and deliberate. Odile's Ash Beckon skill was invaluable here, allowing them to navigate the terrain with ease. As they approached the gate, she felt Bex's gaze on her, a silent question lingering in his eyes.",
+          "corrupt_fragment": "Ash Beckon",
+          "cross_chapter": true,
+          "defect_id": "ms-002-skill_before_acquisition-005",
+          "established_in": 7,
+          "injector_version": 1,
+          "manuscript_id": "ms-002",
+          "notes": "planted 4 of 10 requested",
+          "original_fragment": "Quickstep",
+          "type": "skill_before_acquisition"
+        }
+      ]
+    },
+    {
+      "chapters": 14,
+      "complaints": [
+        {
+          "evidence": "chapter 4 skills: Mind Spike, Glass Song",
+          "message": "'Silent Palm' is used in chapter 4 but is first listed as known in chapter 7",
+          "span": [
+            6828,
+            6839
+          ],
+          "type": "skill_before_acquisition"
+        },
+        {
+          "evidence": "canonical: Glass Song",
+          "message": "'Glass Chant' looks like a variant of 'Glass Song'",
+          "span": [
+            11205,
+            11216
+          ],
+          "type": "entity_rename"
+        },
+        {
+          "evidence": "chapter 9 skills: Mind Spike, Glass Song, Silent Palm",
+          "message": "'Stone Ward' is used in chapter 9 but is first listed as known in chapter 10",
+          "span": [
+            17648,
+            17658
+          ],
+          "type": "skill_before_acquisition"
+        },
+        {
+          "evidence": "canonical: Stone Ward",
+          "message": "'Stone Guard' looks like a variant of 'Stone Ward'",
+          "span": [
+            18831,
+            18842
+          ],
+          "type": "entity_rename"
+        },
+        {
+          "evidence": "chapter 14 inventory: iron key, brass compass",
+          "message": "'tin lantern' is referenced in chapter 14 but is not in inventory here or in the previous chapter",
+          "span": [
+            26977,
+            26988
+          ],
+          "type": "inventory_ghost"
+        }
+      ],
+      "manuscript_id": "ms-003",
+      "planted": [
+        {
+          "chapter": 4,
+          "char_span": [
+            6828,
+            6839
+          ],
+          "clean_line": "As he approached, she turned to face him, her eyes filled with an earnest intensity. \"You are ready,\" she said, nodding towards the ancient stone altar in the center of the clearing. \"The time has come for you to learn the Silent Palm.\"",
+          "corrupt_fragment": "Silent Palm",
+          "cross_chapter": true,
+          "defect_id": "ms-003-skill_before_acquisition-004",
+          "established_in": 7,
+          "injector_version": 1,
+          "manuscript_id": "ms-003",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "Glass Song",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 9,
+          "char_span": [
+            17648,
+            17658
+          ],
+          "clean_line": "With a swift motion, Rhys activated Stone Ward, his hand moving with precision to disarm any potential threat without making a sound. The air around him seemed to hold its breath as he waited for the outcome.",
+          "corrupt_fragment": "Stone Ward",
+          "cross_chapter": true,
+          "defect_id": "ms-003-skill_before_acquisition-009",
+          "established_in": 10,
+          "injector_version": 1,
+          "manuscript_id": "ms-003",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "Silent Palm",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 14,
+          "char_span": [
+            26973,
+            26988
+          ],
+          "clean_line": "Rhys nodded, feeling the familiar pull of curiosity in his chest. His hand instinctively reached for the tin lantern in his pocket, its cold metal a reassuring presence. He glanced at the brass compass he'd recently acquired, its needle spinning slowly as if searching for direction.",
+          "corrupt_fragment": "the tin lantern",
+          "cross_chapter": false,
+          "defect_id": "ms-003-inventory_ghost-014",
+          "established_in": 14,
+          "injector_version": 1,
+          "manuscript_id": "ms-003",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "the iron key",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 6,
+          "char_span": [
+            11205,
+            11216
+          ],
+          "clean_line": "Rhys nodded, his mind racing with possibilities. He reached out, fingers hovering over the charm. With a deep breath, he channeled his intellect, focusing on the patterns etched into its surface. The air around them hummed with energy as he activated Glass Chant, the vibrations resonating through the water and stone.",
+          "corrupt_fragment": "Glass Chant",
+          "cross_chapter": false,
+          "defect_id": "ms-003-entity_rename-006",
+          "established_in": 6,
+          "injector_version": 1,
+          "manuscript_id": "ms-003",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "Glass Song",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 10,
+          "char_span": [
+            18831,
+            18842
+          ],
+          "clean_line": "\"Rhys,\" Warden Ott began, his voice echoing slightly in the stone chamber, \"today you ascend to Level 4. It’s time you learned Stone Guard.\"",
+          "corrupt_fragment": "Stone Guard",
+          "cross_chapter": false,
+          "defect_id": "ms-003-entity_rename-010",
+          "established_in": 10,
+          "injector_version": 1,
+          "manuscript_id": "ms-003",
+          "notes": "planted 5 of 10 requested",
+          "original_fragment": "Stone Ward",
+          "type": "entity_rename"
+        }
+      ]
+    },
+    {
+      "chapters": 14,
+      "complaints": [
+        {
+          "evidence": "chapter 3 skills: Echo Sight",
+          "message": "'Quickstep' is used in chapter 3 but is first listed as known in chapter 13",
+          "span": [
+            4813,
+            4822
+          ],
+          "type": "skill_before_acquisition"
+        },
+        {
+          "evidence": "chapter 4 skills: Echo Sight, Frost Nail",
+          "message": "'Thorn Coil' is used in chapter 4 but is first listed as known in chapter 7",
+          "span": [
+            7067,
+            7077
+          ],
+          "type": "skill_before_acquisition"
+        },
+        {
+          "evidence": "canonical: cracked whetstone",
+          "message": "'cracked grindstone' looks like a variant of 'cracked whetstone'",
+          "span": [
+            8971,
+            8989
+          ],
+          "type": "entity_rename"
+        },
+        {
+          "evidence": "chapter 7: Strength 10",
+          "message": "Strength changes 10 -> 11 between chapters 7 and 8 with no level-up",
+          "span": [
+            14827,
+            14843
+          ],
+          "type": "stat_drift"
+        },
+        {
+          "evidence": "chapter 8: Strength 11",
+          "message": "Strength changes 11 -> 10 between chapters 8 and 9 with no level-up",
+          "span": [
+            17080,
+            17096
+          ],
+          "type": "stat_drift"
+        },
+        {
+          "evidence": "chapter 9 inventory: bone charm",
+          "message": "'grey cloak' is referenced in chapter 9 but is not in inventory here or in the previous chapter",
+          "span": [
+            17345,
+            17355
+          ],
+          "type": "inventory_ghost"
+        },
+        {
+          "evidence": "canonical: Iron Skin",
+          "message": "'Iron Hide' looks like a variant of 'Iron Skin'",
+          "span": [
+            25100,
+            25109
+          ],
+          "type": "entity_rename"
+        },
+        {
+          "evidence": "chapter 13 inventory: bone charm",
+          "message": "'grey cloak' is referenced in chapter 13 but is not in inventory here or in the previous chapter",
+          "span": [
+            26379,
+            26389
+          ],
+          "type": "inventory_ghost"
+        }
+      ],
+      "manuscript_id": "ms-004",
+      "planted": [
+        {
+          "chapter": 8,
+          "char_span": [
+            14827,
+            14841
+          ],
+          "clean_line": "  Strength: 11  ",
+          "corrupt_fragment": "  Strength: 11",
+          "cross_chapter": true,
+          "defect_id": "ms-004-stat_drift-008",
+          "established_in": 7,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "  Strength: 10",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 4,
+          "char_span": [
+            7067,
+            7077
+          ],
+          "clean_line": "Odile nodded, her mind racing with anticipation. She had longed for this moment since she first discovered her Echo Sight, allowing her to perceive the echoes of past events. But Thorn Coil was something else entirely—a skill that promised power and precision.",
+          "corrupt_fragment": "Thorn Coil",
+          "cross_chapter": true,
+          "defect_id": "ms-004-skill_before_acquisition-004",
+          "established_in": 7,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "Frost Nail",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 3,
+          "char_span": [
+            4813,
+            4822
+          ],
+          "clean_line": "As she made her way through the throng of people, her mind focused on Quickstep, the skill that allowed her to see echoes of recent events. It was a gift, or perhaps a curse, but it had proven invaluable in navigating this world. She could almost hear the faint whispers of what had happened just moments before, like echoes bouncing off invisible walls.",
+          "corrupt_fragment": "Quickstep",
+          "cross_chapter": true,
+          "defect_id": "ms-004-skill_before_acquisition-003",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "Echo Sight",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 9,
+          "char_span": [
+            17341,
+            17355
+          ],
+          "clean_line": "The Cistern Gate loomed before Odile, its ancient stones whispering secrets of the past. She adjusted her grip on the grey cloak, feeling its familiar weight in her palm. The air was thick with anticipation as she stepped forward, Echo Sight already flickering to life in her mind's eye.",
+          "corrupt_fragment": "the grey cloak",
+          "cross_chapter": false,
+          "defect_id": "ms-004-inventory_ghost-009",
+          "established_in": 9,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "the bone charm",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 13,
+          "char_span": [
+            26375,
+            26389
+          ],
+          "clean_line": "Odile nodded, feeling the familiar rush of adrenaline. She reached into her inventory, fingers brushing against the grey cloak that hung around her neck. It was a reminder of her journey so far, a symbol of resilience and strength.",
+          "corrupt_fragment": "the grey cloak",
+          "cross_chapter": false,
+          "defect_id": "ms-004-inventory_ghost-013",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "the bone charm",
+          "type": "inventory_ghost"
+        },
+        {
+          "chapter": 12,
+          "char_span": [
+            25100,
+            25109
+          ],
+          "clean_line": "Odile's heart quickened. The Caverns were notorious for their treacherous paths and deadly inhabitants. But she was ready. She could rely on Frost Nail to freeze her enemies in place, Thorn Coil to ensnare them, and Iron Hide to protect herself from harm.",
+          "corrupt_fragment": "Iron Hide",
+          "cross_chapter": false,
+          "defect_id": "ms-004-entity_rename-012",
+          "established_in": 12,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "Iron Skin",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 5,
+          "char_span": [
+            8971,
+            8989
+          ],
+          "clean_line": "Odile nodded, her mind already calculating the best approach. She reached into her inventory and pulled out the cracked grindstone, examining it closely. It was a curious find, its surface marred with tiny fractures that seemed to pulse with latent energy. Perhaps it could be useful later.",
+          "corrupt_fragment": "cracked grindstone",
+          "cross_chapter": false,
+          "defect_id": "ms-004-entity_rename-005",
+          "established_in": 5,
+          "injector_version": 1,
+          "manuscript_id": "ms-004",
+          "notes": "planted 7 of 10 requested",
+          "original_fragment": "cracked whetstone",
+          "type": "entity_rename"
+        }
+      ]
+    },
+    {
+      "chapters": 14,
+      "complaints": [
+        {
+          "evidence": "chapter 2: Strength 12",
+          "message": "Strength changes 12 -> 10 between chapters 2 and 3 with no level-up",
+          "span": [
+            3773,
+            3789
+          ],
+          "type": "stat_drift"
+        },
+        {
+          "evidence": "chapter 4 skills: Quickstep, Frost Nail",
+          "message": "'Echo Sight' is used in chapter 4 but is first listed as known in chapter 7",
+          "span": [
+            6912,
+            6922
+          ],
+          "type": "skill_before_acquisition"
+        },
+        {
+          "evidence": "canonical: cracked whetstone",
+          "message": "'cracked grindstone' looks like a variant of 'cracked whetstone'",
+          "span": [
+            16132,
+            16150
+          ],
+          "type": "entity_rename"
+        },
+        {
+          "evidence": "canonical: Thorn Coil",
+          "message": "'Thorn Vine' looks like a variant of 'Thorn Coil'",
+          "span": [
+            27115,
+            27125
+          ],
+          "type": "entity_rename"
+        }
+      ],
+      "manuscript_id": "ms-005",
+      "planted": [
+        {
+          "chapter": 3,
+          "char_span": [
+            3773,
+            3787
+          ],
+          "clean_line": "  Strength: 10  ",
+          "corrupt_fragment": "  Strength: 10",
+          "cross_chapter": true,
+          "defect_id": "ms-005-stat_drift-003",
+          "established_in": 2,
+          "injector_version": 1,
+          "manuscript_id": "ms-005",
+          "notes": "planted 4 of 10 requested",
+          "original_fragment": "  Strength: 12",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 4,
+          "char_span": [
+            6912,
+            6922
+          ],
+          "clean_line": "The Tallyman nodded, taking her hand in a firm grip. \"Level 2, you say? Let's see what you've got.\" He handed her a small, shimmering orb. \"This is your new skill, Echo Sight. Use it wisely.\"",
+          "corrupt_fragment": "Echo Sight",
+          "cross_chapter": true,
+          "defect_id": "ms-005-skill_before_acquisition-004",
+          "established_in": 7,
+          "injector_version": 1,
+          "manuscript_id": "ms-005",
+          "notes": "planted 4 of 10 requested",
+          "original_fragment": "Frost Nail",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 13,
+          "char_span": [
+            27115,
+            27125
+          ],
+          "clean_line": "With a deep breath, Sorrel focused her energy, channeling it into the very earth beneath her feet. Vines sprang forth, intertwining with the roots and branches around them. Thorn Vine had been learned.",
+          "corrupt_fragment": "Thorn Vine",
+          "cross_chapter": false,
+          "defect_id": "ms-005-entity_rename-013",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-005",
+          "notes": "planted 4 of 10 requested",
+          "original_fragment": "Thorn Coil",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 8,
+          "char_span": [
+            16132,
+            16150
+          ],
+          "clean_line": "Sorrel stepped forward, her mind focused on the path ahead. She knew that losing the cracked grindstone had been a setback, but she was determined not to let it hinder her progress. As she moved deeper into the Sallow Wood, she felt a surge of determination. This was just the beginning.",
+          "corrupt_fragment": "cracked grindstone",
+          "cross_chapter": false,
+          "defect_id": "ms-005-entity_rename-008",
+          "established_in": 8,
+          "injector_version": 1,
+          "manuscript_id": "ms-005",
+          "notes": "planted 4 of 10 requested",
+          "original_fragment": "cracked whetstone",
+          "type": "entity_rename"
+        }
+      ]
+    },
+    {
+      "chapters": 14,
+      "complaints": [
+        {
+          "evidence": "canonical: grey cloak",
+          "message": "'grey mantle' looks like a variant of 'grey cloak'",
+          "span": [
+            4678,
+            4689
+          ],
+          "type": "entity_rename"
+        },
+        {
+          "evidence": "canonical: grey cloak",
+          "message": "'grey mantle' looks like a variant of 'grey cloak'",
+          "span": [
+            28081,
+            28092
+          ],
+          "type": "entity_rename"
+        },
+        {
+          "evidence": "chapter 13: Intellect 9",
+          "message": "Intellect changes 9 -> 8 between chapters 13 and 14 with no level-up",
+          "span": [
+            28532,
+            28548
+          ],
+          "type": "stat_drift"
+        }
+      ],
+      "manuscript_id": "ms-006",
+      "planted": [
+        {
+          "chapter": 14,
+          "char_span": [
+            28532,
+            28546
+          ],
+          "clean_line": "  Intellect: 8  ",
+          "corrupt_fragment": "  Intellect: 8",
+          "cross_chapter": true,
+          "defect_id": "ms-006-stat_drift-014",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-006",
+          "notes": "planted 3 of 10 requested",
+          "original_fragment": "  Intellect: 9",
+          "type": "stat_drift"
+        },
+        {
+          "chapter": 13,
+          "char_span": [
+            28081,
+            28092
+          ],
+          "clean_line": "Sorrel nodded, understanding the weight of his words. She adjusted her grey mantle, feeling the copper ring on her finger—a reminder of her journey and the skills she'd honed. The Ninth Terrace was behind her now, but the path ahead was clearer, and she was ready.",
+          "corrupt_fragment": "grey mantle",
+          "cross_chapter": false,
+          "defect_id": "ms-006-entity_rename-013",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-006",
+          "notes": "planted 3 of 10 requested",
+          "original_fragment": "grey cloak",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 3,
+          "char_span": [
+            4678,
+            4689
+          ],
+          "clean_line": "The sun was just beginning to dip below the horizon, casting long shadows across the cobblestone streets of Highcut. Sorrel adjusted the grey mantle around her shoulders, feeling the familiar weight of it settle comfortably against her back. The air was crisp with the scent of autumn leaves and the distant hum of the marketplace began to swell. She had been wandering these streets for what felt like hours, but she knew there was still much to learn before she could call herself a true adventurer.",
+          "corrupt_fragment": "grey mantle",
+          "cross_chapter": false,
+          "defect_id": "ms-006-entity_rename-003",
+          "established_in": 3,
+          "injector_version": 1,
+          "manuscript_id": "ms-006",
+          "notes": "planted 3 of 10 requested",
+          "original_fragment": "grey cloak",
+          "type": "entity_rename"
+        }
+      ]
+    },
+    {
+      "chapters": 14,
+      "complaints": [
+        {
+          "evidence": "chapter 2 skills: Ember Lash",
+          "message": "'Echo Sight' is used in chapter 2 but is first listed as known in chapter 7",
+          "span": [
+            3606,
+            3616
+          ],
+          "type": "skill_before_acquisition"
+        },
+        {
+          "evidence": "chapter 6 skills: Ember Lash, Stone Ward",
+          "message": "'Ash Beckon' is used in chapter 6 but is first listed as known in chapter 10",
+          "span": [
+            10812,
+            10822
+          ],
+          "type": "skill_before_acquisition"
+        },
+        {
+          "evidence": "canonical: sealed vial",
+          "message": "'sealed phial' looks like a variant of 'sealed vial'",
+          "span": [
+            21735,
+            21747
+          ],
+          "type": "entity_rename"
+        },
+        {
+          "evidence": "canonical: Blood Ledger",
+          "message": "'Blood Tally' looks like a variant of 'Blood Ledger'",
+          "span": [
+            24347,
+            24358
+          ],
+          "type": "entity_rename"
+        }
+      ],
+      "manuscript_id": "ms-007",
+      "planted": [
+        {
+          "chapter": 6,
+          "char_span": [
+            10812,
+            10822
+          ],
+          "clean_line": "Ilrid followed, his mind racing. He knew he had to rely on his skills—Ember Lash and Ash Beckon—to protect himself and uncover whatever threat lurked in the Sallow Wood. The map in his hand seemed more like a puzzle than a guide, but he was determined to solve it.",
+          "corrupt_fragment": "Ash Beckon",
+          "cross_chapter": true,
+          "defect_id": "ms-007-skill_before_acquisition-006",
+          "established_in": 10,
+          "injector_version": 1,
+          "manuscript_id": "ms-007",
+          "notes": "planted 4 of 10 requested",
+          "original_fragment": "Stone Ward",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 2,
+          "char_span": [
+            3606,
+            3616
+          ],
+          "clean_line": "Maro paused, looking back at Ilrid with an encouraging grin. \"You've got this,\" he said, clapping Ilrid on the shoulder. \"Remember, if things get hairy, you've got Echo Sight.\"",
+          "corrupt_fragment": "Echo Sight",
+          "cross_chapter": true,
+          "defect_id": "ms-007-skill_before_acquisition-002",
+          "established_in": 7,
+          "injector_version": 1,
+          "manuscript_id": "ms-007",
+          "notes": "planted 4 of 10 requested",
+          "original_fragment": "Ember Lash",
+          "type": "skill_before_acquisition"
+        },
+        {
+          "chapter": 12,
+          "char_span": [
+            21735,
+            21747
+          ],
+          "clean_line": "Ilrid nodded, feeling the weight of his sealed phial and salt pouch in his belt. He knew these items were crucial, though their purpose remained a mystery for now. \"I'm here to learn,\" he replied, his tone steady.",
+          "corrupt_fragment": "sealed phial",
+          "cross_chapter": false,
+          "defect_id": "ms-007-entity_rename-012",
+          "established_in": 12,
+          "injector_version": 1,
+          "manuscript_id": "ms-007",
+          "notes": "planted 4 of 10 requested",
+          "original_fragment": "sealed vial",
+          "type": "entity_rename"
+        },
+        {
+          "chapter": 13,
+          "char_span": [
+            24347,
+            24358
+          ],
+          "clean_line": "As they approached the gate, Ilrid felt a strange pull in her mind, a whisper of something new. It was subtle, yet unmistakable—a skill waiting to be awakened. Her intellect surged, piecing together fragments of knowledge she hadn't known she possessed. Blood Tally.",
+          "corrupt_fragment": "Blood Tally",
+          "cross_chapter": false,
+          "defect_id": "ms-007-entity_rename-013",
+          "established_in": 13,
+          "injector_version": 1,
+          "manuscript_id": "ms-007",
+          "notes": "planted 4 of 10 requested",
+          "original_fragment": "Blood Ledger",
+          "type": "entity_rename"
+        }
+      ]
+    }
+  ],
+  "cross_chapter_recall": 1.0,
+  "manuscripts": 8,
+  "planted": 37,
+  "precision": 0.9024390243902439,
+  "recall": 1.0,
+  "recall_by_type": {
+    "entity_rename": 1.0,
+    "inventory_ghost": 1.0,
+    "level_regression": 1.0,
+    "skill_before_acquisition": 1.0,
+    "stat_drift": 1.0
+  }
+}

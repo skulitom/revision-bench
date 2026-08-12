@@ -21,12 +21,15 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from functools import lru_cache
 from itertools import pairwise
 
 from revisionbench.detect import Complaint
+from revisionbench.litrpg import STAT_NAMES
 from revisionbench.text import normalise_newlines
 
 __all__ = [
+    "KNOWN_FIELDS",
     "LITRPG_DETECTORS",
     "ChapterReading",
     "detect_all_litrpg",
@@ -39,7 +42,18 @@ __all__ = [
 ]
 
 _CHAPTER_RE = re.compile(r"^Chapter (\d+)\s*$", re.MULTILINE)
-_FIELD_RE = re.compile(r"^ {2}([A-Za-z]+): (.+)$", re.MULTILINE)
+
+#: Indentation is not part of the schema. A model asked to reproduce a status block
+#: reproduces the *fields* and quietly renormalises the whitespace — phi4 returns
+#: ``Name: Bright`` where the template has ``  Name: Bright``. Requiring the two spaces made
+#: the parser find no fields at all, which raises no complaints, which reads as perfect
+#: precision. Real serials vary formatting far more than this, so tolerance here is
+#: realism rather than leniency.
+_FIELD_RE = re.compile(r"^[ \t>*|-]*([A-Za-z]+)\s*:[ \t]*(.+?)[ \t]*$", re.MULTILINE)
+
+#: ...but tolerance needs a bound, or a line of dialogue like ``Bex: not today`` becomes a
+#: canonical fact. The harness knows its own schema, so only these names are read.
+KNOWN_FIELDS = frozenset({"Name", "Level", "Skills", "Inventory", *STAT_NAMES})
 
 
 @dataclass(frozen=True, slots=True)
@@ -74,6 +88,8 @@ def parse_chapters(text: str) -> list[ChapterReading]:
 
         for match in _FIELD_RE.finditer(chunk):
             key, raw = match.group(1), match.group(2).strip()
+            if key not in KNOWN_FIELDS:
+                continue
             spans[key] = (start + match.start(), start + match.end())
             body_start = min(body_start, start + match.end())
             if key == "Level":
@@ -250,6 +266,24 @@ def detect_inventory_ghost(text: str, **_: object) -> list[Complaint]:
     return out
 
 
+@lru_cache(maxsize=1)
+def _function_words() -> frozenset[str]:
+    """The repo's closed-class function-word list, cached.
+
+    Loaded lazily so importing this module does not read a YAML file, and cached so the
+    detector does not re-read it once per candidate.
+    """
+    from revisionbench.metrics.stylometry import load_function_words
+
+    return frozenset(load_function_words()[1])
+
+
+def _shape(name: str) -> tuple[bool, ...]:
+    """Per-token capitalisation. ``Glass Song`` -> (True, True); ``cracked whetstone`` ->
+    (False, False). A variant of a proper noun is still a proper noun."""
+    return tuple(token[:1].isupper() for token in name.split())
+
+
 def detect_entity_rename(text: str, **_: object) -> list[Complaint]:
     """A prose name that is one token away from a canonical skill or item.
 
@@ -271,16 +305,42 @@ def detect_entity_rename(text: str, **_: object) -> list[Complaint]:
         tokens = name.split()
         if len(tokens) < 2:
             continue
-        prefixes.setdefault(" ".join(tokens[:-1]).lower(), set()).add(name)
+        prefixes.setdefault(" ".join(tokens[:-1]), set()).add(name)
 
     seen: set[tuple[int, int]] = set()
     for reading in readings:
         body = text[reading.body_start : reading.end]
         for prefix, names in prefixes.items():
-            for match in re.finditer(rf"\b{re.escape(prefix)} ([A-Za-z]+)", body, re.I):
+            # Case-SENSITIVE, and the candidate must share the canonical name's
+            # capitalisation shape. Both are load-bearing on real prose and neither
+            # mattered on templated prose, which is why this passed at 88% precision there
+            # and 23% here: "Glass Song" matched "glass shards" and "glass with", and
+            # "Silent Palm" matched "silent enigma". 118 false positives across 8
+            # manuscripts, all of them this. A named skill is a proper noun; a lowercase
+            # match is ordinary prose using an ordinary word.
+            #
+            # Shape rather than a stop-word list on purpose: `detect.py` holds the line that
+            # a detector needs no dictionary or cast list, and a rule that reads the text's
+            # own capitalisation keeps that property.
+            for match in re.finditer(rf"\b{re.escape(prefix)} ([A-Za-z]+)", body):
                 candidate = match.group(0)
                 if candidate.lower() in lowered:
                     continue  # the canonical name itself
+                if not all(
+                    token[:1].isupper() == expected
+                    for token, expected in zip(
+                        candidate.split(), _shape(sorted(names)[0]), strict=False
+                    )
+                ):
+                    continue
+                # Capitalisation saves the Title Case skills and does nothing for lowercase
+                # item names: "salt pouch" still fired on "salt from", "salt on", "salt and".
+                # A closed-class function word can never be the second half of an item name,
+                # so a candidate ending in one is prose. The list is the same versioned
+                # closed class Burrows' Delta uses — a fixed grammatical category, not the
+                # open-ended dictionary `detect.py` refuses to depend on.
+                if candidate.split()[-1].lower() in _function_words():
+                    continue
                 span = (reading.body_start + match.start(), reading.body_start + match.end())
                 if span in seen:
                     continue

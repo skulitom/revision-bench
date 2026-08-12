@@ -4170,7 +4170,7 @@
           "type": "entity_rename"
         },
         {
-          "evidence": "canonical: Iron Skin, iron key",
+          "evidence": "canonical: Iron Skin",
           "message": "'Iron Hide' looks like a variant of 'Iron Skin'",
           "span": [
             8997,

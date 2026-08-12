@@ -32,6 +32,7 @@ from dataclasses import asdict, dataclass
 from typing import Any
 
 from revisionbench.litrpg import Manifest, render_chapter, render_status_block
+from revisionbench.litrpg_detect import KNOWN_FIELDS
 
 __all__ = [
     "LITRPG_DEFECT_TYPES",
@@ -130,7 +131,9 @@ def _body_start(text: str) -> int:
     """Where the narrative begins, i.e. after the last status-block field."""
     last = 0
     for line in text.splitlines(keepends=True):
-        if line.startswith("  ") and ": " in line:
+        stripped = line.strip()
+        field = stripped.split(":", 1)[0] if ":" in stripped else ""
+        if field in KNOWN_FIELDS:
             last = text.find(line) + len(line)
     return last
 
@@ -165,6 +168,7 @@ def inject_manuscript(
     types: list[str] | None = None,
     per_type: int = 2,
     seed: int = 0,
+    chapters_text: dict[int, str] | None = None,
 ) -> tuple[str, list[LitRPGDefect]]:
     """Render the manuscript and plant defects. Returns (corrupted_text, defects).
 
@@ -185,7 +189,12 @@ def inject_manuscript(
         raise ValueError(f"unknown defect type(s): {unknown}; known: {list(LITRPG_DEFECT_TYPES)}")
 
     rng = random.Random(f"{manifest.manuscript_id}:{seed}")
-    chapters = {c.chapter: render_chapter(manifest, c.chapter) for c in manifest.chapters}
+    # ``chapters_text`` lets a model-written manuscript be corrupted by the same code that
+    # corrupts the templated one. The manifest is ground truth either way, which is the
+    # property that makes the substitution safe — see litrpg.prompt_for_chapter.
+    chapters = chapters_text or {
+        c.chapter: render_chapter(manifest, c.chapter) for c in manifest.chapters
+    }
     # One defect per chapter at most. Two contradictions in one chapter can interact —
     # renaming a skill that a use-before-acquisition defect also moved leaves a defect whose
     # "correct" repair is ambiguous, and an ambiguous target cannot be scored.

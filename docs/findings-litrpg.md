@@ -68,9 +68,10 @@ to quote them without the caveats will be strongest.
 - **It says nothing about prose quality.** The clean text is not good writing and is not
   claimed to be. This measures whether contradictions are *findable*, not whether revisions
   are *better*. Every quality claim still rests on Stratum A.
-- **Both numbers are upper bounds.** The prose is templated and the status block has a fixed
-  schema, so extraction is near-perfect. Real serials vary formatting constantly. Read these
-  as "what is achievable when parsing is easy", not as a forecast.
+- ~~**Both numbers are upper bounds**~~ — tested in §7 on model-written chapters, where
+  recall and precision held (100%/90%) but only after two silent failures the templated
+  corpus could not expose. The remaining untested assumption is a *fixed* status-block
+  schema; phi4 varies whitespace but keeps the field set, and a real serial would not.
 - **The detectors were built against this injector's five types.** They are not a general
   consistency checker, and recall on defect classes nobody thought to plant is unmeasured —
   the same caveat Stratum B carries.
@@ -155,16 +156,93 @@ registered as resolving one complaint and introducing another when it had simply
 Counting complaints instead cannot be fooled that way: fix one and break one and the total
 is unchanged, which is a rejection.
 
-## 7. Where this leaves the plan
+## 7. Model-written chapters — the upper bounds tested
+
+§4 warned that every number above was an upper bound, because the prose was templated and
+the status block had a fixed schema. `scripts/litrpg_generate.py` replaces the templates
+with phi4-written chapters conditioned on the same manifest, so the pipeline can be measured
+on prose that varies the way real prose does.
+
+**Generation fidelity: 112/112 chapters (100%), every one on the first attempt**, 600s.
+Validation is not optional here — a model that invents state produces contradictions the
+manifest cannot adjudicate, and those would land in the corpus as detector false positives
+when they are really corpus errors. Every chapter is parsed and checked against the manifest
+(level, every stat, skills, inventory) before it is kept.
+
+That phi4 holds a handed-to-it state table across 14 chapters with no failures is itself a
+result: **composition under a fact constraint is not the hard part.**
+
+| | templated | model-written |
+|---|---:|---:|
+| recall | 99% | **100%** |
+| precision | 88% | **90%** |
+| false positives on clean text | 0 | **0** |
+| defects resolved (A2d) | 90% | **97%** |
+| exactly restored (A2d) | 84% | **97%** |
+| chapters edited with no defect in them | 0 | **0** |
+
+The numbers survived — but only after two failures that the templated corpus could never
+have exposed, and both were silent.
+
+### 7.1 The status block lost its indentation
+
+phi4 reproduces the *fields* and quietly renormalises the whitespace: `Name: Bright` where
+the template has `  Name: Bright`. The parser required exactly two spaces, so it found **no
+status fields at all** — which raises no complaints, which reads as *perfect precision*.
+
+Indentation is not part of the schema. The parser now tolerates arbitrary leading
+whitespace and list markers, bounded by a known field-name set so a line of dialogue like
+`Bex: not today` cannot become a canonical fact.
+
+### 7.2 Precision collapsed to 23%, and all of it was one rule
+
+First honest run on generated prose: recall 100%, **precision 23%, 118 false positives on
+clean text.** Every one was `entity_rename`, and the cause was that it matched a skill's
+leading tokens *case-insensitively* — so `Glass Song` fired on "glass shards" and "glass
+with", `Silent Palm` on "silent enigma". Templated prose never used those words as common
+nouns. Model prose does constantly.
+
+Two fixes, neither requiring a dictionary — `detect.py` holds the line that a detector needs
+no dictionary or cast list, and both rules keep that property:
+
+1. **Case-sensitive matching plus capitalisation shape.** A variant of a proper noun is
+   still a proper noun, so a lowercase match is ordinary prose. Recovered precision to 84%.
+2. **A closed-class function word cannot end an item name.** Capitalisation does nothing for
+   lowercase items, so `salt pouch` still fired on "salt from", "salt on", "salt and" — and
+   A2d then dutifully repaired them, rewriting `salt and` to `sea`. Filtering on the same
+   versioned function-word list Burrows' Delta uses removed exactly those three. A fixed
+   grammatical category, not an open-ended word list.
+
+Final: **precision 90% on generated prose, 88% on templated** — and the templated numbers
+did not regress, which matters because a fix tuned on one corpus that degrades the other is
+overfitting rather than correction.
+
+### 7.3 What the collateral edits proved
+
+Before the second fix, 2 chapters were edited that had no defect in them. Tracing them was
+the point: a false complaint becomes a **licensed edit on clean prose**, and the mechanical
+acceptance rule cannot catch it, because the complaint does genuinely go away.
+
+That is the sharpest statement of why precision is the number that matters. Recall failures
+leave a defect in the manuscript; precision failures *actively damage text that was fine*.
+The safety guarantee is exactly as strong as detector precision and no stronger.
+
+(One correction worth recording: `cracked grindstone` and `Thorn Vine` initially looked like
+model-introduced drift. They are not — they are the injector's own variant swaps,
+`whetstone→grindstone` and `Coil→Vine`, so they were planted defects found and repaired
+correctly. Only the `salt` complaints were true false positives.)
+
+## 8. Where this leaves the plan
 
 The judge is not on the critical path for this class of defect, and this is the first
 measurement in the project that shows it rather than argues it. Next, in order:
 
 1. ~~**The repair half**~~ — built, §6. Next on this axis: the 6 defects that resolved
    without restoring, which is where a repair still degrades the manuscript undetectably.
-2. **Model-written chapters** (`litrpg.prompt_for_chapter`) instead of templated ones, with
-   the same manifest as ground truth. That measures how much of the 88% survives real prose,
-   and it is the single most informative follow-up.
-3. **Schema variation** — vary the status-block format across manuscripts, since fixed
-   formatting is what makes extraction near-perfect and is the least realistic assumption
-   here.
+2. ~~**Model-written chapters**~~ — done, §7. Numbers held; two silent failure modes found.
+3. **Schema variation** — vary the status-block format *between* manuscripts (bullets,
+   tables, inline prose stats). Now the least realistic remaining assumption, and §7.1
+   showed how quietly a parsing failure reads as a perfect score.
+4. **Model-dependence** — everything here is phi4. NEXT.md's standing rule requires
+   gemma3:27b and Qwen before any threshold ships, and the §7.2 fixes were tuned against
+   one model's habits.

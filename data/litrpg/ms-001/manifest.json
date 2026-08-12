@@ -1,0 +1,528 @@
+{
+  "chapters": [
+    {
+      "chapter": 1,
+      "inventory": [
+        "cracked whetstone"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 1,
+      "levelled_up": false,
+      "location": "Kellsmarket",
+      "npc": "Nel",
+      "skill_gained": "",
+      "skills": [
+        "Mind Spike"
+      ],
+      "stats": {
+        "Agility": 8,
+        "Intellect": 11,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    },
+    {
+      "chapter": 2,
+      "inventory": [
+        "cracked whetstone",
+        "copper ring"
+      ],
+      "item_gained": "copper ring",
+      "item_lost": "",
+      "level": 1,
+      "levelled_up": false,
+      "location": "the Cistern Gate",
+      "npc": "Sister Elspeth",
+      "skill_gained": "",
+      "skills": [
+        "Mind Spike"
+      ],
+      "stats": {
+        "Agility": 8,
+        "Intellect": 11,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    },
+    {
+      "chapter": 3,
+      "inventory": [
+        "cracked whetstone"
+      ],
+      "item_gained": "",
+      "item_lost": "copper ring",
+      "level": 1,
+      "levelled_up": false,
+      "location": "the Ninth Terrace",
+      "npc": "Bex",
+      "skill_gained": "",
+      "skills": [
+        "Mind Spike"
+      ],
+      "stats": {
+        "Agility": 8,
+        "Intellect": 11,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    },
+    {
+      "chapter": 4,
+      "inventory": [
+        "cracked whetstone"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 2,
+      "levelled_up": true,
+      "location": "the Cistern Gate",
+      "npc": "the Tallyman",
+      "skill_gained": "Blood Ledger",
+      "skills": [
+        "Mind Spike",
+        "Blood Ledger"
+      ],
+      "stats": {
+        "Agility": 10,
+        "Intellect": 11,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    },
+    {
+      "chapter": 5,
+      "inventory": [
+        "cracked whetstone"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 2,
+      "levelled_up": false,
+      "location": "the Cistern Gate",
+      "npc": "the Tallyman",
+      "skill_gained": "",
+      "skills": [
+        "Mind Spike",
+        "Blood Ledger"
+      ],
+      "stats": {
+        "Agility": 10,
+        "Intellect": 11,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    },
+    {
+      "chapter": 6,
+      "inventory": [
+        "cracked whetstone",
+        "salt pouch"
+      ],
+      "item_gained": "salt pouch",
+      "item_lost": "",
+      "level": 2,
+      "levelled_up": false,
+      "location": "the Ninth Terrace",
+      "npc": "Nel",
+      "skill_gained": "",
+      "skills": [
+        "Mind Spike",
+        "Blood Ledger"
+      ],
+      "stats": {
+        "Agility": 10,
+        "Intellect": 11,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    },
+    {
+      "chapter": 7,
+      "inventory": [
+        "cracked whetstone",
+        "salt pouch"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 3,
+      "levelled_up": true,
+      "location": "Highcut",
+      "npc": "Sister Elspeth",
+      "skill_gained": "Quickstep",
+      "skills": [
+        "Mind Spike",
+        "Blood Ledger",
+        "Quickstep"
+      ],
+      "stats": {
+        "Agility": 10,
+        "Intellect": 12,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    },
+    {
+      "chapter": 8,
+      "inventory": [
+        "cracked whetstone",
+        "salt pouch",
+        "brass compass"
+      ],
+      "item_gained": "brass compass",
+      "item_lost": "",
+      "level": 3,
+      "levelled_up": false,
+      "location": "Underbridge",
+      "npc": "Sister Elspeth",
+      "skill_gained": "",
+      "skills": [
+        "Mind Spike",
+        "Blood Ledger",
+        "Quickstep"
+      ],
+      "stats": {
+        "Agility": 10,
+        "Intellect": 12,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    },
+    {
+      "chapter": 9,
+      "inventory": [
+        "cracked whetstone",
+        "salt pouch",
+        "brass compass",
+        "bone charm"
+      ],
+      "item_gained": "bone charm",
+      "item_lost": "",
+      "level": 3,
+      "levelled_up": false,
+      "location": "Kellsmarket",
+      "npc": "Sister Elspeth",
+      "skill_gained": "",
+      "skills": [
+        "Mind Spike",
+        "Blood Ledger",
+        "Quickstep"
+      ],
+      "stats": {
+        "Agility": 10,
+        "Intellect": 12,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    },
+    {
+      "chapter": 10,
+      "inventory": [
+        "cracked whetstone",
+        "salt pouch",
+        "brass compass",
+        "bone charm"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 4,
+      "levelled_up": true,
+      "location": "Kellsmarket",
+      "npc": "Maro",
+      "skill_gained": "Stone Ward",
+      "skills": [
+        "Mind Spike",
+        "Blood Ledger",
+        "Quickstep",
+        "Stone Ward"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 12,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    },
+    {
+      "chapter": 11,
+      "inventory": [
+        "cracked whetstone",
+        "salt pouch",
+        "brass compass",
+        "bone charm",
+        "tin lantern"
+      ],
+      "item_gained": "tin lantern",
+      "item_lost": "",
+      "level": 4,
+      "levelled_up": false,
+      "location": "the Drowned Steps",
+      "npc": "the Tallyman",
+      "skill_gained": "",
+      "skills": [
+        "Mind Spike",
+        "Blood Ledger",
+        "Quickstep",
+        "Stone Ward"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 12,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    },
+    {
+      "chapter": 12,
+      "inventory": [
+        "cracked whetstone",
+        "salt pouch",
+        "brass compass",
+        "bone charm",
+        "tin lantern"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 4,
+      "levelled_up": false,
+      "location": "Highcut",
+      "npc": "Warden Ott",
+      "skill_gained": "",
+      "skills": [
+        "Mind Spike",
+        "Blood Ledger",
+        "Quickstep",
+        "Stone Ward"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 12,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    },
+    {
+      "chapter": 13,
+      "inventory": [
+        "cracked whetstone",
+        "salt pouch",
+        "brass compass",
+        "bone charm",
+        "tin lantern"
+      ],
+      "item_gained": "",
+      "item_lost": "",
+      "level": 5,
+      "levelled_up": true,
+      "location": "Highcut",
+      "npc": "Nel",
+      "skill_gained": "Thorn Coil",
+      "skills": [
+        "Mind Spike",
+        "Blood Ledger",
+        "Quickstep",
+        "Stone Ward",
+        "Thorn Coil"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 14,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    },
+    {
+      "chapter": 14,
+      "inventory": [
+        "cracked whetstone",
+        "salt pouch",
+        "brass compass",
+        "bone charm",
+        "tin lantern",
+        "grey cloak"
+      ],
+      "item_gained": "grey cloak",
+      "item_lost": "",
+      "level": 5,
+      "levelled_up": false,
+      "location": "Fenmouth",
+      "npc": "Warden Ott",
+      "skill_gained": "",
+      "skills": [
+        "Mind Spike",
+        "Blood Ledger",
+        "Quickstep",
+        "Stone Ward",
+        "Thorn Coil"
+      ],
+      "stats": {
+        "Agility": 12,
+        "Intellect": 14,
+        "Strength": 13,
+        "Vitality": 13
+      }
+    }
+  ],
+  "facts": [
+    {
+      "chapter": 1,
+      "key": "level",
+      "kind": "level",
+      "value": "1"
+    },
+    {
+      "chapter": 1,
+      "key": "Mind Spike",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 1,
+      "key": "cracked whetstone",
+      "kind": "item_gained",
+      "value": "held"
+    },
+    {
+      "chapter": 1,
+      "key": "Strength",
+      "kind": "stat",
+      "value": "13"
+    },
+    {
+      "chapter": 1,
+      "key": "Agility",
+      "kind": "stat",
+      "value": "8"
+    },
+    {
+      "chapter": 1,
+      "key": "Intellect",
+      "kind": "stat",
+      "value": "11"
+    },
+    {
+      "chapter": 1,
+      "key": "Vitality",
+      "kind": "stat",
+      "value": "13"
+    },
+    {
+      "chapter": 2,
+      "key": "copper ring",
+      "kind": "item_gained",
+      "value": "held"
+    },
+    {
+      "chapter": 3,
+      "key": "copper ring",
+      "kind": "item_lost",
+      "value": "gone"
+    },
+    {
+      "chapter": 4,
+      "key": "level",
+      "kind": "level",
+      "value": "2"
+    },
+    {
+      "chapter": 4,
+      "key": "Agility",
+      "kind": "stat",
+      "value": "10"
+    },
+    {
+      "chapter": 4,
+      "key": "Blood Ledger",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 6,
+      "key": "salt pouch",
+      "kind": "item_gained",
+      "value": "held"
+    },
+    {
+      "chapter": 7,
+      "key": "level",
+      "kind": "level",
+      "value": "3"
+    },
+    {
+      "chapter": 7,
+      "key": "Intellect",
+      "kind": "stat",
+      "value": "12"
+    },
+    {
+      "chapter": 7,
+      "key": "Quickstep",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 8,
+      "key": "brass compass",
+      "kind": "item_gained",
+      "value": "held"
+    },
+    {
+      "chapter": 9,
+      "key": "bone charm",
+      "kind": "item_gained",
+      "value": "held"
+    },
+    {
+      "chapter": 10,
+      "key": "level",
+      "kind": "level",
+      "value": "4"
+    },
+    {
+      "chapter": 10,
+      "key": "Agility",
+      "kind": "stat",
+      "value": "12"
+    },
+    {
+      "chapter": 10,
+      "key": "Stone Ward",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 11,
+      "key": "tin lantern",
+      "kind": "item_gained",
+      "value": "held"
+    },
+    {
+      "chapter": 13,
+      "key": "level",
+      "kind": "level",
+      "value": "5"
+    },
+    {
+      "chapter": 13,
+      "key": "Intellect",
+      "kind": "stat",
+      "value": "14"
+    },
+    {
+      "chapter": 13,
+      "key": "Thorn Coil",
+      "kind": "skill",
+      "value": "known"
+    },
+    {
+      "chapter": 14,
+      "key": "grey cloak",
+      "kind": "item_gained",
+      "value": "held"
+    }
+  ],
+  "manifest_version": 1,
+  "manuscript_id": "ms-001",
+  "protagonist": "Kaelen",
+  "seed": 1
+}

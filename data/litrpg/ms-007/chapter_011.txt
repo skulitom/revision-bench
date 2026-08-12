@@ -1,0 +1,33 @@
+Chapter 11
+
+[ STATUS ]
+  Name: Ilrid
+  Level: 4
+  Strength: 8
+  Agility: 9
+  Intellect: 10
+  Vitality: 12
+  Skills: Ember Lash, Stone Ward, Echo Sight, Ash Beckon
+  Inventory: sealed vial, tin lantern, salt pouch
+
+---
+
+The damp air of the Cistern Gate clung to Ilrid's skin as he stood before Warden Ott, who towered over him with a stern gaze. The warden's eyes flickered with a hint of curiosity, perhaps at the sight of Ilrid's tin lantern casting its warm glow in the dim corridor.
+
+"Ah, you're Ilrid," Warden Ott rumbled, his voice echoing slightly against the stone walls. "I've heard about your recent adventures. You've been making quite a name for yourself."
+
+Ilrid nodded, trying to appear nonchalant despite the thrill of recognition. "Just doing my part," he replied, shifting the sealed vial in his pocket. He knew the warden's interest was piqued by something more than mere curiosity.
+
+Warden Ott stepped closer, his hand resting on a worn leather pouch at his belt. "I've got something that might interest you," he said, pulling out a small, intricately carved salt pouch. The pouch shimmered faintly in the lantern light, hinting at its hidden potential.
+
+Ilrid's eyes widened slightly. "A salt pouch, huh? I could use one of those."
+
+The warden nodded, a rare smile tugging at his lips. "Consider it a reward for your bravery. But be careful with it. This isn't just any salt."
+
+As Ilrid took the pouch, he felt a subtle shift in the air, a whisper of power that seemed to linger around him. He tucked the new addition into his inventory, feeling a sense of accomplishment.
+
+"Thank you, Warden Ott," Ilrid said, bowing slightly. "I'll make sure it's put to good use."
+
+The warden nodded approvingly. "Just remember, every tool has its purpose. Use them wisely."
+
+With that, Ilrid turned and began his journey back through the Cistern Gate, the weight of the new salt pouch in his inventory a reminder of the challenges—and opportunities—still ahead.
